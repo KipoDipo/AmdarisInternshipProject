@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-Hello, world! I am a changed text file... But I am changed from the original place!!!
-=======
-Hello, world! I am a changed text file... But now I am changed from somewhere else!
->>>>>>> d9f9c926a80e3213a940d44622d2a11cf322f05c
+Hello, world! I am a changed text file... But I am changed from both the original place and somewhere else!!!
