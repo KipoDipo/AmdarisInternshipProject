@@ -1,1 +1,1 @@
-This feature is very cool, but is only 20% implemented.
+This feature is very cool, but is only 50% implemented.
