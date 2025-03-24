@@ -6,5 +6,10 @@
             : base(name, manufacturer, coreCount, price)
         {
         }
+
+        public override void DoWork()
+        {
+            Console.WriteLine($"GPU {Manufacturer} {Name} is processing the graphics with all {CoreCount} cores!");
+        }
     }
 }

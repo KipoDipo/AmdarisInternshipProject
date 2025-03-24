@@ -9,5 +9,10 @@
         {
             CoreCount = coreCount;
         }
+
+        public override void DoWork()
+        {
+            Console.WriteLine($"Generic unit {Manufacturer} {Name} is processing with all {CoreCount} cores!");
+        }
     }
 }
