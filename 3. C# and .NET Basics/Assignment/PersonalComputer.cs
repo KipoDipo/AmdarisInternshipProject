@@ -25,12 +25,26 @@ namespace Assignment
             components.Add(component);
         }
 
-        public void PowerOn()
+        public void PowerOn(float delaySeconds = 0.0f, bool shutDownAfter = false)
         {
+            if (delaySeconds != 0.0f)
+            {
+                Console.WriteLine($"Waiting {delaySeconds} seconds before power on...");
+                Thread.Sleep((int)(delaySeconds * 1000));
+            }
             foreach (var component in components)
             {
                 component.DoWork();
             }
+            if (shutDownAfter)
+            {
+                PowerOff();
+            }
+        }
+
+        public void PowerOff()
+        {
+            Console.WriteLine("Shutting down...");
         }
 
         public static bool IsValidConfiguration(List<ComputerComponent> components)

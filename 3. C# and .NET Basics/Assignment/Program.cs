@@ -31,7 +31,7 @@
 
             if (computer.IsValidConfiguration())
             {
-                computer.PowerOn();
+                computer.PowerOn(shutDownAfter: true, delaySeconds: 2);
             }
             else
             {
