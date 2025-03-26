@@ -10,17 +10,6 @@
     {
         delegate void PersonAction(Person person);
 
-        public static void CapitalizeNames(Person person)
-        {
-            person.FirstName = person.FirstName.ToUpper();
-            person.LastName = person.LastName.ToUpper();
-        }
-
-        public static void PrintNames(Person person)
-        {
-            Console.WriteLine($"{person.FirstName} {person.LastName}");
-        }
-
         static void Main(string[] args)
         {
             List<Person> people =
@@ -34,13 +23,20 @@
                 new() { FirstName = "Vladimir", LastName = "Randomirov" },
             ];
 
-            PersonAction action = CapitalizeNames;
+            PersonAction action = delegate(Person person)
+            {
+                person.FirstName = person.FirstName.ToUpper();
+                person.LastName = person.LastName.ToUpper();
+            };
             foreach (var person in people)
             {
                 action(person);
             }
 
-            action = PrintNames;
+            action = delegate (Person person)
+            {
+                Console.WriteLine($"{person.FirstName} {person.LastName}");
+            };
 
             foreach (var person in people)
             {
