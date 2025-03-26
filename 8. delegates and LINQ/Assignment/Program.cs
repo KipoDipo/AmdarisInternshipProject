@@ -5,7 +5,27 @@
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
     }
-    
+
+    public static class PersonListExtention
+    {
+        public static void CapitalizeNames(this List<Person> people)
+        {
+            foreach (var person in people)
+            {
+                person.FirstName = person.FirstName.ToUpper();
+                person.LastName = person.LastName.ToUpper();
+            }
+        }
+
+        public static void PrintNames(this List<Person> people)
+        {
+            foreach (var person in people)
+            {
+                Console.WriteLine($"{person.FirstName} {person.LastName}");
+            }
+        }
+    }
+
     public class Program
     {
         delegate void PersonAction(Person person);
@@ -23,22 +43,8 @@
                 new() { FirstName = "Vladimir", LastName = "Randomirov" },
             ];
 
-            PersonAction action = person => 
-            {
-                person.FirstName = person.FirstName.ToUpper();
-                person.LastName = person.LastName.ToUpper();
-            };
-            foreach (var person in people)
-            {
-                action(person);
-            }
-
-            action = person => Console.WriteLine($"{person.FirstName} {person.LastName}");
-
-            foreach (var person in people)
-            {
-                action(person);
-            }
+            people.CapitalizeNames();
+            people.PrintNames();
         }
     }
 }
