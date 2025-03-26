@@ -23,7 +23,7 @@
                 new() { FirstName = "Vladimir", LastName = "Randomirov" },
             ];
 
-            PersonAction action = delegate(Person person)
+            PersonAction action = person => 
             {
                 person.FirstName = person.FirstName.ToUpper();
                 person.LastName = person.LastName.ToUpper();
@@ -33,10 +33,7 @@
                 action(person);
             }
 
-            action = delegate (Person person)
-            {
-                Console.WriteLine($"{person.FirstName} {person.LastName}");
-            };
+            action = person => Console.WriteLine($"{person.FirstName} {person.LastName}");
 
             foreach (var person in people)
             {
