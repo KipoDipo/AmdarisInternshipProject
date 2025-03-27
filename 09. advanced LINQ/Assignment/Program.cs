@@ -46,15 +46,23 @@
 
 			// =============================================================
 
-			// this took the life out of me
-			// but at least I learned about 'let'
-			var ownerToColorsQuery = from owner in owners
-									 let colors = from carName in owner.Cars
-												  join car in cars on carName equals car.Name
-												  select car.Color
-									 select new { Owner = owner.Name, Colors = colors.Distinct() };
+			var ownerToColorsQuery1 = from owner in owners
+									  select new
+									  {
+										  Owner = owner.Name,
+										  Colors = (from carName in owner.Cars
+													join car in cars on carName equals car.Name
+													select car.Color).Distinct()
+									  };
 
-			foreach (var item in ownerToColorsQuery)
+			var ownerToColorsQuery2 = owners
+				.Select(owner => new
+				{
+					Owner = owner.Name,
+					Colors = owner.Cars.Join(cars, ownedCar => ownedCar, car => car.Name, (ownedCar, car) => car.Color).Distinct()
+				});
+
+			foreach (var item in ownerToColorsQuery2)
 			{
 				Console.WriteLine($"Owner: {item.Owner}, owned car colors: {string.Join(", ", item.Colors)}");
 			}
