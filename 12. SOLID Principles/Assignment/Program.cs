@@ -1,4 +1,7 @@
-﻿namespace Assignment
+﻿using Assignment.NotificationSystems;
+using Assignment.NotificationType;
+
+namespace Assignment
 {
 	public class Program
 	{
@@ -7,14 +10,9 @@
 			User Adam = new() { FirstName = "Adam", LastName = "Adamov" };
 			User Eve = new() { FirstName = "Eva", LastName = "Evova" };
 
-			MyNotificationSystem system = new MyNotificationSystem();
+			MessageService service = new MessageService([new SmsNotificationSystem(), new EmailNotificationSystem(), new PushNotificationSystem()]);
 
-			system.SendNotification(
-				NotificationTypes.Email | NotificationTypes.SMS,
-				Adam,
-				Eve,
-				"Hello!!!"
-			);
+			service.SendNotifications(NotificationTypes.SMS | NotificationTypes.Email, Adam, Eve, "Hello");
 		}
 	}
 }
