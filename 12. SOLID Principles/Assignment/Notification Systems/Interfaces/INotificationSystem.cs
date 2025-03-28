@@ -1,4 +1,5 @@
 ﻿using Assignment.NotificationType;
+using Assignment.Users.Interfaces;
 
 namespace Assignment
 {

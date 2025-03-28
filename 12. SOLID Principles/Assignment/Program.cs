@@ -1,5 +1,6 @@
 ﻿using Assignment.NotificationSystems;
 using Assignment.NotificationType;
+using Assignment.Users;
 
 namespace Assignment
 {
@@ -10,9 +11,9 @@ namespace Assignment
 			User Adam = new() { FirstName = "Adam", LastName = "Adamov" };
 			User Eve = new() { FirstName = "Eva", LastName = "Evova" };
 
-			MessageService service = new MessageService([new SmsNotificationSystem(), new EmailNotificationSystem(), new PushNotificationSystem()]);
+			MessageService service = new MessageService([new EmailNotificationSystem(), new PushNotificationSystem(), new SmsNotificationSystem()]);
 
-			service.SendNotifications(NotificationTypes.SMS | NotificationTypes.Email, Adam, Eve, "Hello");
+			service.SendNotifications(NotificationTypes.Push | NotificationTypes.SMS, Adam, Eve, "Hello!");
 		}
 	}
 }

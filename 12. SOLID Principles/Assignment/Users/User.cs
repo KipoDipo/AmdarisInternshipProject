@@ -1,4 +1,6 @@
-﻿namespace Assignment
+﻿using Assignment.Users.Interfaces;
+
+namespace Assignment.Users
 {
 	class User : INotifyableUser
 	{
