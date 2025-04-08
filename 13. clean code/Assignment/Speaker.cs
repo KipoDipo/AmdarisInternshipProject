@@ -10,10 +10,10 @@ public class Speaker : ISpeaker
 	public string Email { get; set; }
 	public int? Experience { get; set; }
 	public bool HasBlog { get; set; }
+	public string Employer { get; set; }
 	public string BlogURL { get; set; }
 	public IWebBrowser Browser { get; set; }
 	public List<string> Certifications { get; set; }
-	public string Employer { get; set; }
 	public int RegistrationFee { get; set; }
 	public List<ISession> Sessions { get; set; }
 
@@ -35,7 +35,7 @@ public class Speaker : ISpeaker
 	public int? Register(IRepository repository, SpeakerApprovalCriteria criteria)
 	{
 		int? speakerId = null;
-
+		
 		_validator.Validate(this, criteria);
 
 		if (!_approvalService.Approve(this, criteria))
