@@ -1,0 +1,156 @@
+@startuml Class Diagram
+' top to bottom direction
+' left to right direction
+
+hide methods
+skinparam nodesep 25
+skinparam ranksep 25
+' skinparam linetype ortho
+
+
+interface IBase
+{
+    +id : int
+    +createdAt : DateTime
+    +updatedAt : DateTime
+}
+
+interface IDeletable
+{
+    +isDeleted : bool
+    +deletedAt : DateTime
+}
+
+abstract User
+{
+    +email: string
+    +password: string
+    +username: string
+    +firstName: string
+    +lastName?: string
+    +bio? : string
+    +profilePicture? : byte[]
+    +phoneNumber?: string
+}
+
+class Admin
+{
+}
+
+class Listener
+{
+    +following: List<Artist>
+    +createdPlaylists: List<Playlist>
+    +likedPlaylists: List<Playlist>
+    +likedSongs: List<Song>
+    ..
+    +badges: List<Badge>
+    +titles: List<Title>
+
+    +equippedBadge: Badge
+    +equippedTitle: Title
+    ..
+    +isSubscribed: bool
+    +subscriptionDate: DateTime
+}
+
+class Distributor
+{
+    +artists: List<Artist>
+}
+
+class Artist
+{
+    +followers: List<Listener>
+    +albums: List<Album>
+    +singles: List<Song>
+}
+
+package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD 
+{
+
+    class Album
+    {
+        +title: string
+        +releaseDate: DateTime
+        +songs: List<Song>
+    }
+
+    class Song
+    {
+        +title: string
+        +duration: TimeSpan
+        +releaseDate: DateTime
+        +genres: List<Genre>
+        +data: byte[]
+    }
+
+    class Playlist
+    {
+        +title: string
+        +createdBy: Listener
+        +songs: List<Song>
+    }
+
+    class Genre
+    {
+        +name: string
+    }
+}
+
+package "Customization\n\n" <<cloud>> #DDDDDD 
+{
+    class Badge
+    {
+        +name: string
+        +description: string
+        +icon: byte[]
+    }
+
+    class Title
+    {
+        +name: string
+        +description: string
+    }
+}
+
+IBase <|-- IDeletable
+' IDeletable <|--r Playlist
+' IDeletable <|--r User
+' IDeletable <|--r Album
+' IDeletable <|--r Song
+
+User <|-- Admin
+User <|-- Listener
+User <|-- Artist
+User <|-- Distributor
+
+Artist "0..n" --l "0..n" Listener : "\t\t"
+Artist "1  " *-- "0..n  " Song
+Artist "1" *-- "0..n   " Album
+
+Distributor o--l "0..n" Artist : "\tManages\t"
+
+Album *-l "1..n" Song : "\t"
+
+Playlist o-r Song: "\tContains\t"
+' Playlist -left[hidden]- Title
+' Title -left[hidden]- Badge
+
+Listener *--d Playlist : "creates"
+Listener -- Playlist : "likes"
+Listener -- Song : "likes"
+
+Listener -- Badge : "equips"
+Listener -- "0..n" Badge : "owns"
+Listener -- Title : "equips\t\t"
+Listener -- "0..n" Title : "owns"
+
+Song o-- "1..n" Genre : "\n"
+
+
+' Song "0..n" -- "0..n" Playlist : "\t\t"
+' Playlist "0..n" -- "0..n" Listener : "\t\t"
+
+
+@enduml
