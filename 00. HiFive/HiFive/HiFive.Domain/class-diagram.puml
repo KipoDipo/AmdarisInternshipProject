@@ -8,6 +8,15 @@ skinparam ranksep 25
 ' skinparam linetype ortho
 
 
+class "IdentityUser (ASP.Net)" as IdentityUser
+{
+    +id: string
+    +email: string
+    +passwordHash: string
+    +phoneNumber: string
+    +userName: string
+}
+
 interface IBase
 {
     +id : int
@@ -23,14 +32,10 @@ interface IDeletable
 
 abstract User
 {
-    +email: string
-    +password: string
-    +username: string
     +firstName: string
     +lastName?: string
     +bio? : string
     +profilePicture? : byte[]
-    +phoneNumber?: string
 }
 
 class Admin
@@ -115,15 +120,14 @@ package "Customization\n\n" <<cloud>> #DDDDDD
 }
 
 IBase <|-- IDeletable
-' IDeletable <|--r Playlist
-' IDeletable <|--r User
-' IDeletable <|--r Album
-' IDeletable <|--r Song
+
+IdentityUser <|--- User
 
 User <|-- Admin
 User <|-- Listener
 User <|-- Artist
 User <|-- Distributor
+
 
 Artist "0..n" --l "0..n" Listener : "\t\t"
 Artist "1  " *-- "0..n  " Song
@@ -137,16 +141,16 @@ Playlist o-r Song: "\tContains\t"
 ' Playlist -left[hidden]- Title
 ' Title -left[hidden]- Badge
 
-Listener *--d Playlist : "creates"
-Listener -- Playlist : "likes"
-Listener -- Song : "likes"
+Listener *--d "0..n" Playlist : "creates"
+Listener -- "0..n" Playlist : "likes"
+Listener -- "0..n" Song : "likes"
 
 Listener -- Badge : "equips"
 Listener -- "0..n" Badge : "owns"
 Listener -- Title : "equips\t\t"
 Listener -- "0..n" Title : "owns"
 
-Song o-- "1..n" Genre : "\n"
+Song -- "1..n" Genre : "\n"
 
 
 ' Song "0..n" -- "0..n" Playlist : "\t\t"
