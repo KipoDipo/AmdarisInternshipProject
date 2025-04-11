@@ -80,6 +80,8 @@ package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD
         +title: string
         +releaseDate: DateTime
         +songs: List<Song>
+        +cover: byte[]
+        +createdBy: Artist
     }
 
     class Song
@@ -89,13 +91,15 @@ package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD
         +releaseDate: DateTime
         +genres: List<Genre>
         +data: byte[]
+        +cover: byte[]
+        +createdBy: Artist
     }
 
     class Playlist
     {
         +title: string
-        +createdBy: Listener
         +songs: List<Song>
+        +createdBy: Listener
     }
 
     class Genre
