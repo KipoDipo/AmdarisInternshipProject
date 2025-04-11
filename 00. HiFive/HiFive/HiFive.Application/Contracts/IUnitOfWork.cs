@@ -1,8 +1,15 @@
-﻿namespace HiFive.Application.Contracts;
+﻿using HiFive.Domain.Models.Music;
+using HiFive.Domain.Models.Users;
 
-public interface IUnitOfWork
+namespace HiFive.Application.Contracts;
+
+public interface IUnitOfWork : IDisposable
 {
-	Task SaveChangesAsync();
+	IRepository<Playlist> Playlists { get; }
+	IRepository<Song> Songs { get; }
+	IRepository<Album> Albums { get; }
+	IRepository<Listener> Listeners { get; }
+
 	Task BeginTransactionAsync();
 	Task CommitTransactionAsync();
 	Task RollbackTransactionAsync();
