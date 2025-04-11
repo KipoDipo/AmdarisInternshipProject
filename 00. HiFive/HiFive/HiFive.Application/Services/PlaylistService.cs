@@ -3,7 +3,6 @@ using HiFive.Application.DTOs.Playlist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Application.Services.Contracts;
 using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
