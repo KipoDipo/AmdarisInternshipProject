@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Users;
 
 namespace HiFive.Domain.Models.Music;
 

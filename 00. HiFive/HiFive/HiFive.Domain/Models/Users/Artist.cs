@@ -1,8 +1,7 @@
 ﻿using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Users;
 
-namespace HiFive.Domain.Models;
+namespace HiFive.Domain.Models.Users;
 
 public class Artist : ApplicationUser
 {
