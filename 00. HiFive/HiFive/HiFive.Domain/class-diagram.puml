@@ -10,7 +10,7 @@ skinparam ranksep 25
 
 class "IdentityUser (ASP.Net)" as IdentityUser
 {
-    +id: string
+    +id: Guid
     +email: string
     +passwordHash: string
     +phoneNumber: string
@@ -19,7 +19,7 @@ class "IdentityUser (ASP.Net)" as IdentityUser
 
 interface IBase
 {
-    +id : int
+    +id : Guid
     +createdAt : DateTime
     +updatedAt : DateTime
 }
@@ -44,7 +44,8 @@ class Admin
 
 class Listener
 {
-    +following: List<Artist>
+    +followingArtists: List<Artist>
+    +followingListeners: List<Listener>
     +createdPlaylists: List<Playlist>
     +likedPlaylists: List<Playlist>
     +likedSongs: List<Song>
