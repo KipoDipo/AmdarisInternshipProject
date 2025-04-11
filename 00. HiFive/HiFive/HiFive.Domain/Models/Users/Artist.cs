@@ -1,5 +1,4 @@
 ﻿using HiFive.Domain.Contracts;
-using HiFive.Domain.Models.Audio;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Users;
 

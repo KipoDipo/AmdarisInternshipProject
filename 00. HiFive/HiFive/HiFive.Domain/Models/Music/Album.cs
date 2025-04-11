@@ -10,8 +10,11 @@ public class Album : IDeletable
 	public required DateTime ReleaseDate { get; set; }
 	public List<Song> Songs { get; set; } = [];
 
+	public Guid ArtistId { get; set; }
+	public Artist Artist { get; set; } = null!;
+
 	public bool IsDeleted { get; set; }
-	public DateTime? DeletedAt { get; set; }
-	public DateTime CreatedAt { get; set; }
-	public DateTime UpdatedAt { get; set; }
+	public DateTime? DeletedOn { get; set; }
+	public DateTime CreatedOn { get; set; }
+	public DateTime UpdatedOn { get; set; }
 }

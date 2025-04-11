@@ -11,7 +11,7 @@ public class Badge : IDeletable
 	public byte[]? Image { get; set; }
 
 	public bool IsDeleted { get; set; }
-	public DateTime? DeletedAt { get; set; }
-	public DateTime CreatedAt { get; set; }
-	public DateTime UpdatedAt { get; set; }
+	public DateTime? DeletedOn { get; set; }
+	public DateTime CreatedOn { get; set; }
+	public DateTime UpdatedOn { get; set; }
 }

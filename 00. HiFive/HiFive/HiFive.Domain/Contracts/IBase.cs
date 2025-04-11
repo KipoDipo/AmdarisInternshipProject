@@ -3,6 +3,6 @@
 public interface IBase
 {
 	Guid Id { get; set; }
-	DateTime CreatedAt { get; set; }
-	DateTime UpdatedAt { get; set; }
+	DateTime CreatedOn { get; set; }
+	DateTime UpdatedOn { get; set; }
 }
