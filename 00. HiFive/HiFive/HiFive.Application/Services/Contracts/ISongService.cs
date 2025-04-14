@@ -7,10 +7,12 @@ public interface ISongService
 	Task<SongDto> CreateSongAsync(string title, Guid artistId, TimeSpan duration, 
 		List<Genre> genres, DateTime releaseDate, byte[] data);
 	Task<SongDto> GetSongByIdAsync(Guid songId);
-	Task<IEnumerable<SongDto>> GetSongsByPartialName(string partialName);
+	Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName);
+	Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId);
 
 	Task<SongDetailsDto> GetSongDetailsByIdAsync(Guid songId);
 	Task<SongDto> UpdateSongAsync(Guid songId, string title, DateTime releaseDate);
+
 
 	Task<IEnumerable<SongDto>> GetSongsByArtistIdAsync(Guid artistId);
 }

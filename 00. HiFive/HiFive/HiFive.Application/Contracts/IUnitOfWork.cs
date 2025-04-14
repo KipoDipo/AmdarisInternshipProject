@@ -13,6 +13,7 @@ public interface IUnitOfWork : IDisposable
 
 	IRepository<Playlist> Playlists { get; }
 	IRepository<Song> Songs { get; }
+	IRepository<Genre> Genres { get; }
 	IRepository<Album> Albums { get; }
 
 	IRepository<Badge> Badges { get; }

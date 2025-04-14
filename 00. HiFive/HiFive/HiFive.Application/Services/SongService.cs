@@ -59,13 +59,25 @@ public class SongService : ISongService
 		return SongDto.FromEntity(song);
 	}
 
-	public async Task<IEnumerable<SongDto>> GetSongsByPartialName(string partialName)
+	public async Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName)
 	{
 		if (string.IsNullOrWhiteSpace(partialName))
 			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
 		
 		var songs = await _unitOfWork.Songs.GetAllAsync()
 			.Where(s => s.Title.Contains(partialName, StringComparison.CurrentCultureIgnoreCase))
+			.ToListAsync();
+
+		return songs.Select(SongDto.FromEntity);
+	}
+
+	public async Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId)
+	{
+		var genre = await _unitOfWork.Genres.GetByIdNoTrackingAsync(genreId);
+		Validator.Validate(genre);
+
+		var songs = await _unitOfWork.Songs.GetAllAsync()
+			.Where(s => s.Genres.Any(g => g.Id == genreId))
 			.ToListAsync();
 
 		return songs.Select(SongDto.FromEntity);
