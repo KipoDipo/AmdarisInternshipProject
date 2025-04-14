@@ -21,7 +21,7 @@ public class PlaylistService : IPlaylistService
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentException("Playlist name cannot be empty.", nameof(name));
 
-		var user = await _unitOfWork.Listeners.GetByIdNoTrackingAsync(userId);
+		var user = await _unitOfWork.Listeners.GetByIdAsync(userId);
 		Validator.Validate(user);
 
 		var playlist = new Playlist
@@ -40,7 +40,7 @@ public class PlaylistService : IPlaylistService
 
 	public async Task<PlaylistDto> GetPlaylistByIdAsync(Guid playlistId)
 	{
-		var playlist = await _unitOfWork.Playlists.GetByIdNoTrackingAsync(playlistId);
+		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
 
 		Validator.Validate(playlist);
 
@@ -49,7 +49,7 @@ public class PlaylistService : IPlaylistService
 
 	public async Task<IEnumerable<PlaylistDto>> GetPlaylistsByUserIdAsync(Guid userId)
 	{
-		var user = await _unitOfWork.Listeners.GetByIdNoTrackingAsync(userId);
+		var user = await _unitOfWork.Listeners.GetByIdAsync(userId);
 		Validator.Validate(user);
 
 		var playlists = await _unitOfWork.Playlists.GetAllNoTrackingAsync()
@@ -71,7 +71,7 @@ public class PlaylistService : IPlaylistService
 		playlist.Description = description;
 
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Playlists.UpdateAsync(playlist);
+		_unitOfWork.Playlists.Update(playlist);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
@@ -96,7 +96,7 @@ public class PlaylistService : IPlaylistService
 		playlist.Songs.Add(song);
 
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Playlists.UpdateAsync(playlist);
+		_unitOfWork.Playlists.Update(playlist);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
@@ -111,7 +111,7 @@ public class PlaylistService : IPlaylistService
 		playlist.Songs.Remove(song);
 
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Playlists.UpdateAsync(playlist);
+		_unitOfWork.Playlists.Update(playlist);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 

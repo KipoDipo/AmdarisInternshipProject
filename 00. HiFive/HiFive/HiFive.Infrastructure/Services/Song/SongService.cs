@@ -1,10 +1,10 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Application.DTOs.Song;
+using HiFive.Application.Services;
 using HiFive.Application.Services.Contracts;
-using HiFive.Domain.Models.Music;
 using Microsoft.EntityFrameworkCore;
 
-namespace HiFive.Application.Services;
+namespace HiFive.Infrastructure.Services.Song;
 
 public class SongService : ISongService
 {
@@ -16,7 +16,7 @@ public class SongService : ISongService
 	}
 
 	public async Task<SongDto> CreateSongAsync(string title, Guid artistId, TimeSpan duration,
-		List<Genre> genres, DateTime releaseDate, byte[] data)
+		List<Guid> genreIds, DateTime releaseDate, byte[] data)
 	{
 		if (string.IsNullOrWhiteSpace(title))
 			throw new ArgumentException("Song title cannot be empty.", nameof(title));
@@ -24,17 +24,17 @@ public class SongService : ISongService
 		if (duration <= TimeSpan.Zero)
 			throw new ArgumentException("Song duration must be greater than zero.", nameof(duration));
 
-		if (genres == null || genres.Count == 0)
-			throw new ArgumentNullException(nameof(genres), "Genres cannot be null or empty.");
-
 		if (data == null || data.Length == 0)
 			throw new ArgumentNullException(nameof(data), "Song data cannot be null or empty.");
 
-		var artist = await _unitOfWork.Artists.GetByIdNoTrackingAsync(artistId);
-
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
-		var song = new Song
+		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+			.Where(g => genreIds.Contains(g.Id))
+			.ToListAsync();
+
+		var song = new Domain.Models.Music.Song()
 		{
 			Title = title,
 			ArtistId = artistId,
@@ -73,7 +73,7 @@ public class SongService : ISongService
 
 	public async Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId)
 	{
-		var genre = await _unitOfWork.Genres.GetByIdNoTrackingAsync(genreId);
+		var genre = await _unitOfWork.Genres.GetByIdAsync(genreId);
 		Validator.Validate(genre);
 
 		var songs = await _unitOfWork.Songs.GetAllAsync()
@@ -85,7 +85,7 @@ public class SongService : ISongService
 
 	public async Task<SongDetailsDto> GetSongDetailsByIdAsync(Guid songId)
 	{
-		var song = await _unitOfWork.Songs.GetByIdNoTrackingAsync(songId);
+		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
 		
 
@@ -94,7 +94,7 @@ public class SongService : ISongService
 
 	public async Task<IEnumerable<SongDto>> GetSongsByArtistIdAsync(Guid artistId)
 	{
-		var artist = await _unitOfWork.Artists.GetByIdNoTrackingAsync(artistId);
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTrackingAsync()
@@ -117,7 +117,7 @@ public class SongService : ISongService
 		song.ReleaseDate = releaseDate;
 
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Songs.UpdateAsync(song);
+		_unitOfWork.Songs.Update(song);
 		await _unitOfWork.CommitTransactionAsync();
 		
 		return SongDto.FromEntity(song);

@@ -1,9 +1,10 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Application.DTOs.Genre;
+using HiFive.Application.Services;
 using HiFive.Application.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace HiFive.Application.Services;
+namespace HiFive.Infrastructure.Services.Genre;
 
 public class GenreService : IGenreService
 {
@@ -42,7 +43,7 @@ public class GenreService : IGenreService
 
 	public async Task<IEnumerable<GenreDto>> GetAllGenresBySongIdAsync(Guid songId)
 	{
-		var song = await _unitOfWork.Songs.GetByIdNoTrackingAsync(songId);
+		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
 
 		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
@@ -66,7 +67,7 @@ public class GenreService : IGenreService
 
 	public async Task<GenreDto> GetGenreByIdAsync(Guid genreId)
 	{
-		var genre = await _unitOfWork.Genres.GetByIdNoTrackingAsync(genreId);
+		var genre = await _unitOfWork.Genres.GetByIdAsync(genreId);
 		Validator.Validate(genre);
 
 		return GenreDto.FromEntity(genre);
@@ -82,7 +83,7 @@ public class GenreService : IGenreService
 
 		genre.Name = name;
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Genres.UpdateAsync(genre);
+		_unitOfWork.Genres.Update(genre);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 

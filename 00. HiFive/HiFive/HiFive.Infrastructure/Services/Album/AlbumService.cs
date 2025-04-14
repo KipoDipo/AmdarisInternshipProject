@@ -1,9 +1,10 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Application.DTOs.Album;
+using HiFive.Application.Services;
 using HiFive.Application.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace HiFive.Application.Services;
+namespace HiFive.Infrastructure.Services.Album;
 
 public class AlbumService : IAlbumService
 {
@@ -19,7 +20,7 @@ public class AlbumService : IAlbumService
 		if (string.IsNullOrWhiteSpace(title))
 			throw new ArgumentException("Album title cannot be empty.", nameof(title));
 
-		var artist = await _unitOfWork.Artists.GetByIdNoTrackingAsync(artistId);
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
 		var album = new Domain.Models.Music.Album
@@ -36,7 +37,7 @@ public class AlbumService : IAlbumService
 
 	public async Task<AlbumDto> GetAlbumByIdAsync(Guid albumId)
 	{
-		var album = await _unitOfWork.Albums.GetByIdNoTrackingAsync(albumId);
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
 		Validator.Validate(album);
 
 		return AlbumDto.FromEntity(album);
@@ -44,7 +45,7 @@ public class AlbumService : IAlbumService
 
 	public async Task<IEnumerable<AlbumDto>> GetAllAlbumsByArtistAsync(Guid artistId)
 	{
-		var artist = await _unitOfWork.Artists.GetByIdNoTrackingAsync(artistId);
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
 		var albums = await _unitOfWork.Albums.GetAllNoTrackingAsync()
@@ -68,9 +69,9 @@ public class AlbumService : IAlbumService
 
 	public async Task AddSongToAlbumAsync(Guid albumId, Guid songId)
 	{
-		var album = await _unitOfWork.Albums.GetByIdNoTrackingAsync(albumId);
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
 		Validator.Validate(album);
-		var song = await _unitOfWork.Songs.GetByIdNoTrackingAsync(songId);
+		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
 
 		if (album.Songs.Any(s => s.Id == songId))
@@ -78,7 +79,7 @@ public class AlbumService : IAlbumService
 		
 		album.Songs.Add(song);
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Albums.UpdateAsync(album);
+		_unitOfWork.Albums.Update(album);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
@@ -87,21 +88,21 @@ public class AlbumService : IAlbumService
 		if (string.IsNullOrWhiteSpace(title))
 			throw new ArgumentException("Album title cannot be empty.", nameof(title));
 
-		var album = await _unitOfWork.Albums.GetByIdNoTrackingAsync(albumId);
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
 		Validator.Validate(album);
 
 		album.Title = title;
 		album.ReleaseDate = releaseDate;
 
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Albums.UpdateAsync(album);
+		_unitOfWork.Albums.Update(album);
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
 
 	public async Task DeleteAlbumAsync(Guid albumId)
 	{
-		var album = await _unitOfWork.Albums.GetByIdNoTrackingAsync(albumId);
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
 		Validator.Validate(album);
 
 		await _unitOfWork.BeginTransactionAsync();
