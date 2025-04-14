@@ -93,7 +93,7 @@ public class SongService : ISongService
 		return songs.Select(SongDto.FromEntity);
 	}
 
-	public async Task<SongDto> UpdateSongAsync(Guid songId, string title, Guid artistId)
+	public async Task<SongDto> UpdateSongAsync(Guid songId, string title, DateTime releaseDate)
 	{
 		if (string.IsNullOrWhiteSpace(title))
 			throw new ArgumentException("Song title cannot be empty.", nameof(title));
@@ -101,12 +101,9 @@ public class SongService : ISongService
 		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
 
-		var artist = await _unitOfWork.Artists.GetByIdNoTrackingAsync(artistId);
-		Validator.Validate(artist);
-
 		song.Title = title;
-		song.ArtistId = artistId;
-		
+		song.ReleaseDate = releaseDate;
+
 		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.Songs.UpdateAsync(song);
 		await _unitOfWork.CommitTransactionAsync();

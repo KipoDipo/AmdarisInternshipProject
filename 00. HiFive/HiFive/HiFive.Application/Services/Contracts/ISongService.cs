@@ -10,7 +10,7 @@ public interface ISongService
 	Task<IEnumerable<SongDto>> GetSongsByPartialName(string partialName);
 
 	Task<SongDetailsDto> GetSongDetailsByIdAsync(Guid songId);
-	Task<SongDto> UpdateSongAsync(Guid songId, string title, Guid artistId);
+	Task<SongDto> UpdateSongAsync(Guid songId, string title, DateTime releaseDate);
 
 	Task<IEnumerable<SongDto>> GetSongsByArtistIdAsync(Guid artistId);
 }

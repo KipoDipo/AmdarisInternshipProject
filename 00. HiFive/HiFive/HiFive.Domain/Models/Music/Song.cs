@@ -16,6 +16,9 @@ public class Song : IDeletable
 	public Guid ArtistId { get; set; }
 	public Artist Artist { get; set; } = null!;
 
+	public Guid? AlbumId { get; set; }
+	public Album? Album { get; set; }
+
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }
 	public DateTime CreatedOn { get; set; }
