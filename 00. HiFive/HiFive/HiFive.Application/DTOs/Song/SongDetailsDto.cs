@@ -9,7 +9,7 @@ public class SongDetailsDto
 	public string Title { get; set; } = null!;
 	public TimeSpan Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
-	public ICollection<Genre> Genres { get; set; } = null!;
+	public ICollection<Domain.Models.Music.Genre> Genres { get; set; } = null!;
 	public Guid ArtistId { get; set; }
 
 	public static SongDetailsDto FromEntity(Domain.Models.Music.Song song)

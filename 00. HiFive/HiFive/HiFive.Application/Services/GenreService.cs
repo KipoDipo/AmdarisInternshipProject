@@ -39,6 +39,19 @@ public class GenreService : IGenreService
 		return genres.Select(GenreDto.FromEntity);
 	}
 
+
+	public async Task<IEnumerable<GenreDto>> GetAllGenresBySongIdAsync(Guid songId)
+	{
+		var song = await _unitOfWork.Songs.GetByIdNoTrackingAsync(songId);
+		Validator.Validate(song);
+
+		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+			.Where(g => g.Songs.Any(s => s.Id == songId))
+			.ToListAsync();
+
+		return genres.Select(GenreDto.FromEntity);
+	}
+
 	public async Task<IEnumerable<GenreDto>> GetAllGenresByPartialNameAsync(string partialName)
 	{
 		if (string.IsNullOrWhiteSpace(partialName))
