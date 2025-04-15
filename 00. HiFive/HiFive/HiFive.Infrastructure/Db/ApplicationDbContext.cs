@@ -48,38 +48,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 	{
 		base.OnModelCreating(builder);
 
-		builder.ApplyConfiguration(new ApplicationUserConfiguration());
-
-		builder.Entity<Playlist>()
-			.HasOne(p => p.Owner)
-			.WithMany(p => p.CreatedPlaylists);
-
-		builder.Entity<Listener>()
-			.HasMany(l => l.Badges)
-			.WithMany(b => b.Owners);
-
-		builder.Entity<Listener>()
-			.HasOne(l => l.EquippedBadge);
-
-		builder.Entity<Listener>()
-			.HasMany(l => l.Titles)
-			.WithMany(t => t.Owners);
-
-		builder.Entity<Listener>()
-			.HasOne(l => l.EquippedTitle);
-
-		builder.Entity<ListenerFollower>()
-			.HasKey(lf => new { lf.FollowerId, lf.FollowedId });
-
-		builder.Entity<ListenerFollower>() // Listener that follows
-			.HasOne(lf => lf.Follower)
-			.WithMany(l => l.FollowingListeners)
-			.OnDelete(DeleteBehavior.Restrict);
-
-		builder.Entity<ListenerFollower>() // Listener that is being followed
-			.HasOne(lf => lf.Followed)
-			.WithMany(l => l.FollowedByListeners)
-			.OnDelete(DeleteBehavior.Restrict);
+		builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 	}
-
 }
