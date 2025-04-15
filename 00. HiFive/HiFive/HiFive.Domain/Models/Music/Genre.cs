@@ -8,7 +8,7 @@ public class Genre : IDeletable
 
 	public required string Name { get; set; }
 
-	public ICollection<Genre> Songs { get; set; } = null!;
+	public ICollection<Song> Songs { get; set; } = null!;
 
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }

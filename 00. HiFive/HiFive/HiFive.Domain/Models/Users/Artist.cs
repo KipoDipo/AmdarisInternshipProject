@@ -5,9 +5,9 @@ namespace HiFive.Domain.Models.Users;
 
 public class Artist : ApplicationUser
 {
-	public ICollection<Listener> Followers { get; set; }
-	public ICollection<Album> Albums { get; set; }
-	public ICollection<Song> Singles { get; set; }
+	public List<Listener> Followers { get; set; } = [];
+	public List<Album> Albums { get; set; } = [];
+	public List<Song> Singles { get; set; } = [];
 
 	public Distributor? Distributor { get; set; }
 }

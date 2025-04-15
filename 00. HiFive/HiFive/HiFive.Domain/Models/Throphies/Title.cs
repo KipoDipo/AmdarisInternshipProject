@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Users;
 
 namespace HiFive.Domain.Models.Throphies;
 
@@ -8,6 +9,8 @@ public class Title : IDeletable
 
 	public required string Name { get; set; }
 	public required string Description { get; set; }
+
+	public List<Listener> Owners { get; set; } = [];
 
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }

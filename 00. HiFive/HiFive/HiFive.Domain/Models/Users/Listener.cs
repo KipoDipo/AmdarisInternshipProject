@@ -7,7 +7,9 @@ namespace HiFive.Domain.Models.Users;
 public class Listener : ApplicationUser
 {
 	public List<Artist> FollowingArtists { get; set; } = [];
-	public List<Listener> FollowingListeners { get; set; } = [];
+	
+	public List<ListenerFollower> FollowingListeners { get; set; } = [];
+	public List<ListenerFollower> FollowedByListeners { get; set; } = [];
 
 	public List<Playlist> CreatedPlaylists { get; set; } = [];
 	
