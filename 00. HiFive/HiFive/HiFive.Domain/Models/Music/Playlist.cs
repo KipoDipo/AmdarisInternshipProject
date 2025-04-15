@@ -14,6 +14,8 @@ public class Playlist : IDeletable
 	public Guid OwnerId { get; set; }
 	public Listener Owner { get; set; } = null!;
 
+	public List<Listener> LikedByListeners { get; set; } = [];
+
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }
 	public DateTime CreatedOn { get; set; }

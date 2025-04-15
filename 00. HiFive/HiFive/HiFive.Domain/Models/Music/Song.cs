@@ -11,13 +11,16 @@ public class Song : IDeletable
 	public TimeSpan Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
 	public ICollection<Genre> Genres { get; set; } = null!;
-	public byte[] Data { get; set; } = null!;
+	public byte[] Data { get; set; } = null!; // Azure Blob Storage
 
 	public Guid ArtistId { get; set; }
 	public Artist Artist { get; set; } = null!;
 
 	public Guid? AlbumId { get; set; }
 	public Album? Album { get; set; }
+
+	public List<Playlist> PlaylistsIn { get; set; } = [];
+	public List<Listener> LikedBy { get; set; } = [];
 
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }

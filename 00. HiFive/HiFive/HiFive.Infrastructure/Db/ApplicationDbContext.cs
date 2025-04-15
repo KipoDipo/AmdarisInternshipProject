@@ -49,5 +49,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 		base.OnModelCreating(builder);
 
 		builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+		var entityTypes = builder.Model.GetEntityTypes();
+
+		var foreignKeys = entityTypes
+			.SelectMany(x => x.GetForeignKeys())
+			.Where(x => x.DeleteBehavior == DeleteBehavior.Cascade);
+
+		foreach (var foreignKey in foreignKeys)
+		{
+			foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+		}
 	}
 }
