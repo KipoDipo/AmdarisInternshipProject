@@ -1,12 +1,10 @@
 ﻿using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Users;
 using HiFive.Domain.Models.Throphies;
-
+using HiFive.Domain.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HiFive.Infrastructure.Db.Configurations;
 
 namespace HiFive.Infrastructure.Db;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>

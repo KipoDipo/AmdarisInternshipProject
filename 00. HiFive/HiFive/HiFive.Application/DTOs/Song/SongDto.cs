@@ -1,6 +1,4 @@
-﻿using HiFive.Domain.Models.Music;
-
-namespace HiFive.Application.DTOs.Song;
+﻿namespace HiFive.Application.DTOs.Song;
 
 public class SongDto
 {

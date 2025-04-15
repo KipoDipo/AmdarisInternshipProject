@@ -1,4 +1,5 @@
 ﻿namespace HiFive.Application.DTOs.Album;
+
 public class AlbumDto
 {
 	public Guid Id { get; set; }

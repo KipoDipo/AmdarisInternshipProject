@@ -33,7 +33,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 		// ============================== Setting up indexes ==============================
 		builder.HasIndex(b => b.Email)
 			.IsUnique();
-		
+
 		builder.HasIndex(b => b.NormalizedEmail)
 			.IsUnique();
 	}

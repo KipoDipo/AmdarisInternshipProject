@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Domain.Contracts;
+using HiFive.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Infrastructure;
@@ -31,7 +32,7 @@ public class Repository<T> : IRepository<T> where T : class, IDeletable
 	// Will use Tracker
 	public async Task<T?> GetByIdAsync(Guid id)
 	{
-		return await _dbContext.Set<T>().FindAsync(id) ;
+		return await _dbContext.Set<T>().FindAsync(id);
 	}
 
 	public void Update(T entity)
@@ -42,11 +43,10 @@ public class Repository<T> : IRepository<T> where T : class, IDeletable
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var obj = await _dbContext.Set<T>().FindAsync(id);
-		if (obj == null)
-			throw new ArgumentNullException(nameof(obj), "Entity not found");
+		var entity = await _dbContext.Set<T>().FindAsync(id);
+		Validator.Validate(entity);
 
-		obj.IsDeleted = true;
-		obj.DeletedOn = DateTime.Now;
+		entity.IsDeleted = true;
+		entity.DeletedOn = DateTime.Now;
 	}
 }

@@ -1,4 +1,5 @@
 ﻿namespace HiFive.Domain.Models.Users;
+
 public class ListenerFollower
 {
 	public Guid FollowerId { get; set; }

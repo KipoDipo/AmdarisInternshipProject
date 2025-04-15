@@ -7,14 +7,14 @@ namespace HiFive.Domain.Models.Users;
 public class Listener : ApplicationUser
 {
 	public List<Artist> FollowingArtists { get; set; } = [];
-	
+
 	public List<ListenerFollower> FollowingListeners { get; set; } = [];
 	public List<ListenerFollower> FollowedByListeners { get; set; } = [];
 
 	public List<Playlist> CreatedPlaylists { get; set; } = [];
-	
+
 	public List<Playlist> LikedPlaylists { get; set; } = [];
-	public List<Song> LikedSongs{ get; set; } = [];
+	public List<Song> LikedSongs { get; set; } = [];
 
 	public List<Badge> Badges { get; set; } = [];
 	public List<Title> Titles { get; set; } = [];

@@ -2,10 +2,9 @@
 using HiFive.Application.DTOs.Playlist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Application.Services.Contracts;
-using HiFive.Domain.Models.Music;
 using Microsoft.EntityFrameworkCore;
 
-namespace HiFive.Application.Services;
+namespace HiFive.Infrastructure.Services.Playlist;
 
 public class PlaylistService : IPlaylistService
 {
@@ -24,7 +23,7 @@ public class PlaylistService : IPlaylistService
 		var user = await _unitOfWork.Listeners.GetByIdAsync(userId);
 		Validator.Validate(user);
 
-		var playlist = new Playlist
+		var playlist = new Domain.Models.Music.Playlist
 		{
 			Title = name,
 			Description = description,

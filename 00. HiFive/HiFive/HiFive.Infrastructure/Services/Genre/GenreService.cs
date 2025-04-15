@@ -1,6 +1,5 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Application.DTOs.Genre;
-using HiFive.Application.Services;
 using HiFive.Application.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Users;
 using HiFive.Domain.Models.Throphies;
+using HiFive.Domain.Models.Users;
 
 namespace HiFive.Application.Contracts;
 

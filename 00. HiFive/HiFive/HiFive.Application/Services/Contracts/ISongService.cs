@@ -1,11 +1,11 @@
 ﻿using HiFive.Application.DTOs.Song;
-using HiFive.Domain.Models.Music;
 
 namespace HiFive.Application.Services.Contracts;
 public interface ISongService
 {
 	Task<SongDto> CreateSongAsync(string title, Guid artistId, TimeSpan duration,
 		List<Guid> genreIds, DateTime releaseDate, byte[] data);
+
 	Task<SongDto> GetSongByIdAsync(Guid songId);
 	Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName);
 	Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId);

@@ -1,6 +1,5 @@
 ﻿using HiFive.Application.Contracts;
 using HiFive.Application.DTOs.Song;
-using HiFive.Application.Services;
 using HiFive.Application.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -87,7 +86,6 @@ public class SongService : ISongService
 	{
 		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
-		
 
 		return SongDetailsDto.FromEntity(song);
 	}
@@ -101,7 +99,6 @@ public class SongService : ISongService
 			.Where(s => s.ArtistId == artistId)
 			.ToListAsync();
 
-		
 		return songs.Select(SongDto.FromEntity);
 	}
 

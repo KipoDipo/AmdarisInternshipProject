@@ -1,7 +1,4 @@
-﻿using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Users;
-
-namespace HiFive.Application.DTOs.Playlist;
+﻿namespace HiFive.Application.DTOs.Playlist;
 
 public class PlaylistDto
 {

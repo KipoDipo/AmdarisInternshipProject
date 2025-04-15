@@ -55,5 +55,6 @@ public class UnitOfWork : IUnitOfWork
 	public void Dispose()
 	{
 		Context?.Dispose();
+		GC.SuppressFinalize(this);
 	}
 }
