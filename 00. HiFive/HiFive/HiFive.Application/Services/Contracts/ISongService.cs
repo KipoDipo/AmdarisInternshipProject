@@ -3,8 +3,8 @@
 namespace HiFive.Application.Services.Contracts;
 public interface ISongService
 {
-	Task<SongDto> CreateSongAsync(string title, Guid artistId, TimeSpan duration,
-		List<Guid> genreIds, DateTime releaseDate, byte[] data);
+	Task<SongDto> CreateSongAsync(string title, Guid artistId, Guid? albumId, uint duration,
+		List<Guid> genreIds, DateTime releaseDate, string data);
 
 	Task<SongDto> GetSongByIdAsync(Guid songId);
 	Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName);

@@ -28,18 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 	public DbSet<Title> Titles { get; set; }
 	#endregion
 
-	//public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-	//	: base(options)
-	//{
-	//}
-
-	public ApplicationDbContext()
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		: base(options)
 	{
-	}
-
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	{
-		optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=testing_grounds;Integrated Security=True;Encrypt=False");
 	}
 
 	protected override void OnModelCreating(ModelBuilder builder)

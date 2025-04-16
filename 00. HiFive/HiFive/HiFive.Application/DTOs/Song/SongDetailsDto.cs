@@ -4,9 +4,9 @@ public class SongDetailsDto
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; } = null!;
-	public TimeSpan Duration { get; set; }
+	public uint Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
-	public ICollection<Domain.Models.Music.Genre> Genres { get; set; } = null!;
+	public List<Guid> GenreIds { get; set; } = null!;
 	public Guid ArtistId { get; set; }
 
 	public static SongDetailsDto FromEntity(Domain.Models.Music.Song song)
@@ -17,7 +17,7 @@ public class SongDetailsDto
 			Title = song.Title,
 			Duration = song.Duration,
 			ReleaseDate = song.ReleaseDate,
-			Genres = song.Genres,
+			GenreIds = song.Genres.Select(g => g.Id).ToList(),
 			ArtistId = song.ArtistId,
 		};
 	}

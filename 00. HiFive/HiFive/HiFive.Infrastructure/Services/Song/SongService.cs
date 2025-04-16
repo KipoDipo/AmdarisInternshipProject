@@ -14,14 +14,11 @@ public class SongService : ISongService
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<SongDto> CreateSongAsync(string title, Guid artistId, TimeSpan duration,
-		List<Guid> genreIds, DateTime releaseDate, byte[] data)
+	public async Task<SongDto> CreateSongAsync(string title, Guid artistId, Guid? albumId, uint duration,
+		List<Guid> genreIds, DateTime releaseDate, string data)
 	{
 		if (string.IsNullOrWhiteSpace(title))
 			throw new ArgumentException("Song title cannot be empty.", nameof(title));
-
-		if (duration <= TimeSpan.Zero)
-			throw new ArgumentException("Song duration must be greater than zero.", nameof(duration));
 
 		if (data == null || data.Length == 0)
 			throw new ArgumentNullException(nameof(data), "Song data cannot be null or empty.");
@@ -37,6 +34,7 @@ public class SongService : ISongService
 		{
 			Title = title,
 			ArtistId = artistId,
+			AlbumId = albumId,
 			Duration = duration,
 			Genres = genres,
 			ReleaseDate = releaseDate,

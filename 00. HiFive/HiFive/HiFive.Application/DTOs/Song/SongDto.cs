@@ -6,7 +6,8 @@ public class SongDto
 
 	public required string Title { get; set; }
 	public required Guid ArtistId { get; set; }
-	public TimeSpan Duration { get; set; }
+	public Guid? AlbumId { get; set; }
+	public uint Duration { get; set; }
 
 	public static SongDto FromEntity(Domain.Models.Music.Song song)
 	{

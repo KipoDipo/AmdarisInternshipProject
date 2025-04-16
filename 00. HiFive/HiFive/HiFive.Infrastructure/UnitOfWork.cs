@@ -2,13 +2,13 @@
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Throphies;
 using HiFive.Domain.Models.Users;
-using Microsoft.EntityFrameworkCore;
+using HiFive.Infrastructure.Db;
 
 namespace HiFive.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-	public required DbContext Context { get; init; }
+	private ApplicationDbContext _context;
 
 	public IRepository<Listener> Listeners { get; }
 	public IRepository<Artist> Artists { get; }
@@ -21,9 +21,9 @@ public class UnitOfWork : IUnitOfWork
 	public IRepository<Badge> Badges { get; }
 	public IRepository<Title> Titles { get; }
 
-	public UnitOfWork(DbContext dbContext)
+	public UnitOfWork(ApplicationDbContext dbContext)
 	{
-		Context = dbContext;
+		_context = dbContext;
 		Listeners = new Repository<Listener>(dbContext);
 		Artists = new Repository<Artist>(dbContext);
 		Distributors = new Repository<Distributor>(dbContext);
@@ -38,23 +38,23 @@ public class UnitOfWork : IUnitOfWork
 
 	public async Task BeginTransactionAsync()
 	{
-		await Context.Database.BeginTransactionAsync();
+		await _context.Database.BeginTransactionAsync();
 	}
 
 	public async Task CommitTransactionAsync()
 	{
-		await Context.Database.CommitTransactionAsync();
-		await Context.SaveChangesAsync();
+		await _context.Database.CommitTransactionAsync();
+		await _context.SaveChangesAsync();
 	}
 
 	public async Task RollbackTransactionAsync()
 	{
-		await Context.Database.RollbackTransactionAsync();
+		await _context.Database.RollbackTransactionAsync();
 	}
 
 	public void Dispose()
 	{
-		Context?.Dispose();
+		_context?.Dispose();
 		GC.SuppressFinalize(this);
 	}
 }

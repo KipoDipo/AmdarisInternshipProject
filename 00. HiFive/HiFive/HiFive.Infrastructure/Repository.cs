@@ -16,6 +16,8 @@ public class Repository<T> : IRepository<T> where T : class, IDeletable
 
 	public async Task AddAsync(T entity)
 	{
+		entity.CreatedOn = DateTime.Now;
+		entity.UpdatedOn = DateTime.Now;
 		await _dbContext.AddAsync(entity);
 	}
 

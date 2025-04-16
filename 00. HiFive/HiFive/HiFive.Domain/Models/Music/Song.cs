@@ -8,10 +8,10 @@ public class Song : IDeletable
 	public Guid Id { get; set; }
 
 	public required string Title { get; set; }
-	public TimeSpan Duration { get; set; }
+	public uint Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
 	public ICollection<Genre> Genres { get; set; } = null!;
-	public byte[] Data { get; set; } = null!; // Azure Blob Storage
+	public string Data { get; set; } = null!; // Azure Blob Storage
 
 	public Guid ArtistId { get; set; }
 	public Artist Artist { get; set; } = null!;
