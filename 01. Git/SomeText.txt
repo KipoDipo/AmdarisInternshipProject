@@ -1,3 +1,0 @@
-Hello, world! I am a changed text file... But I am changed from both the original place and somewhere else!!!
-
-I sure hope no one deletes this file...
