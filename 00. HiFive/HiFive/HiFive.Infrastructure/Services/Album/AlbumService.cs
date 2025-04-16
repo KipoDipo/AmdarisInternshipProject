@@ -14,20 +14,30 @@ public class AlbumService : IAlbumService
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<AlbumDto> CreateAlbumAsync(string title, DateTime releaseDate, Guid artistId)
+	public async Task<AlbumDto> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
 	{
-		if (string.IsNullOrWhiteSpace(title))
-			throw new ArgumentException("Album title cannot be empty.", nameof(title));
+		if (string.IsNullOrWhiteSpace(albumCreateDto.Title))
+			throw new ArgumentException("Title cannot be empty.", nameof(albumCreateDto.Title));
 
-		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		var artist = await _unitOfWork.Artists.GetByIdAsync(albumCreateDto.ArtistId);
 		Validator.Validate(artist);
 
 		var album = new Domain.Models.Music.Album
 		{
-			Title = title,
-			ReleaseDate = releaseDate,
-			ArtistId = artistId
+			Title = albumCreateDto.Title,
+			Description = albumCreateDto.Description,
+			ReleaseDate = albumCreateDto.ReleaseDate,
+			ArtistId = albumCreateDto.ArtistId,
 		};
+
+		foreach (var songId in albumCreateDto.SongIds)
+		{
+			var song = await _unitOfWork.Songs.GetByIdAsync(songId);
+			Validator.Validate(song);
+
+			album.Songs.Add(song);
+		}
+
 		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.Albums.AddAsync(album);
 		await _unitOfWork.CommitTransactionAsync();
@@ -40,6 +50,14 @@ public class AlbumService : IAlbumService
 		Validator.Validate(album);
 
 		return AlbumDto.FromEntity(album);
+	}
+
+	public async Task<AlbumDetailsDto> GetAlbumDetailsByIdAsync(Guid albumId)
+	{
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
+		Validator.Validate(album);
+
+		return AlbumDetailsDto.FromEntity(album);
 	}
 
 	public async Task<IEnumerable<AlbumDto>> GetAllAlbumsByArtistAsync(Guid artistId)
@@ -82,16 +100,16 @@ public class AlbumService : IAlbumService
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
-	public async Task UpdateAlbumAsync(Guid albumId, string title, DateTime releaseDate)
+	public async Task UpdateAlbumAsync(AlbumUpdateDto albumUpdateDto)
 	{
-		if (string.IsNullOrWhiteSpace(title))
-			throw new ArgumentException("Album title cannot be empty.", nameof(title));
+		if (string.IsNullOrWhiteSpace(albumUpdateDto.Title))
+			throw new ArgumentException("Album title cannot be empty.", nameof(albumUpdateDto.Title));
 
-		var album = await _unitOfWork.Albums.GetByIdAsync(albumId);
+		var album = await _unitOfWork.Albums.GetByIdAsync(albumUpdateDto.Id);
 		Validator.Validate(album);
 
-		album.Title = title;
-		album.ReleaseDate = releaseDate;
+		album.Title = albumUpdateDto.Title ?? album.Title;
+		album.Description = albumUpdateDto.Description ?? album.Description;
 
 		await _unitOfWork.BeginTransactionAsync();
 		_unitOfWork.Albums.Update(album);

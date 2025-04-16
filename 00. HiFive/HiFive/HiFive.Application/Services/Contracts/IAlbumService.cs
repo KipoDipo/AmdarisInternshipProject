@@ -4,11 +4,12 @@ namespace HiFive.Application.Services.Contracts;
 
 public interface IAlbumService
 {
-	Task<AlbumDto> CreateAlbumAsync(string title, DateTime releaseDate, Guid artistId);
+	Task<AlbumDto> CreateAlbumAsync(AlbumCreateDto albumCreateDto);
 	Task<AlbumDto> GetAlbumByIdAsync(Guid albumId);
+	Task<AlbumDetailsDto> GetAlbumDetailsByIdAsync(Guid albumId);
 	Task<IEnumerable<AlbumDto>> GetAllAlbumsByArtistAsync(Guid artistId);
 	Task<IEnumerable<AlbumDto>> GetAllAlbumsByPartialTitleAsync(string partialTitle);
 	Task AddSongToAlbumAsync(Guid albumId, Guid songId);
-	Task UpdateAlbumAsync(Guid albumId, string title, DateTime releaseDate);
+	Task UpdateAlbumAsync(AlbumUpdateDto albumUpdateDto);
 	Task DeleteAlbumAsync(Guid albumId);
 }
