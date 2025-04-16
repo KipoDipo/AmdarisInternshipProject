@@ -1,13 +1,15 @@
 using HiFive.Application.Contracts;
 using HiFive.Application.Services.Contracts;
 using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
 using HiFive.Infrastructure.Services.Album;
+using HiFive.Infrastructure.Services.Artist;
 using HiFive.Infrastructure.Services.Genre;
+using HiFive.Infrastructure.Services.Listener;
 using HiFive.Infrastructure.Services.Playlist;
 using HiFive.Infrastructure.Services.Song;
-using HiFive.Presentation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,10 +31,15 @@ builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<IListenerService, ListenerService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+
+builder.Services.AddScoped<BaseUserManager<Listener>>();
+builder.Services.AddScoped<BaseUserManager<Artist>>();
 
 var app = builder.Build();
 

@@ -15,6 +15,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 		builder.Property(b => b.LastName)
 			.HasColumnType("nvarchar(32)");
 
+		builder.Property(b => b.DisplayName)
+			.HasColumnType("nvarchar(32)");
+
 		builder.Property(b => b.Email)
 			.HasColumnType("varchar(128)");
 

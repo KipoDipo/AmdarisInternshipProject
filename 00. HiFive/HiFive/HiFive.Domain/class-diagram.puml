@@ -32,6 +32,7 @@ interface IDeletable
 
 abstract User
 {
+    +displayName: string
     +firstName: string
     +lastName?: string
     +bio? : string
@@ -90,7 +91,7 @@ package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD
         +duration: TimeSpan
         +releaseDate: DateTime
         +genres: List<Genre>
-        +data: byte[]
+        +data: string
         +cover: byte[]
         +createdBy: Artist
     }

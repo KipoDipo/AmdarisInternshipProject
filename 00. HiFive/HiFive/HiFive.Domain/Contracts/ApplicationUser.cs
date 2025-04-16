@@ -4,6 +4,7 @@ namespace HiFive.Domain.Contracts;
 
 public abstract class ApplicationUser : IdentityUser<Guid>, IDeletable
 {
+	public string DisplayName { get; set; } = null!;
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public string? Bio { get; set; }
