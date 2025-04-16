@@ -10,5 +10,5 @@ public interface IListenerService
 	Task<IEnumerable<ListenerDto>> GetListenersByPartialNameAsync(string partialName);
 	Task<ListenerDetailsDto> GetListenerDetailsByIdAsync(Guid listenerId);
 
-	Task<ListenerDto> UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto);
+	Task UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto);
 }

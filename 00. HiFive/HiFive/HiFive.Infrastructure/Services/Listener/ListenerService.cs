@@ -61,7 +61,7 @@ public class ListenerService : IListenerService
 		return listeners.Select(ListenerDto.FromEntity).ToList();
 	}
 
-	public async Task<ListenerDto> UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto)
+	public async Task UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto)
 	{
 		var listener = await _userManager.Users
 			.FirstOrDefaultAsync(a => a.Id == listenerUpdateDto.Id);
@@ -74,7 +74,5 @@ public class ListenerService : IListenerService
 		listener.ProfilePicture = listenerUpdateDto.ProfilePicture ?? listener.ProfilePicture;
 
 		await _userManager.UpdateAsync(listener);
-
-		return ListenerDto.FromEntity(listener);
 	}
 }

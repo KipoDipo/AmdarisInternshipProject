@@ -42,6 +42,7 @@ public class ArtistController : ControllerBase
 	[HttpPut]
 	public async Task<IActionResult> Update(ArtistUpdateDto artist)
 	{
-		return Ok(await _artistService.UpdateArtistAsync(artist));
+		await _artistService.UpdateArtistAsync(artist);
+		return NoContent();
 	}
 }

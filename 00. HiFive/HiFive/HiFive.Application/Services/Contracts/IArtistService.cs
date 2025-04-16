@@ -10,7 +10,7 @@ public interface IArtistService
 	Task<IEnumerable<ArtistDto>> GetArtistsByPartialNameAsync(string partialName);
 	Task<ArtistDetailsDto> GetArtistDetailsByIdAsync(Guid artistId);
 
-	Task<ArtistDto> UpdateArtistAsync(ArtistUpdateDto artistUpdateDto);
+	Task UpdateArtistAsync(ArtistUpdateDto artistUpdateDto);
 	
 	Task DeleteArtistAsync(Guid artistId);
 }

@@ -48,7 +48,8 @@ public class SongController : ControllerBase
 	[HttpPut]
 	public async Task<IActionResult> Update(SongUpdateDto song)
 	{
-		return Ok(await _songService.UpdateSongAsync(song.Id, song.Title, song.ReleaseDate));
+		await _songService.UpdateSongAsync(song.Id, song.Title, song.ReleaseDate);
+		return NoContent();
 	}
 
 	[HttpGet("liked/{listenerId}")]

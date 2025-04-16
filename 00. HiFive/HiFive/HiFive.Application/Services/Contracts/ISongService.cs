@@ -11,7 +11,7 @@ public interface ISongService
 	Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId);
 
 	Task<SongDetailsDto> GetSongDetailsByIdAsync(Guid songId);
-	Task<SongDto> UpdateSongAsync(Guid songId, string title, DateTime releaseDate); // TODO: Refactor
+	Task UpdateSongAsync(Guid songId, string title, DateTime releaseDate); // TODO: Refactor
 
 
 	Task<IEnumerable<SongDto>> GetListenerLikedSongs(Guid listenerId);

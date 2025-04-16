@@ -71,7 +71,7 @@ public class ArtistService : IArtistService
 		return artists.Select(ArtistDto.FromEntity);
 	}
 
-	public async Task<ArtistDto> UpdateArtistAsync(ArtistUpdateDto artistUpdateDto)
+	public async Task UpdateArtistAsync(ArtistUpdateDto artistUpdateDto)
 	{
 		var artist = await _userManager.Users
 			.FirstOrDefaultAsync(a => a.Id == artistUpdateDto.Id);
@@ -85,6 +85,5 @@ public class ArtistService : IArtistService
 
 		await _userManager.UpdateAsync(artist);
 		//await _userManager.UpdateSecurityStampAsync(artist); ??
-		return ArtistDto.FromEntity(artist);
 	}
 }

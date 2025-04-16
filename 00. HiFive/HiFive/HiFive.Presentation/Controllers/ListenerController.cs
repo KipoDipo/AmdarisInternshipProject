@@ -41,6 +41,7 @@ public class ListenerController : ControllerBase
 	[HttpPut]
 	public async Task<IActionResult> Update(ListenerUpdateDto listener)
 	{
-		return Ok(await _listenerService.UpdateListenerAsync(listener));
+		await _listenerService.UpdateListenerAsync(listener);
+		return NoContent();
 	}
 }
