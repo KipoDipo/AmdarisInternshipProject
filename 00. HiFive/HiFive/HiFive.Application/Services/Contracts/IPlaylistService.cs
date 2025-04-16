@@ -5,8 +5,9 @@ namespace HiFive.Application.Services.Contracts;
 
 public interface IPlaylistService
 {
-	Task<PlaylistDto> CreatePlaylistAsync(string name, string description, Guid userId);
+	Task<PlaylistDto> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto);
 	Task<PlaylistDto> GetPlaylistByIdAsync(Guid playlistId);
+	Task<PlaylistDetailsDto> GetPlaylistDetailsByIdAsync(Guid playlistId);
 	Task<IEnumerable<PlaylistDto>> GetPlaylistsByUserIdAsync(Guid userId);
 
 	Task UpdatePlaylistAsync(Guid playlistId, string name, string description);

@@ -15,19 +15,19 @@ public class PlaylistService : IPlaylistService
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<PlaylistDto> CreatePlaylistAsync(string name, string description, Guid userId)
+	public async Task<PlaylistDto> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto)
 	{
-		if (string.IsNullOrWhiteSpace(name))
-			throw new ArgumentException("Playlist name cannot be empty.", nameof(name));
+		if (string.IsNullOrWhiteSpace(playlistCreateDto.Title))
+			throw new ArgumentException("Playlist name cannot be empty.", nameof(playlistCreateDto.Title));
 
-		var user = await _unitOfWork.Listeners.GetByIdAsync(userId);
+		var user = await _unitOfWork.Listeners.GetByIdAsync(playlistCreateDto.OwnerId);
 		Validator.Validate(user);
 
 		var playlist = new Domain.Models.Music.Playlist
 		{
-			Title = name,
-			Description = description,
-			OwnerId = userId,
+			Title = playlistCreateDto.Title,
+			Description = playlistCreateDto.Description,
+			OwnerId = playlistCreateDto.OwnerId,
 		};
 
 		await _unitOfWork.BeginTransactionAsync();
@@ -40,10 +40,17 @@ public class PlaylistService : IPlaylistService
 	public async Task<PlaylistDto> GetPlaylistByIdAsync(Guid playlistId)
 	{
 		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
-
 		Validator.Validate(playlist);
 
 		return PlaylistDto.FromEntity(playlist);
+	}
+
+	public async Task<PlaylistDetailsDto> GetPlaylistDetailsByIdAsync(Guid playlistId)
+	{
+		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
+		Validator.Validate(playlist);
+
+		return PlaylistDetailsDto.FromEntity(playlist);
 	}
 
 	public async Task<IEnumerable<PlaylistDto>> GetPlaylistsByUserIdAsync(Guid userId)
@@ -66,8 +73,8 @@ public class PlaylistService : IPlaylistService
 		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
 		Validator.Validate(playlist);
 
-		playlist.Title = name;
-		playlist.Description = description;
+		playlist.Title = name ?? playlist.Title;
+		playlist.Description = description ?? playlist.Description;
 
 		await _unitOfWork.BeginTransactionAsync();
 		_unitOfWork.Playlists.Update(playlist);
@@ -125,5 +132,4 @@ public class PlaylistService : IPlaylistService
 		
 		return songs.Select(SongDto.FromEntity);
 	}
-
 }
