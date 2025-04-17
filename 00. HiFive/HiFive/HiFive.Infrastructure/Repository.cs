@@ -21,12 +21,12 @@ public class Repository<T> : IRepository<T> where T : class, IDeletable
 		await _dbContext.AddAsync(entity);
 	}
 
-	public IQueryable<T> GetAllAsync()
+	public IQueryable<T> GetAll()
 	{
 		return _dbContext.Set<T>().AsQueryable();
 	}
 
-	public IQueryable<T> GetAllNoTrackingAsync()
+	public IQueryable<T> GetAllNoTracking()
 	{
 		return _dbContext.Set<T>().AsNoTracking().AsQueryable();
 	}

@@ -33,7 +33,7 @@ public class GenreService : IGenreService
 
 	public async Task<IEnumerable<GenreDto>> GetAllGenresAsync()
 	{
-		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+		var genres = await _unitOfWork.Genres.GetAllNoTracking()
 			.ToListAsync();
 
 		return genres.Select(GenreDto.FromEntity);
@@ -45,7 +45,7 @@ public class GenreService : IGenreService
 		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		Validator.Validate(song);
 
-		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+		var genres = await _unitOfWork.Genres.GetAllNoTracking()
 			.Where(g => g.Songs.Any(s => s.Id == songId))
 			.ToListAsync();
 
@@ -57,7 +57,7 @@ public class GenreService : IGenreService
 		if (string.IsNullOrWhiteSpace(partialName))
 			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
 
-		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+		var genres = await _unitOfWork.Genres.GetAllNoTracking()
 			.Where(g => g.Name.Contains(partialName, StringComparison.CurrentCultureIgnoreCase))
 			.ToListAsync();
 

@@ -58,7 +58,7 @@ public class PlaylistService : IPlaylistService
 		var user = await _unitOfWork.Listeners.GetByIdAsync(userId);
 		Validator.Validate(user);
 
-		var playlists = await _unitOfWork.Playlists.GetAllNoTrackingAsync()
+		var playlists = await _unitOfWork.Playlists.GetAllNoTracking()
 			.Where(p => p.OwnerId == userId)
 			.ToListAsync();
 
@@ -126,7 +126,7 @@ public class PlaylistService : IPlaylistService
 		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
 		Validator.Validate(playlist);
 
-		var songs = await _unitOfWork.Songs.GetAllNoTrackingAsync()
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Where(s => playlist.Songs.Contains(s) && !s.IsDeleted) // TODO: Query Filters
 			.ToListAsync();
 		

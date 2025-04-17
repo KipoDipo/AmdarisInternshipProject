@@ -65,7 +65,7 @@ public class AlbumService : IAlbumService
 		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
-		var albums = await _unitOfWork.Albums.GetAllNoTrackingAsync()
+		var albums = await _unitOfWork.Albums.GetAllNoTracking()
 			.Where(a => a.ArtistId == artistId)
 			.ToListAsync();
 
@@ -77,7 +77,7 @@ public class AlbumService : IAlbumService
 		if (string.IsNullOrWhiteSpace(partialTitle))
 			throw new ArgumentException("Partial title cannot be empty.", nameof(partialTitle));
 
-		var albums = await _unitOfWork.Albums.GetAllNoTrackingAsync()
+		var albums = await _unitOfWork.Albums.GetAllNoTracking()
 			.Where(a => a.Title.Contains(partialTitle))
 			.ToListAsync();
 

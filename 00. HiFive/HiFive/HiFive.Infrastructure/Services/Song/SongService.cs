@@ -26,7 +26,7 @@ public class SongService : ISongService
 		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
-		var genres = await _unitOfWork.Genres.GetAllNoTrackingAsync()
+		var genres = await _unitOfWork.Genres.GetAllNoTracking()
 			.Where(g => genreIds.Contains(g.Id))
 			.ToListAsync();
 
@@ -61,7 +61,7 @@ public class SongService : ISongService
 		if (string.IsNullOrWhiteSpace(partialName))
 			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
 		
-		var songs = await _unitOfWork.Songs.GetAllAsync()
+		var songs = await _unitOfWork.Songs.GetAll()
 			.Where(s => s.Title.Contains(partialName, StringComparison.CurrentCultureIgnoreCase))
 			.ToListAsync();
 
@@ -73,7 +73,7 @@ public class SongService : ISongService
 		var genre = await _unitOfWork.Genres.GetByIdAsync(genreId);
 		Validator.Validate(genre);
 
-		var songs = await _unitOfWork.Songs.GetAllAsync()
+		var songs = await _unitOfWork.Songs.GetAll()
 			.Where(s => s.Genres.Any(g => g.Id == genreId))
 			.ToListAsync();
 
@@ -93,7 +93,7 @@ public class SongService : ISongService
 		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
 		Validator.Validate(artist);
 
-		var songs = await _unitOfWork.Songs.GetAllNoTrackingAsync()
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Where(s => s.ArtistId == artistId)
 			.ToListAsync();
 
@@ -121,7 +121,7 @@ public class SongService : ISongService
 		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);
 		Validator.Validate(listener);
 
-		var songs = await _unitOfWork.Songs.GetAllNoTrackingAsync()
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Where(s => s.LikedBy.Any(l => l.Id == listenerId))
 			.ToListAsync();
 
