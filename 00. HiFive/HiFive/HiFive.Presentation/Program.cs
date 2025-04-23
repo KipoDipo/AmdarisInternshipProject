@@ -7,7 +7,7 @@ using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
-using HiFive.Presentation.Controllers.Middleware;
+using HiFive.Presentation.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

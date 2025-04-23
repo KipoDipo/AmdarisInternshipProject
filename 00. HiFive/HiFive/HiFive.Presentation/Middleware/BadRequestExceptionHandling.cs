@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace HiFive.Presentation.Controllers.Middleware;
+namespace HiFive.Presentation.Middleware;
 
 public class BadRequestExceptionHandling
 {
