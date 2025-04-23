@@ -6,6 +6,7 @@ public class SongCreateDto
 	public uint Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
 	public List<Guid> GenreIds { get; set; } = null!;
+	public byte[]? CoverImage { get; set; }
 
 	public string Data { get; set; } = null!;
 

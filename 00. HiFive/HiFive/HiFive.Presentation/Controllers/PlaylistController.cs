@@ -1,5 +1,5 @@
-﻿using HiFive.Application.DTOs.Playlist;
-using HiFive.Application.Services.Contracts;
+﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Playlist;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -42,7 +42,7 @@ public class PlaylistController : ControllerBase
 	[HttpPut]
 	public async Task<IActionResult> Update(PlaylistUpdateDto playlist)
 	{
-		await _playlistService.UpdatePlaylistAsync(playlist.Id, playlist.Title, playlist.Description);
+		await _playlistService.UpdatePlaylistAsync(playlist);
 		return NoContent();
 	}
 }

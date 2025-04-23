@@ -6,4 +6,5 @@ public class SongUpdateDto
 
 	public required string Title { get; set; }
 	public DateTime ReleaseDate { get; set; }
+	public byte[]? CoverImage { get; set; }
 }

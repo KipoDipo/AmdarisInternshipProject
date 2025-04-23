@@ -1,4 +1,5 @@
-﻿using HiFive.Application.Services.Contracts;
+﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Genre;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -15,9 +16,9 @@ public class GenreController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> CreateGenre(string name)
+	public async Task<IActionResult> CreateGenre(GenreCreateDto genre)
 	{
-		return Ok(await _genreService.CreateGenreAsync(name));
+		return Ok(await _genreService.CreateGenreAsync(genre));
 	}
 
 	[HttpGet]
@@ -45,9 +46,9 @@ public class GenreController : ControllerBase
 	}
 
 	[HttpPut("id/{id}")]
-	public async Task<IActionResult> UpdateGenre(Guid id, string name)
+	public async Task<IActionResult> UpdateGenre(GenreDto genre)
 	{
-		await _genreService.UpdateGenreAsync(id, name);
+		await _genreService.UpdateGenreAsync(genre);
 		return NoContent();
 	}
 

@@ -1,4 +1,4 @@
-﻿using HiFive.Application.Contracts;
+﻿using HiFive.Application.UnitOfWork;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Users;
 

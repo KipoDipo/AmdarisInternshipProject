@@ -8,6 +8,7 @@ public class SongDto
 	public required Guid ArtistId { get; set; }
 	public Guid? AlbumId { get; set; }
 	public uint Duration { get; set; }
+	public byte[]? CoverImage { get; set; }
 
 	public static SongDto FromEntity(Domain.Models.Music.Song song)
 	{

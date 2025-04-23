@@ -1,20 +1,15 @@
 //#define USE_INMEMORY_DB
 using HiFive.Application.Contracts;
-using HiFive.Application.Services.Contracts;
+using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.Services;
+using HiFive.Application.UnitOfWork;
 using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
-using HiFive.Infrastructure.Services.Album;
-using HiFive.Infrastructure.Services.Artist;
-using HiFive.Infrastructure.Services.Genre;
-using HiFive.Infrastructure.Services.Listener;
-using HiFive.Infrastructure.Services.Playlist;
-using HiFive.Infrastructure.Services.Song;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -37,6 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IValidator, Validator>();
 builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();

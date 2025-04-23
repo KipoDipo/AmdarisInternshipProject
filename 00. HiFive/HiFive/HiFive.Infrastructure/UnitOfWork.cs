@@ -1,8 +1,9 @@
-﻿using HiFive.Application.Contracts;
-using HiFive.Domain.Models.Music;
-using HiFive.Domain.Models.Throphies;
+﻿using HiFive.Application.Contracts.Repositories;
+using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure.Db;
+using HiFive.Infrastructure.Repositories;
 
 namespace HiFive.Infrastructure;
 
@@ -10,30 +11,30 @@ public class UnitOfWork : IUnitOfWork
 {
 	private ApplicationDbContext _context;
 
-	public IRepository<Listener> Listeners { get; }
-	public IRepository<Artist> Artists { get; }
-	public IRepository<Distributor> Distributors { get; }
-	public IRepository<Admin> Admins { get; }
-	public IRepository<Playlist> Playlists { get; }
-	public IRepository<Song> Songs { get; }
-	public IRepository<Genre> Genres { get; }
-	public IRepository<Album> Albums { get; }
-	public IRepository<Badge> Badges { get; }
-	public IRepository<Title> Titles { get; }
+	public IListenerRepository Listeners { get; }
+	public IArtistRepository Artists { get; }
+	public IDistributorRepository Distributors { get; }
+	public IAdminRepository Admins { get; }
+	public IPlaylistRepository Playlists { get; }
+	public ISongRepository Songs { get; }
+	public IGenreRepository Genres { get; }
+	public IAlbumRepository Albums { get; }
+	public IBadgeRepository Badges { get; }
+	public ITitleRepository Titles { get; }
 
-	public UnitOfWork(ApplicationDbContext dbContext)
+	public UnitOfWork(ApplicationDbContext dbContext, BaseUserManager<Listener> _listenerManager, BaseUserManager<Artist> _artistManager)
 	{
 		_context = dbContext;
-		Listeners = new Repository<Listener>(dbContext);
-		Artists = new Repository<Artist>(dbContext);
-		Distributors = new Repository<Distributor>(dbContext);
-		Admins = new Repository<Admin>(dbContext);
-		Playlists = new Repository<Playlist>(dbContext);
-		Songs = new Repository<Song>(dbContext);
-		Genres = new Repository<Genre>(dbContext);
-		Albums = new Repository<Album>(dbContext);
-		Badges = new Repository<Badge>(dbContext);
-		Titles = new Repository<Title>(dbContext);
+		Listeners = new ListenerRepository(dbContext, _listenerManager);
+		Artists = new ArtistRepository(dbContext, _artistManager);
+		Distributors = new DistributorRepository(dbContext);
+		Admins = new AdminRepository(dbContext);
+		Playlists = new PlaylistRepository(dbContext);
+		Songs = new SongRepository(dbContext);
+		Genres = new GenreRepository(dbContext);
+		Albums = new AlbumRepository(dbContext);
+		Badges = new BadgeRepository(dbContext);
+		Titles = new TitleRepository(dbContext);
 	}
 
 	public async Task BeginTransactionAsync()

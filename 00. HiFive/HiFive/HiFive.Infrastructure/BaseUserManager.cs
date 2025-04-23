@@ -8,7 +8,7 @@ public class BaseUserManager<T> where T : ApplicationUser, new()
 {
 	private readonly UserManager<ApplicationUser> _userManager;
 
-	public IQueryable<T> Users => _userManager.Users.OfType<T>();
+	public virtual IQueryable<T> Users => _userManager.Users.OfType<T>();
 
 	public BaseUserManager(UserManager<ApplicationUser> userManager)
 	{

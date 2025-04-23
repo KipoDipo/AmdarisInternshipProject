@@ -15,7 +15,7 @@ public class ListenerDetailsDto
 
 	public Guid? EquippedBadgeId { get; set; }
 	public List<Guid> BadgeIds { get; set; } = [];
-	
+
 	public Guid? EquippedTitleId { get; set; }
 	public List<Guid> TitleIds { get; set; } = [];
 

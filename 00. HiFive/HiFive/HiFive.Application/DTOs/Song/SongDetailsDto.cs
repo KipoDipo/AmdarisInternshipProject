@@ -8,6 +8,7 @@ public class SongDetailsDto
 	public DateTime ReleaseDate { get; set; }
 	public List<Guid> GenreIds { get; set; } = null!;
 	public Guid ArtistId { get; set; }
+	public string? CoverImage { get; set; }
 
 	public static SongDetailsDto FromEntity(Domain.Models.Music.Song song)
 	{

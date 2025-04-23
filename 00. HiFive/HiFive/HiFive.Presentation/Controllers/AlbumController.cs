@@ -1,5 +1,5 @@
-﻿using HiFive.Application.DTOs.Album;
-using HiFive.Application.Services.Contracts;
+﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Album;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;

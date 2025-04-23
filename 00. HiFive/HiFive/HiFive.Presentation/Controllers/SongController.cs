@@ -1,5 +1,5 @@
-﻿using HiFive.Application.DTOs.Song;
-using HiFive.Application.Services.Contracts;
+﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Song;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -18,7 +18,7 @@ public class SongController : ControllerBase
 	[HttpPost]
 	public async Task<IActionResult> Create(SongCreateDto song)
 	{
-		return Ok(await _songService.CreateSongAsync(song.Title, song.ArtistId, song.AlbumId, song.Duration, song.GenreIds, song.ReleaseDate, song.Data));
+		return Ok(await _songService.CreateSongAsync(song));
 	}
 
 	[HttpGet("id/{id}")]
@@ -48,7 +48,7 @@ public class SongController : ControllerBase
 	[HttpPut]
 	public async Task<IActionResult> Update(SongUpdateDto song)
 	{
-		await _songService.UpdateSongAsync(song.Id, song.Title, song.ReleaseDate);
+		await _songService.UpdateSongAsync(song);
 		return NoContent();
 	}
 
