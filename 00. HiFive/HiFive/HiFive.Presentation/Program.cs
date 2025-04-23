@@ -7,11 +7,17 @@ using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
-
+using HiFive.Presentation.Controllers.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration()
+	.WriteTo.Console()
+	.CreateLogger();
+
+builder.Host.UseSerilog();
 
 #if (USE_INMEMORY_DB)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -64,6 +70,8 @@ using (var scope = app.Services.CreateScope())
 	var artistManager = scope.ServiceProvider.GetRequiredService<BaseUserManager<Artist>>();
 	await DbSeeder.Seed(unit, listenerManager, artistManager);
 }
+
+app.UseMiddleware<BadRequestExceptionHandling>();
 
 app.UseHttpsRedirection();
 
