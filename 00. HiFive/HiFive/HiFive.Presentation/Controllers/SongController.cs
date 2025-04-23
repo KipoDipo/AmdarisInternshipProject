@@ -27,6 +27,12 @@ public class SongController : ControllerBase
 		return Ok(await _songService.GetSongByIdAsync(id));
 	}
 
+	[HttpGet("details/{id}")]
+	public async Task<IActionResult> GetDetailsById(Guid id)
+	{
+		return Ok(await _songService.GetSongDetailsByIdAsync(id));
+	}
+
 	[HttpGet("name/{partialName}")]
 	public async Task<IActionResult> GetByPartialName(string partialName)
 	{
@@ -39,10 +45,16 @@ public class SongController : ControllerBase
 		return Ok(await _songService.GetAllSongsByGenreAsync(genreId));
 	}
 
-	[HttpGet("details/{id}")]
-	public async Task<IActionResult> GetDetailsById(Guid id)
+	[HttpGet("playlist/{id}")]
+	public async Task<IActionResult> GetSongsByPlaylistId(Guid id)
 	{
-		return Ok(await _songService.GetSongDetailsByIdAsync(id));
+		return Ok(await _songService.GetAllSongsByPlaylistIdAsync(id));
+	}
+
+	[HttpGet("album/{id}")]
+	public async Task<IActionResult> GetSongsByAlbumId(Guid id)
+	{
+		return Ok(await _songService.GetAllSongsByAlbumIdAsync(id));
 	}
 
 	[HttpPut]

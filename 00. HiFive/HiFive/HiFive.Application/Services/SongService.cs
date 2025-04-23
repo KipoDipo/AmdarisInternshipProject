@@ -120,10 +120,22 @@ public class SongService : ISongService
 		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);
 		_validator.Validate(listener);
 
-		var songs = await _unitOfWork.Songs.GetAllNoTracking()
-			.Where(s => s.LikedBy.Any(l => l.Id == listenerId))
-			.ToListAsync();
+		return listener.LikedSongs.Select(SongDto.FromEntity);
+	}
 
-		return songs.Select(SongDto.FromEntity);
+	public async Task<IEnumerable<SongDto>> GetAllSongsByPlaylistIdAsync(Guid playlistId)
+	{
+		var playlist = await _unitOfWork.Playlists.GetWithDetailsByIdAsync(playlistId);
+		_validator.Validate(playlist);
+
+		return playlist.Songs.Select(SongDto.FromEntity);
+	}
+
+	public async Task<IEnumerable<SongDto>> GetAllSongsByAlbumIdAsync(Guid albumId)
+	{
+		var album = await _unitOfWork.Albums.GetWithDetailsByIdAsync(albumId); // TODO: there's 1 extra join here for Artist
+		_validator.Validate(album);
+
+		return album.Songs.Select(SongDto.FromEntity);
 	}
 }

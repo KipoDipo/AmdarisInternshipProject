@@ -33,7 +33,13 @@ public class PlaylistController : ControllerBase
 		return Ok(await _playlistService.GetPlaylistByIdAsync(id));
 	}
 
-	[HttpGet("details/{id}")]
+	[HttpGet("details-id/{id}")]
+	public async Task<IActionResult> GeDetailstById(Guid id)
+	{
+		return Ok(await _playlistService.GetPlaylistDetailsByIdAsync(id));
+	}
+
+	[HttpGet("user/{id}")]
 	public async Task<IActionResult> GetPlaylistsByUserId(Guid id)
 	{
 		return Ok(await _playlistService.GetPlaylistsByUserIdAsync(id));

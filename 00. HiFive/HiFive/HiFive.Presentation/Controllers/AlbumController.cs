@@ -9,31 +9,40 @@ namespace HiFive.Presentation.Controllers;
 public class AlbumController : ControllerBase
 {
 	private readonly IAlbumService _albumService;
+	
 	public AlbumController(IAlbumService albumService)
 	{
 		_albumService = albumService;
 	}
+	
 	[HttpPost]
 	public async Task<IActionResult> Create(AlbumCreateDto album)
 	{
 		return Ok(await _albumService.CreateAlbumAsync(album));
 	}
+	
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _albumService.GetAlbumByIdAsync(id));
 	}
 
-	[HttpGet("name/{partialName}")]
-	public async Task<IActionResult> GetByPartialName(string partialName)
-	{
-		return Ok(await _albumService.GetAllAlbumsByPartialTitleAsync(partialName));
-	}
-
 	[HttpGet("details/{id}")]
 	public async Task<IActionResult> GetDetailsById(Guid id)
 	{
 		return Ok(await _albumService.GetAlbumDetailsByIdAsync(id));
+	}
+
+	[HttpGet("artist/{id}")]
+	public async Task<IActionResult> GetByArtistId(Guid id)
+	{
+		return Ok(await _albumService.GetAllAlbumsByArtistAsync(id));
+	}
+
+	[HttpGet("name/{partialName}")]
+	public async Task<IActionResult> GetByPartialName(string partialName)
+	{
+		return Ok(await _albumService.GetAllAlbumsByPartialTitleAsync(partialName));
 	}
 
 	[HttpPut]
