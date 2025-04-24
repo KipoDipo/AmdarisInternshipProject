@@ -3,6 +3,6 @@ using HiFive.Domain.Models.Users;
 
 namespace HiFive.Application.Contracts.Repositories;
 
-public interface IDistributorRepository : IRepository<Distributor>, IRegisterable<Distributor>
+public interface IDistributorRepository : IRepository<Distributor>, IRegisterable<Distributor, int>
 {
 }

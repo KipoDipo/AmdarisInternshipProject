@@ -15,8 +15,6 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 
 	public async Task AddAsync(T entity)
 	{
-		entity.CreatedOn = DateTime.Now;
-		entity.UpdatedOn = DateTime.Now;
 		await _dbContext.AddAsync(entity);
 		await _dbContext.SaveChangesAsync();
 	}
@@ -41,7 +39,6 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 
 	public async Task UpdateAsync(T entity)
 	{
-		entity.UpdatedOn = DateTime.Now;
 		_dbContext.Update(entity);
 		await _dbContext.SaveChangesAsync();
 	}
@@ -52,8 +49,7 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 		if (entity == null)
 			throw new InvalidOperationException($"Entity with id {id} not found.");
 
-		entity.IsDeleted = true;
-		entity.DeletedOn = DateTime.Now;
+		_dbContext.Remove(entity);
 		await _dbContext.SaveChangesAsync();
 	}
 

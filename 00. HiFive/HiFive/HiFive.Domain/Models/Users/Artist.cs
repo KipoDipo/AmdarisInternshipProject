@@ -3,7 +3,7 @@ using HiFive.Domain.Models.Music;
 
 namespace HiFive.Domain.Models.Users;
 
-public class Artist : ApplicationUser
+public class Artist : User
 {
 	public List<Listener> Followers { get; set; } = [];
 	public List<Album> Albums { get; set; } = [];

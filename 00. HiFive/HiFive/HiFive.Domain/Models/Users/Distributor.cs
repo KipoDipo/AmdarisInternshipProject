@@ -2,7 +2,7 @@
 
 namespace HiFive.Domain.Models.Users;
 
-public class Distributor : ApplicationUser
+public class Distributor : User
 {
 	public List<Artist> Artists { get; set; } = [];
 }

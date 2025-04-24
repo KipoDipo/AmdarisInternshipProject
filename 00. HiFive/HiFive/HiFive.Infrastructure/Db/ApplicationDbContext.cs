@@ -50,4 +50,52 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 			foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
 		}
 	}
+
+	public override int SaveChanges()
+	{
+		ApplyAuditInfo();
+		return base.SaveChanges();
+	}
+
+	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+	{
+		ApplyAuditInfo();
+		return await base.SaveChangesAsync(cancellationToken);
+	}
+
+	private void ApplyAuditInfo()
+	{
+		var entries = ChangeTracker.Entries<IDeletable>();
+
+		foreach (var entry in entries)
+		{
+			switch (entry.State)
+			{
+				case EntityState.Added:
+				{
+					entry.Entity.CreatedOn = DateTime.Now;
+					entry.Entity.UpdatedOn = DateTime.Now;
+
+					break;
+				}
+				case EntityState.Modified:
+				{
+					entry.Entity.UpdatedOn = DateTime.Now;
+
+					break;
+				}
+				case EntityState.Deleted:
+				{
+					entry.State = EntityState.Modified;
+
+					entry.Entity.IsDeleted = true;
+					entry.Entity.DeletedOn = DateTime.Now;
+					break;
+				}
+
+				default:
+					break;
+			}
+		}
+	}
 }

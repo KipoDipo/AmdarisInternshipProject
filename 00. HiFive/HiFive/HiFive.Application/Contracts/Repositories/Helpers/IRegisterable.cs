@@ -2,7 +2,7 @@
 
 namespace HiFive.Application.Contracts.Repositories.Helpers;
 
-public interface IRegisterable<T> where T : IBase
+public interface IRegisterable<T, Dto> where T : User
 {
-	Task Register(T entity, string password);
+	Task<T> Register(Dto dto);
 }

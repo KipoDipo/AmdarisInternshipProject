@@ -4,7 +4,7 @@ using HiFive.Domain.Models.Throphies;
 
 namespace HiFive.Domain.Models.Users;
 
-public class Listener : ApplicationUser
+public class Listener : User
 {
 	public List<Artist> FollowingArtists { get; set; } = [];
 

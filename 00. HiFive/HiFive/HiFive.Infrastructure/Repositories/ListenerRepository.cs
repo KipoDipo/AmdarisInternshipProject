@@ -1,22 +1,24 @@
 ﻿using HiFive.Application.Contracts.Repositories;
+using HiFive.Application.DTOs.Listener;
 using HiFive.Domain.Models.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace HiFive.Infrastructure.Repositories;
+
 public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 {
-	private readonly BaseUserManager<Listener> _listenerManager;
+	private readonly UserManager<ApplicationUser> _userManager;
 
-	public ListenerRepository(DbContext dbContext, BaseUserManager<Listener> userManager) : base(dbContext)
+	public ListenerRepository(DbContext dbContext, UserManager<ApplicationUser> userManager) : base(dbContext)
 	{
-		_listenerManager = userManager;
+		_userManager = userManager;
 	}
 
 	public async Task<IEnumerable<Listener>> GetAllByPartialName(string partialName)
 	{
 		return await _dbContext.Set<Listener>()
-			.Where(x => x.DisplayName.Contains(partialName))
+			.Where(l => l.DisplayName.Contains(partialName))
 			.ToListAsync();
 	}
 
@@ -29,8 +31,28 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			.FirstOrDefaultAsync(x => x.Id == id);
 	}
 
-	public async Task Register(Listener entity, string password)
+	public async Task<Listener> Register(ListenerCreateDto listenerCreateDto)
 	{
-		await _listenerManager.CreateAsync(entity, password);
+		ApplicationUser newListener = new()
+		{
+			UserName = listenerCreateDto.UserName,
+			Email = listenerCreateDto.Email,
+			PhoneNumber = listenerCreateDto.PhoneNumber,
+		};
+		await _userManager.CreateAsync(newListener, listenerCreateDto.Password);
+
+		var listener = new Listener()
+		{
+			Id = newListener.Id,
+			DisplayName = listenerCreateDto.DisplayName,
+			FirstName = listenerCreateDto.FirstName,
+			LastName = listenerCreateDto.LastName,
+			Bio = listenerCreateDto.Bio,
+			ProfilePicture = listenerCreateDto.ProfilePicture,
+		};
+
+		await _dbContext.AddAsync(listener);
+
+		return listener;
 	}
 }

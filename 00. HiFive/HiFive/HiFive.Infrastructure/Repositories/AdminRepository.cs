@@ -14,7 +14,7 @@ public class AdminRepository : BaseRepository<Admin>, IAdminRepository
 		throw new NotImplementedException();
 	}
 
-	public Task Register(Admin entity, string password)
+	public Task<Admin> Register(int dto)
 	{
 		throw new NotImplementedException();
 	}

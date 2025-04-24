@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiFive.Infrastructure", "Hi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiFive.Presentation", "HiFive.Presentation\HiFive.Presentation.csproj", "{A59C8D2F-2165-4FDF-B71E-707AA42F05E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiFive.Tests", "HiFive.Tests\HiFive.Tests.csproj", "{E7B32F8F-A9A4-41FB-8E78-681EB116109A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A59C8D2F-2165-4FDF-B71E-707AA42F05E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A59C8D2F-2165-4FDF-B71E-707AA42F05E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A59C8D2F-2165-4FDF-B71E-707AA42F05E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7B32F8F-A9A4-41FB-8E78-681EB116109A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7B32F8F-A9A4-41FB-8E78-681EB116109A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7B32F8F-A9A4-41FB-8E78-681EB116109A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7B32F8F-A9A4-41FB-8E78-681EB116109A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

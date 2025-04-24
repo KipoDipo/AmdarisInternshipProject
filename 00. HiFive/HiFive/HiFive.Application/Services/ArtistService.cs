@@ -20,20 +20,8 @@ public class ArtistService : IArtistService
 		if (string.IsNullOrWhiteSpace(artistCreateDto.DisplayName))
 			throw new ArgumentException("Artist display name cannot be empty.", nameof(artistCreateDto.DisplayName));
 
-		var artist = new Domain.Models.Users.Artist()
-		{
-			UserName = artistCreateDto.UserName,
-			DisplayName = artistCreateDto.DisplayName,
-			FirstName = artistCreateDto.FirstName,
-			LastName = artistCreateDto.LastName,
-			Email = artistCreateDto.Email,
-			Bio = artistCreateDto.Bio,
-			ProfilePicture = artistCreateDto.ProfilePicture,
-		};
-
-
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Artists.Register(artist, artistCreateDto.Password);
+		var artist = await _unitOfWork.Artists.Register(artistCreateDto);
 		await _unitOfWork.CommitTransactionAsync();
 		return ArtistDto.FromEntity(artist);
 	}

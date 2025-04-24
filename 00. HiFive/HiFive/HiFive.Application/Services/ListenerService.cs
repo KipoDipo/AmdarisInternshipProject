@@ -20,19 +20,8 @@ public class ListenerService : IListenerService
 		if (string.IsNullOrWhiteSpace(listenerCreateDto.DisplayName))
 			throw new ArgumentException("Listener display name cannot be empty.", nameof(listenerCreateDto.DisplayName));
 
-		var listener = new Domain.Models.Users.Listener()
-		{
-			UserName = listenerCreateDto.UserName,
-			DisplayName = listenerCreateDto.DisplayName,
-			FirstName = listenerCreateDto.FirstName,
-			LastName = listenerCreateDto.LastName,
-			Email = listenerCreateDto.Email,
-			Bio = listenerCreateDto.Bio,
-			ProfilePicture = listenerCreateDto.ProfilePicture,
-		};
-
 		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Listeners.Register(listener, listenerCreateDto.Password);
+		var listener = await _unitOfWork.Listeners.Register(listenerCreateDto);
 		await _unitOfWork.CommitTransactionAsync();
 
 		return ListenerDto.FromEntity(listener);

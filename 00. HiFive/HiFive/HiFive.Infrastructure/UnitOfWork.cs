@@ -4,6 +4,7 @@ using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure.Db;
 using HiFive.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace HiFive.Infrastructure;
 
@@ -22,11 +23,11 @@ public class UnitOfWork : IUnitOfWork
 	public IBadgeRepository Badges { get; }
 	public ITitleRepository Titles { get; }
 
-	public UnitOfWork(ApplicationDbContext dbContext, BaseUserManager<Listener> _listenerManager, BaseUserManager<Artist> _artistManager)
+	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
 	{
 		_context = dbContext;
-		Listeners = new ListenerRepository(dbContext, _listenerManager);
-		Artists = new ArtistRepository(dbContext, _artistManager);
+		Listeners = new ListenerRepository(dbContext, userManager);
+		Artists = new ArtistRepository(dbContext, userManager);
 		Distributors = new DistributorRepository(dbContext);
 		Admins = new AdminRepository(dbContext);
 		Playlists = new PlaylistRepository(dbContext);

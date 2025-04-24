@@ -1,10 +1,7 @@
 //#define USE_INMEMORY_DB
-using HiFive.Application.Contracts;
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.Services;
 using HiFive.Application.UnitOfWork;
-using HiFive.Domain.Contracts;
-using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Middleware;
@@ -52,9 +49,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
 
-builder.Services.AddScoped<BaseUserManager<Listener>>();
-builder.Services.AddScoped<BaseUserManager<Artist>>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -66,9 +60,7 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
 	var unit = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-	var listenerManager = scope.ServiceProvider.GetRequiredService<BaseUserManager<Listener>>();
-	var artistManager = scope.ServiceProvider.GetRequiredService<BaseUserManager<Artist>>();
-	await DbSeeder.Seed(unit, listenerManager, artistManager);
+	await DbSeeder.Seed(unit);
 }
 
 app.UseMiddleware<BadRequestExceptionHandling>();

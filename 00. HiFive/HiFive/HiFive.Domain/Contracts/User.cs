@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace HiFive.Domain.Contracts;
 
-namespace HiFive.Domain.Contracts;
-
-public abstract class ApplicationUser : IdentityUser<Guid>, IDeletable
+public abstract class User : IDeletable
 {
+	public Guid Id { get; set; }
+
 	public string DisplayName { get; set; } = null!;
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }

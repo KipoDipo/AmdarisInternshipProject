@@ -15,7 +15,7 @@ public class DistributorRepository : BaseRepository<Distributor>, IDistributorRe
 		throw new NotImplementedException();
 	}
 
-	public Task Register(Distributor entity, string password)
+	public Task<Distributor> Register(int dto)
 	{
 		throw new NotImplementedException();
 	}

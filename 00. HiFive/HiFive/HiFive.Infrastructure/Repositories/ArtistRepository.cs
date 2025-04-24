@@ -1,17 +1,18 @@
 ﻿using HiFive.Application.Contracts.Repositories;
+using HiFive.Application.DTOs.Artist;
 using HiFive.Domain.Models.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Infrastructure.Repositories;
 
 public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 {
-	private readonly BaseUserManager<Artist> _artistManager;
+	private readonly UserManager<ApplicationUser> _userManager;
 
-
-	public ArtistRepository(DbContext dbContext, BaseUserManager<Artist> artistManager) : base(dbContext)
+	public ArtistRepository(DbContext dbContext, UserManager<ApplicationUser> userManager) : base(dbContext)
 	{
-		_artistManager = artistManager;
+		_userManager = userManager;
 	}
 
 	public async Task<IEnumerable<Artist>> GetAllByPartialName(string partialName)
@@ -29,8 +30,28 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 			.FirstOrDefaultAsync(a => a.Id == id);
 	}
 
-	public async Task Register(Artist entity, string password)
+	public async Task<Artist> Register(ArtistCreateDto artistCreateDto)
 	{
-		await _artistManager.CreateAsync(entity, password);
+		ApplicationUser newArtist = new()
+		{
+			UserName = artistCreateDto.UserName,
+			Email = artistCreateDto.Email,
+			PhoneNumber = artistCreateDto.PhoneNumber,
+		};
+
+		await _userManager.CreateAsync(newArtist, artistCreateDto.Password);
+		
+		var artist = new Artist()
+		{
+			Id = newArtist.Id,
+			DisplayName = artistCreateDto.DisplayName,
+			FirstName = artistCreateDto.FirstName,
+			LastName = artistCreateDto.LastName,
+			Bio = artistCreateDto.Bio,
+			ProfilePicture = artistCreateDto.ProfilePicture,
+		};
+		
+		await _dbContext.AddAsync(artist);
+		return artist;
 	}
 }
