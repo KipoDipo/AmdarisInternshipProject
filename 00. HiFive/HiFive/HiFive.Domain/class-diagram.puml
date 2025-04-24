@@ -10,33 +10,33 @@ skinparam ranksep 25
 
 class "IdentityUser (ASP.Net)" as IdentityUser
 {
-    +id: Guid
-    +email: string
-    +passwordHash: string
-    +phoneNumber: string
-    +userName: string
+    +Id: Guid
+    +Email: String
+    +UserName: String
+    +PasswordHash: String
+    +PhoneNumber: String
 }
 
 interface IBase
 {
-    +id : Guid
-    +createdAt : DateTime
-    +updatedAt : DateTime
+    +Id : Guid
+    +CreatedAt : DateTime
+    +UpdatedAt : DateTime
 }
 
 interface IDeletable
 {
-    +isDeleted : bool
-    +deletedAt : DateTime
+    +IsDeleted : bool
+    +DeletedAt : DateTime
 }
 
 abstract User
 {
-    +displayName: string
-    +firstName: string
-    +lastName?: string
-    +bio? : string
-    +profilePicture? : byte[]
+    +DisplayName: String
+    +FirstName: String
+    +LastName?: String
+    +Bio? : String
+    +ProfilePicture? : byte[]
 }
 
 class Admin
@@ -45,32 +45,34 @@ class Admin
 
 class Listener
 {
-    +followingArtists: List<Artist>
-    +followingListeners: List<Listener>
-    +createdPlaylists: List<Playlist>
-    +likedPlaylists: List<Playlist>
-    +likedSongs: List<Song>
+    +FollowingArtists: List<Artist>
+    +FollowingListeners: List<Listener>
+    +CreatedPlaylists: List<Playlist>
+    +LikedPlaylists: List<Playlist>
+    +LikedSongs: List<Song>
     ..
-    +badges: List<Badge>
-    +titles: List<Title>
+    +Badges: List<Badge>
+    +Titles: List<Title>
 
-    +equippedBadge: Badge
-    +equippedTitle: Title
+    +EquippedBadge: Badge
+    +EquippedTitle: Title
     ..
-    +isSubscribed: bool
-    +subscriptionDate: DateTime
+    +IsSubscribed: bool
+    +SubscriptionEndDate: DateTime
 }
 
 class Distributor
 {
-    +artists: List<Artist>
+    +Artists: List<Artist>
 }
 
 class Artist
 {
-    +followers: List<Listener>
-    +albums: List<Album>
-    +singles: List<Song>
+    +Followers: List<Listener>
+    +Albums: List<Album>
+    +Singles: List<Song>
+
+    +Distributor: Distributor
 }
 
 package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD 
@@ -78,34 +80,36 @@ package "Music Related\t\t\t\t\t\t\t\t\t\t" <<cloud>> #DDDDDD
 
     class Album
     {
-        +title: string
-        +releaseDate: DateTime
-        +songs: List<Song>
-        +cover: byte[]
-        +createdBy: Artist
+        +Title: String
+        +ReleaseDate: DateTime
+        +Songs: List<Song>
+        +Cover: byte[]
+        +CreatedBy: Artist
     }
 
     class Song
     {
-        +title: string
-        +duration: TimeSpan
-        +releaseDate: DateTime
-        +genres: List<Genre>
-        +data: string
-        +cover: byte[]
-        +createdBy: Artist
+        +Title: String
+        +Duration: TimeSpan
+        +ReleaseDate: DateTime
+        +Genres: List<Genre>
+        +Data: String
+        +Cover: byte[]
+        +Artist: Artist
+        +Album?: Album
     }
 
     class Playlist
     {
-        +title: string
-        +songs: List<Song>
-        +createdBy: Listener
+        +Title: String
+        +Description: String
+        +Songs: List<Song>
+        +Owner: Listener
     }
 
     class Genre
     {
-        +name: string
+        +Name: String
     }
 }
 
@@ -113,21 +117,21 @@ package "Customization\n\n" <<cloud>> #DDDDDD
 {
     class Badge
     {
-        +name: string
-        +description: string
-        +icon: byte[]
+        +Name: String
+        +Description: String
+        +Icon: byte[]
     }
 
     class Title
     {
-        +name: string
-        +description: string
+        +Name: String
+        +Description: String
     }
 }
 
 IBase <|-- IDeletable
 
-IdentityUser <|--- User
+IdentityUser --[hidden] User
 
 User <|-- Admin
 User <|-- Listener
