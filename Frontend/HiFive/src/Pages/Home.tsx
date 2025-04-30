@@ -1,5 +1,5 @@
-import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { useSetSong, } from "../SongContext";
+import { Avatar, ButtonBase, Stack, Typography } from "@mui/material";
+import { useSetSong, } from "../Contexts/SongContext";
 
 function Song() {
   
@@ -27,7 +27,20 @@ function Song() {
 
   return (
     <Stack alignItems='center' sx={{ cursor: 'pointer', maxWidth: 200, textAlign: 'center'}} onClick={handleClick}>
-      <Avatar src={song.image} variant='rounded' sx={{ width: 200, height: 200 , boxShadow: 10}}/>
+      <ButtonBase 
+      sx={{
+        transition: 'filter 0.3s ease, transform 0.2s',
+        '&:hover': {
+          filter: 'brightness(1.3)',
+          transform: 'scale(0.95)'
+        },
+        '&:active': {
+          filter: 'brightness(1.5)',
+          transform: 'scale(0.9)'
+        }
+      }}>
+        <Avatar src={song.image} variant='rounded' sx={{ width: 200, height: 200 , boxShadow: 10 }}/>
+      </ButtonBase>
       <Typography variant='h5' sx={{textShadow: '1px 0 10px #000'}}>{song.title}</Typography>
       <Typography variant='subtitle1' sx={{textShadow: '1px 0 10px #000'}}>{song.artist}</Typography>
     </Stack>
@@ -38,7 +51,7 @@ function Category({name}: {name: string}) {
   return (
     <>
       <Typography variant='h3'>{name}</Typography>
-      <Stack direction='row' gap={2} marginTop={1}>
+      <Stack direction='row' gap={2} marginTop={1} flexWrap='wrap'>
         <Song/>
         <Song/>
         <Song/>
@@ -52,13 +65,11 @@ function Category({name}: {name: string}) {
 
 function Home() {
   return (
-    <Box margin={3}>
-      <Stack>
-        <Category name="Recently played"/>
-        <Category name="Your friends listened to"/>
-        <Category name="Recommended for you"/>
-      </Stack>
-    </Box>
+    <Stack margin={3}>
+      <Category name="Recently played"/>
+      <Category name="Your friends listened to"/>
+      <Category name="Recommended for you"/>
+    </Stack>
   );
 }
 

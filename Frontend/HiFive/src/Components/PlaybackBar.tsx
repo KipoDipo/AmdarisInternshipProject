@@ -9,8 +9,8 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded';
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
-import { useSong } from './SongContext';
-import { Song } from './Models/Song';
+import { useSong } from '../Contexts/SongContext';
+import { Song } from '../Models/Song';
 
 
 function Controls({size}: {size?:number}) {
