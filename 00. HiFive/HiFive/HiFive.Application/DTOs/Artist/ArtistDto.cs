@@ -1,4 +1,6 @@
-﻿namespace HiFive.Application.DTOs.Artist;
+﻿using HiFive.Domain.Models.Misc;
+
+namespace HiFive.Application.DTOs.Artist;
 
 public class ArtistDto
 {
@@ -6,7 +8,7 @@ public class ArtistDto
 
 	public required string DisplayName { get; set; }
 
-	public byte[]? ProfilePicture { get; set; }
+	public Guid? ProfilePictureId { get; set; }
 
 	public static ArtistDto FromEntity(Domain.Models.Users.Artist artist)
 	{
@@ -14,7 +16,7 @@ public class ArtistDto
 		{
 			Id = artist.Id,
 			DisplayName = artist.DisplayName,
-			ProfilePicture = artist.ProfilePicture
+			ProfilePictureId = artist.ProfilePictureId
 		};
 	}
 }

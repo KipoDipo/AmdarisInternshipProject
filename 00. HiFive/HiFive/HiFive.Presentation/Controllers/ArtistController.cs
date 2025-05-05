@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
-using HiFive.Application.DTOs.Artist;
+using HiFive.Presentation.Controllers.Requests.Users;
+using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -9,16 +10,31 @@ namespace HiFive.Presentation.Controllers;
 public class ArtistController : ControllerBase
 {
 	private readonly IArtistService _artistService;
+	private readonly IImageFileService _imageFileService;
 
-	public ArtistController(IArtistService artistService)
+	public ArtistController(IArtistService artistService, IImageFileService imageFileService)
 	{
 		_artistService = artistService;
+		_imageFileService = imageFileService;
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(ArtistCreateDto artist)
+	public async Task<IActionResult> Create(ArtistCreateRequest artist)
 	{
-		return Ok(await _artistService.CreateArtistAsync(artist));
+		if (artist.ProfilePicture == null)
+		{
+			var artistDto = artist.ToArtistCreateDto(null);
+
+			return Ok(await _artistService.CreateArtistAsync(artistDto));
+		}
+		else
+		{
+			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(artist.ProfilePicture));
+
+			var artistDto = artist.ToArtistCreateDto(imageDto.Id);
+
+			return Ok(await _artistService.CreateArtistAsync(artistDto));
+		}
 	}
 
 	[HttpGet("id/{id}")]
@@ -40,9 +56,32 @@ public class ArtistController : ControllerBase
 	}
 
 	[HttpPut]
-	public async Task<IActionResult> Update(ArtistUpdateDto artist)
+	public async Task<IActionResult> Update(ArtistUpdateRequest artistRequest)
 	{
-		await _artistService.UpdateArtistAsync(artist);
+		var artistUpdateDto = artistRequest.ToAristUpdateDto();
+
+		if (artistRequest.ProfilePicture == null)
+		{
+			await _artistService.UpdateArtistAsync(artistUpdateDto);
+			return NoContent();
+		}
+
+		var artistDto = await _artistService.GetArtistByIdAsync(artistRequest.Id);
+		if (artistDto.ProfilePictureId == null) // if artist doesn't have a profile picture already
+		{
+			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(artistRequest.ProfilePicture));
+
+			artistUpdateDto.ProfilePictureId = imageDto.Id;
+		}
+		else // if artist already has a profile picture
+		{
+			var imageDto = await _imageFileService.GetImageByIdAsync(artistDto.ProfilePictureId.Value);
+
+			var imageUpdateDto = ImageDtoHelper.UpdateDtoFromFormFile(artistRequest.ProfilePicture, imageDto.Id);
+			await _imageFileService.UpdateImageAsync(imageUpdateDto);
+		}
+
+		await _artistService.UpdateArtistAsync(artistUpdateDto);
 		return NoContent();
 	}
 }

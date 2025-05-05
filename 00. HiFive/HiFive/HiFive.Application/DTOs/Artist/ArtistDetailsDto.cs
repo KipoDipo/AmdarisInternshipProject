@@ -6,7 +6,7 @@ public class ArtistDetailsDto
 
 	public required string DisplayName { get; set; }
 
-	public byte[]? ProfilePicture { get; set; }
+	public Guid? ProfilePictureId { get; set; }
 	public string? Bio { get; set; }
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
@@ -23,7 +23,7 @@ public class ArtistDetailsDto
 			Bio = artist.Bio,
 			FirstName = artist.FirstName,
 			LastName = artist.LastName,
-			ProfilePicture = artist.ProfilePicture,
+			ProfilePictureId = artist.ProfilePictureId,
 			AlbumIds = artist.Albums.Select(a => a.Id).ToList(),
 			SingleIds = artist.Singles.Select(s => s.Id).ToList()
 		};

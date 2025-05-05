@@ -22,6 +22,7 @@ public class UnitOfWork : IUnitOfWork
 	public IAlbumRepository Albums { get; }
 	public IBadgeRepository Badges { get; }
 	public ITitleRepository Titles { get; }
+	public IImageFileRepository Images { get; }
 
 	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
 	{
@@ -36,6 +37,7 @@ public class UnitOfWork : IUnitOfWork
 		Albums = new AlbumRepository(dbContext);
 		Badges = new BadgeRepository(dbContext);
 		Titles = new TitleRepository(dbContext);
+		Images = new ImageFileRepository(dbContext);
 	}
 
 	public async Task BeginTransactionAsync()

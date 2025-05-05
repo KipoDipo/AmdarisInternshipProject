@@ -17,6 +17,8 @@ public interface IUnitOfWork : IDisposable
 	IBadgeRepository Badges { get; }
 	ITitleRepository Titles { get; }
 
+	IImageFileRepository Images { get; }
+
 	Task BeginTransactionAsync();
 	Task CommitTransactionAsync();
 	Task RollbackTransactionAsync();

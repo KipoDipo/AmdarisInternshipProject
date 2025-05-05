@@ -9,7 +9,7 @@ public class ListenerDetailsDto
 	public string? Bio { get; set; }
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
-	public byte[]? ProfilePicture { get; set; }
+	public Guid? ProfilePictureId { get; set; }
 
 	public List<Guid> CreatedPlaylistsIds { get; set; } = [];
 
@@ -29,7 +29,7 @@ public class ListenerDetailsDto
 			Bio = listener.Bio,
 			FirstName = listener.FirstName,
 			LastName = listener.LastName,
-			ProfilePicture = listener.ProfilePicture,
+			ProfilePictureId = listener.ProfilePictureId,
 			CreatedPlaylistsIds = listener.CreatedPlaylists.Select(p => p.Id).ToList(),
 			EquippedBadgeId = listener.EquippedBadgeId,
 			BadgeIds = listener.Badges.Select(b => b.Id).ToList(),

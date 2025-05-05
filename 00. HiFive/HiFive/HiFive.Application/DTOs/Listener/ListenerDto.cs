@@ -6,7 +6,7 @@ public class ListenerDto
 
 	public required string DisplayName { get; set; }
 
-	public byte[]? ProfilePicture { get; set; }
+	public Guid? ProfilePictureId { get; set; }
 
 	public Guid? BadgeId { get; set; }
 	public Guid? TitleId { get; set; }
@@ -17,7 +17,7 @@ public class ListenerDto
 		{
 			Id = listener.Id,
 			DisplayName = listener.DisplayName,
-			ProfilePicture = listener.ProfilePicture,
+			ProfilePictureId = listener.ProfilePictureId,
 			BadgeId = listener.EquippedBadgeId,
 			TitleId = listener.EquippedTitleId
 		};

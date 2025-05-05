@@ -48,7 +48,7 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			FirstName = listenerCreateDto.FirstName,
 			LastName = listenerCreateDto.LastName,
 			Bio = listenerCreateDto.Bio,
-			ProfilePicture = listenerCreateDto.ProfilePicture,
+			ProfilePictureId = listenerCreateDto.ProfilePictureId,
 		};
 
 		await _dbContext.AddAsync(listener);

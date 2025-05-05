@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Repositories;
 using HiFive.Application.DTOs.Artist;
+using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 		return await _dbContext.Set<Artist>()
 			.Include(a => a.Albums)
 			.Include(a => a.Singles)
+			.Include(a => a.ProfilePicture)
 			.FirstOrDefaultAsync(a => a.Id == id);
 	}
 
@@ -40,7 +42,7 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 		};
 
 		await _userManager.CreateAsync(newArtist, artistCreateDto.Password);
-		
+
 		var artist = new Artist()
 		{
 			Id = newArtist.Id,
@@ -48,7 +50,7 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 			FirstName = artistCreateDto.FirstName,
 			LastName = artistCreateDto.LastName,
 			Bio = artistCreateDto.Bio,
-			ProfilePicture = artistCreateDto.ProfilePicture,
+			ProfilePictureId = artistCreateDto.ProfilePictureId,
 		};
 		
 		await _dbContext.AddAsync(artist);

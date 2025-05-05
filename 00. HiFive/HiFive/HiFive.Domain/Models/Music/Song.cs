@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
 
 namespace HiFive.Domain.Models.Music;
@@ -12,7 +13,9 @@ public class Song : IDeletable
 	public DateTime ReleaseDate { get; set; }
 	public ICollection<Genre> Genres { get; set; } = null!;
 	public string Data { get; set; } = null!; // Azure Blob Storage
-	public byte[]? CoverImage { get; set; } // Azure Blob Storage
+
+	public Guid? CoverImageId { get; set; }
+	public ImageFile? CoverImage { get; set; }
 
 	public Guid ArtistId { get; set; }
 	public Artist Artist { get; set; } = null!;

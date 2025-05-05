@@ -1,4 +1,6 @@
-﻿namespace HiFive.Domain.Contracts;
+﻿using HiFive.Domain.Models.Misc;
+
+namespace HiFive.Domain.Contracts;
 
 public abstract class User : IDeletable
 {
@@ -8,7 +10,9 @@ public abstract class User : IDeletable
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public string? Bio { get; set; }
-	public byte[]? ProfilePicture { get; set; }
+
+	public Guid? ProfilePictureId { get; set; }
+	public ImageFile? ProfilePicture { get; set; }
 
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }

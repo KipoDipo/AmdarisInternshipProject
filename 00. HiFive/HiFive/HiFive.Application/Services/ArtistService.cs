@@ -1,6 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Misc;
 
 namespace HiFive.Application.Services;
 
@@ -63,15 +64,14 @@ public class ArtistService : IArtistService
 
 	public async Task UpdateArtistAsync(ArtistUpdateDto artistUpdateDto)
 	{
-		var artist = await _unitOfWork.Artists.GetByIdAsync(artistUpdateDto.Id);
+		var artist = await _unitOfWork.Artists.GetWithDetailsByIdAsync(artistUpdateDto.Id);
 		_validator.Validate(artist);
-
+		
 		await _unitOfWork.BeginTransactionAsync();
 		artist.DisplayName = artistUpdateDto.DisplayName ?? artist.DisplayName;
 		artist.FirstName = artistUpdateDto.FirstName ?? artist.FirstName;
 		artist.LastName = artistUpdateDto.LastName ?? artist.LastName;
 		artist.Bio = artistUpdateDto.Bio ?? artist.Bio;
-		artist.ProfilePicture = artistUpdateDto.ProfilePicture ?? artist.ProfilePicture;
 
 		await _unitOfWork.Artists.UpdateAsync(artist);
 		await _unitOfWork.CommitTransactionAsync();

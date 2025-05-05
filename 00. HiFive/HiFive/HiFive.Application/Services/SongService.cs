@@ -106,12 +106,12 @@ public class SongService : ISongService
 		var song = await _unitOfWork.Songs.GetByIdAsync(songUpdateDto.Id);
 		_validator.Validate(song);
 
+		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.Songs.UpdateAsync(song);
 
 		song.Title = songUpdateDto.Title;
 		song.ReleaseDate = songUpdateDto.ReleaseDate;
 
-		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
