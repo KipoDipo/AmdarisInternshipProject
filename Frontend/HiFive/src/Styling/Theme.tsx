@@ -51,6 +51,57 @@ export const theme = createTheme({
           color: colors.white,
         }
       }
+    },
+
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: colors.white,
+            },
+            '&:hover fieldset': {
+              borderColor: colors.yellow,
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: colors.yellow,
+            },
+            '& input': {
+              color: colors.white,
+            },
+          },
+          '& .MuiFormLabel-root': {
+              color: colors.white,
+          },
+          '& .MuiSvgIcon-root': {
+            color: colors.white,
+          },
+        },
+      },
+    },
+
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: colors.white,
+            },
+            '&:hover fieldset': {
+              borderColor: colors.yellow,
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: colors.yellow,
+            },
+            '& input': {
+              color: colors.white,
+            },
+          },
+          '& .MuiFormLabel-root': {
+              color: colors.white,
+          },
+        },
+      },
     }
   }
 })

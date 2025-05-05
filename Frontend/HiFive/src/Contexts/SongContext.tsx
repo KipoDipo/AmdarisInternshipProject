@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Song } from './Models/Song';
+import { Song } from '../Models/Song';
 
 const SongStateContext = createContext<Song>(null);
 const SongUpdateContext = createContext<((song: Song) => void) | undefined>(undefined);

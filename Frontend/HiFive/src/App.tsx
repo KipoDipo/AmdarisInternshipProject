@@ -4,6 +4,7 @@ import SideBar from "./Components/SideBar"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Account from "./Pages/Account";
+import AddSong from "./Pages/AddSong";
 import { SongProvider } from "./Contexts/SongContext";
 
 import { theme } from "./Styling/Theme";
@@ -29,7 +30,8 @@ function App() {
               <SideBar />
               <Routes>
                 <Route index element={<Home />} />
-                <Route path="/Account" element={<Account />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/add-song/" element={<AddSong />} />
               </Routes>
             </BrowserRouter>
             <PlaybackBar/>

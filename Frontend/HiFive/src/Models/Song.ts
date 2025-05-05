@@ -1,9 +1,12 @@
 type Song = 
 {
+    id: string;
     title: string;
-    artist: string;
+    artistId: string;
+    artistName: string;
+    albumId: string;
     duration: number;
-    image: string;
-} | null;
+    coverImageId: string;
+};
 
 export type {Song};

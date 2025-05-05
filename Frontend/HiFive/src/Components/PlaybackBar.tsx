@@ -12,7 +12,6 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
 import { useSong } from '../Contexts/SongContext';
 import { Song } from '../Models/Song';
 
-
 function Controls({size}: {size?:number}) {
   const theme = useTheme();
   const [isPlayingMusic, setPlayingMusic] = useState(false);
@@ -52,7 +51,6 @@ function Controls({size}: {size?:number}) {
 }
 
 function Info({song}: {song?: Song}) {
-
   const typographySx: TypographyOwnProps = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -62,10 +60,10 @@ function Info({song}: {song?: Song}) {
 
   return (
     <Stack direction='row' alignItems='center' spacing={3} flex={1} minWidth={0}>
-      <Avatar sx={{width: 64, height: 64}} variant='rounded' src={song?.image} alt={song?.title}/>
+      <Avatar sx={{width: 64, height: 64}} variant='rounded' src={`https://localhost:7214/Image/${song?.coverImageId}`} alt={song?.title}/>
       <Stack minWidth={0}>
       <Typography variant='h5' sx={typographySx}>{song?.title}</Typography>
-      <Typography variant='subtitle1' sx={typographySx}>{song?.artist}</Typography>
+      <Typography variant='subtitle1' sx={typographySx}>{song?.artistName}</Typography>
       </Stack>
     </Stack>
     )
