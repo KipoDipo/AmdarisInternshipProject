@@ -27,7 +27,7 @@ public class SongService : ISongService
 		var artist = await _unitOfWork.Artists.GetByIdAsync(songCreateDto.ArtistId);
 		_validator.Validate(artist);
 
-		var genres = await _unitOfWork.Genres.GetAllNoTracking()
+		var genres = await _unitOfWork.Genres.GetAll()
 			.Where(g => songCreateDto.GenreIds.Contains(g.Id))
 			.ToListAsync();
 
@@ -37,9 +37,10 @@ public class SongService : ISongService
 			ArtistId = songCreateDto.ArtistId,
 			AlbumId = songCreateDto.AlbumId,
 			Duration = songCreateDto.Duration,
+			CoverImageId = songCreateDto.CoverImageId,
 			Genres = genres,
 			ReleaseDate = songCreateDto.ReleaseDate,
-			Data = songCreateDto.Data
+			Data = songCreateDto.Data,
 		};
 
 		await _unitOfWork.BeginTransactionAsync();
@@ -55,6 +56,15 @@ public class SongService : ISongService
 		_validator.Validate(song);
 
 		return SongDto.FromEntity(song);
+	}
+	
+	public async Task<IEnumerable<SongDto>> GetAllSongsAsync()
+	{
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
+			.Include(s => s.Artist)
+			.ToListAsync();
+
+		return songs.Select(SongDto.FromEntity);
 	}
 
 	public async Task<SongDetailsDto> GetSongDetailsByIdAsync(Guid songId)
@@ -138,4 +148,5 @@ public class SongService : ISongService
 
 		return album.Songs.Select(SongDto.FromEntity);
 	}
+
 }

@@ -1,5 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Song;
+using HiFive.Presentation.Controllers.Requests.Music;
+using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -9,22 +11,33 @@ namespace HiFive.Presentation.Controllers;
 public class SongController : ControllerBase
 {
 	private ISongService _songService;
+	private IImageFileService _imageFileService;
 
-	public SongController(ISongService songService)
+	public SongController(ISongService songService, IImageFileService imageFileService)
 	{
 		_songService = songService;
+		_imageFileService = imageFileService;
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(SongCreateDto song)
+	public async Task<IActionResult> Create([FromForm] SongCreateRequest song)
 	{
-		return Ok(await _songService.CreateSongAsync(song));
+		var imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);
+		var imageDto = await _imageFileService.UploadImageAsync(imageCreateDto);
+		var songDto = song.ToSongCreateDto(imageDto.Id);
+		return Ok(await _songService.CreateSongAsync(songDto));
 	}
 
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _songService.GetSongByIdAsync(id));
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> GetAll()
+	{
+		return Ok(await _songService.GetAllSongsAsync());
 	}
 
 	[HttpGet("details/{id}")]

@@ -43,6 +43,12 @@ public class ArtistController : ControllerBase
 		return Ok(await _artistService.GetArtistByIdAsync(id));
 	}
 
+	[HttpGet]
+	public async Task<IActionResult> GetAll()
+	{
+		return Ok(await _artistService.GetAllArtistsAsync());
+	}
+
 	[HttpGet("name/{partialName}")]
 	public async Task<IActionResult> GetByPartialName(string partialName)
 	{

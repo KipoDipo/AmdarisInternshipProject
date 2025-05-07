@@ -1,7 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
 using HiFive.Application.UnitOfWork;
-using HiFive.Domain.Models.Misc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
 
@@ -27,14 +27,12 @@ public class ArtistService : IArtistService
 		return ArtistDto.FromEntity(artist);
 	}
 
-	public async Task DeleteArtistAsync(Guid artistId)
+	public async Task<IEnumerable<ArtistDto>> GetAllArtistsAsync()
 	{
-		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
-		_validator.Validate(artist);
+		var artists = await _unitOfWork.Artists.GetAll()
+			.ToListAsync();
 
-		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Artists.DeleteAsync(artistId);
-		await _unitOfWork.CommitTransactionAsync();
+		return artists.Select(ArtistDto.FromEntity);
 	}
 
 	public async Task<ArtistDto> GetArtistByIdAsync(Guid artistId)
@@ -77,5 +75,15 @@ public class ArtistService : IArtistService
 		await _unitOfWork.CommitTransactionAsync();
 		//await _userManager.UpdateSecurityStampAsync(artist); ??
 		//TODO update passowrd
+	}
+
+	public async Task DeleteArtistAsync(Guid artistId)
+	{
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		_validator.Validate(artist);
+
+		await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.Artists.DeleteAsync(artistId);
+		await _unitOfWork.CommitTransactionAsync();
 	}
 }

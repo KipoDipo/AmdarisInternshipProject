@@ -6,6 +6,7 @@ public interface ISongService
 	Task<SongDto> CreateSongAsync(SongCreateDto songCreateDto);
 
 	Task<SongDto> GetSongByIdAsync(Guid songId);
+	Task<IEnumerable<SongDto>> GetAllSongsAsync();
 	Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName);
 	Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId);
 	Task<IEnumerable<SongDto>> GetAllSongsByPlaylistIdAsync(Guid playlistId);

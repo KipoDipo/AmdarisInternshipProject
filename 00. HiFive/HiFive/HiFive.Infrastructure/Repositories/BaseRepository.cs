@@ -13,37 +13,37 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 		_dbContext = dbContext;
 	}
 
-	public async Task AddAsync(T entity)
+	public virtual async Task AddAsync(T entity)
 	{
 		await _dbContext.AddAsync(entity);
 		await _dbContext.SaveChangesAsync();
 	}
 
-	public IQueryable<T> GetAll()
+	public virtual IQueryable<T> GetAll()
 	{
 		return _dbContext.Set<T>().AsQueryable();
 	}
 
-	public IQueryable<T> GetAllNoTracking()
+	public virtual IQueryable<T> GetAllNoTracking()
 	{
 		return _dbContext.Set<T>().AsNoTracking().AsQueryable();
 	}
 
 	// Will use Tracker
-	public async Task<T?> GetByIdAsync(Guid id)
+	public virtual async Task<T?> GetByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<T>().FindAsync(id);
 	}
 
 	public abstract Task<T?> GetWithDetailsByIdAsync(Guid id);
 
-	public async Task UpdateAsync(T entity)
+	public virtual async Task UpdateAsync(T entity)
 	{
 		_dbContext.Update(entity);
 		await _dbContext.SaveChangesAsync();
 	}
 
-	public async Task DeleteAsync(Guid id)
+	public virtual async Task DeleteAsync(Guid id)
 	{
 		var entity = await _dbContext.Set<T>().FindAsync(id);
 		if (entity == null)

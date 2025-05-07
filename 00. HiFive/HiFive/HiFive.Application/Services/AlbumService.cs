@@ -24,6 +24,7 @@ public class AlbumService : IAlbumService
 		var artist = await _unitOfWork.Artists.GetByIdAsync(albumCreateDto.ArtistId);
 		_validator.Validate(artist);
 
+		await _unitOfWork.BeginTransactionAsync();
 		var album = new Domain.Models.Music.Album
 		{
 			Title = albumCreateDto.Title,
@@ -31,17 +32,16 @@ public class AlbumService : IAlbumService
 			ReleaseDate = albumCreateDto.ReleaseDate,
 			ArtistId = albumCreateDto.ArtistId,
 		};
+		await _unitOfWork.Albums.AddAsync(album);
 
 		foreach (var songId in albumCreateDto.SongIds)
 		{
 			var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 			_validator.Validate(song);
 
-			album.Songs.Add(song);
+			song.Album = album;
 		}
 
-		await _unitOfWork.BeginTransactionAsync();
-		await _unitOfWork.Albums.AddAsync(album);
 		await _unitOfWork.CommitTransactionAsync();
 		return AlbumDto.FromEntity(album);
 	}

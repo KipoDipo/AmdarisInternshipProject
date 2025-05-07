@@ -44,10 +44,22 @@ builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<IListenerService, ListenerService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddScoped<IImageFileService, ImageFileService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAll",
+		builder =>
+		{
+			builder.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader();
+		});
+});
 
 var app = builder.Build();
 
@@ -68,6 +80,8 @@ app.UseMiddleware<BadRequestExceptionHandling>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
