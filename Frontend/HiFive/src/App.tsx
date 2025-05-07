@@ -2,12 +2,15 @@ import { Box, Stack, ThemeProvider } from "@mui/material";
 import PlaybackBar from "./Components/PlaybackBar";
 import SideBar from "./Components/SideBar"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { SongProvider } from "./Contexts/SongContext";
+import { theme } from "./Styling/Theme";
+
 import Home from "./Pages/Home";
 import Account from "./Pages/Account";
-import AddSong from "./Pages/AddSong";
-import { SongProvider } from "./Contexts/SongContext";
-
-import { theme } from "./Styling/Theme";
+import AddSongPage from "./Pages/AddSong";
+import AddGenrePage from "./Pages/AddGenre";
+import AddAlbumPage from "./Pages/AddAlbum";
+import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
   return (
@@ -31,7 +34,10 @@ function App() {
               <Routes>
                 <Route index element={<Home />} />
                 <Route path="/account" element={<Account />} />
-                <Route path="/add-song/" element={<AddSong />} />
+                <Route path="/add-song/" element={<AddSongPage />} />
+                <Route path="/add-genre/" element={<AddGenrePage />} />
+                <Route path="/add-album/" element={<AddAlbumPage />} />
+                <Route path="/add-playlist/" element={<AddPlaylistPage />} />
               </Routes>
             </BrowserRouter>
             <PlaybackBar/>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
 import { Genre } from "../Models/Genre";
 
-function Foo() {
+function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, onUpload?: () => void, setFormData?: (formData: FormData) => void}) {
     const [artists, setArtists] = useState<Artist[]>([]);
     const [inputArtistText, setInputArtistText] = useState<string>();
     const [inputArtist, setInputArtist] = useState<Artist | null>(null);
@@ -32,6 +32,32 @@ function Foo() {
         }
     };
 
+    const handleUpload = async () => {
+        const formData = new FormData();
+        formData.append("title", inputSongTitle);
+        formData.append("duration", "0");
+        formData.append("genreIds", inputGenre?.id || "");
+        formData.append("coverImage", inputImageFile as Blob);
+        formData.append("data", "AZURE_BLOB_STORAGE_URL");
+        formData.append("artistId", inputArtist?.id || "");
+        formData.append("albumId", "");
+        //TODO implement azure blob storage upload
+        try {
+            setFormData?.(formData);
+            if (onUpload) {
+                onUpload();
+            }
+            else {
+                var response = await axios.post("https://localhost:7214/Song", formData)
+                console.log(response.data);   
+            }
+        }
+        catch (error) {
+            console.error("There was an error uploading the data!", error);
+        }
+    }
+
+
     useEffect(() => {
         axios.get("https://localhost:7214/Genre")
         .then((response) => {
@@ -44,28 +70,27 @@ function Foo() {
 
     return (
     <Stack margin={3} gap={3} width={300}>
-        <Autocomplete
+        {!noArtist && <Autocomplete
             disablePortal
             options={artists || []}
             getOptionLabel={(option) => option.displayName || ""}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             inputValue={inputArtistText}
             renderInput={(params) => <TextField {...params} label="Enter artist" />}
-            onInputChange={(_event, newValue) => {
+            onInputChange={async (_event, newValue) => {
                 setInputArtistText(newValue);
-
-                axios.get(`https://localhost:7214/Artist/name/${newValue}`)
-                .then((response) => {
+                try {
+                    const response = await axios.get(`https://localhost:7214/Artist/name/${newValue}`);
                     setArtists(response.data);
-                })
-                .catch((error) => {
+                }
+                catch (error) {
                     console.error("There was an error fetching the data!", error);
-                });
+                }
             }}
             onChange={(_event, newValue) => {
                 setInputArtist(newValue);
             }}
-        />
+        />}
         <TextField
             label="Enter song name"
             variant="outlined"
@@ -102,26 +127,7 @@ function Foo() {
         />
         <Button 
             variant='contained'
-            onClick={() => {
-                const formData = new FormData();
-                formData.append("title", inputSongTitle);
-                formData.append("duration", "0");
-                formData.append("genreIds", inputGenre?.id || "");
-                formData.append("coverImage", inputImageFile as Blob);
-                formData.append("data", "AZURE_BLOB_STORAGE_URL");
-                formData.append("artistId", inputArtist?.id || "");
-                //TODO implement azure blob storage upload
-                for (let [key, value] of formData.entries()) { 
-                    console.log(key, value);
-                }
-                axios.post("https://localhost:7214/Song", formData)
-                .then((response) => {
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    console.error("There was an error uploading the data!", error);
-                });
-            }}
+            onClick={handleUpload}
             >
             Upload
         </Button>
@@ -129,4 +135,4 @@ function Foo() {
     )
 }
 
-export default Foo;
+export default AddSongPage;

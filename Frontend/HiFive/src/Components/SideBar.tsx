@@ -53,8 +53,8 @@ function SideBar() {
                     }}
                 >
                     <Tab label='Home' icon={<HomeRoundedIcon/>} iconPosition='start' component={Link} to='/'/>
-                    <Tab label='Account' icon={<PersonRoundedIcon/>} iconPosition='start' component={Link} to='/account'/>
                     <Tab label='Explore'icon={<SearchRoundedIcon/>} iconPosition='start'/>
+                    <Tab label='Account' icon={<PersonRoundedIcon/>} iconPosition='start' component={Link} to='/account'/>
                     <Tab label='Settings'icon={<SettingsRoundedIcon/>} iconPosition='start'/>
                     <Tab label='Go Premium'icon={<ElectricBoltRoundedIcon/>} iconPosition='start'/>
                     {/* 
@@ -67,6 +67,8 @@ function SideBar() {
                     <Divider sx={{background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0'}}/>
                     <Typography variant='h4' sx={{margin: '10px'}}>Dev</Typography>
                     <Tab label='Add Song' icon={<QueueMusicRoundedIcon/>} iconPosition='start' component={Link} to='/add-song'/>
+                    <Tab label='Add Genre' icon={<QueueMusicRoundedIcon/>} iconPosition='start' component={Link} to='/add-genre'/>
+                    <Tab label='Add Album' icon={<QueueMusicRoundedIcon/>} iconPosition='start' component={Link} to='/add-album'/>
                 </Tabs>
             </Box>
         </Box>

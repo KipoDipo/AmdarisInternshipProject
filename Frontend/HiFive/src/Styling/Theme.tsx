@@ -96,12 +96,33 @@ export const theme = createTheme({
             '& input': {
               color: colors.white,
             },
+            '& textarea': {
+              color: colors.white
+            }
           },
           '& .MuiFormLabel-root': {
               color: colors.white,
           },
         },
       },
-    }
+    },
+
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: colors.black,
+          color: colors.white,
+        }
+      }
+    },
+
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: colors.gray,
+          color: colors.white,
+        }
+      }
+    },
   }
 })
