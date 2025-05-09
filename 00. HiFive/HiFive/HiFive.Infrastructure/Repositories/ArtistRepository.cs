@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Artist;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
+using HiFive.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

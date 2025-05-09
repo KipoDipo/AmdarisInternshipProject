@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Album;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class AlbumService : IAlbumService
 	public async Task<AlbumDto> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(albumCreateDto.Title))
-			throw new ArgumentException("Title cannot be empty.", nameof(albumCreateDto.Title));
+			throw new UserInputException("Title cannot be empty.");
 
 		var artist = await _unitOfWork.Artists.GetByIdAsync(albumCreateDto.ArtistId);
 		_validator.Validate(artist);
@@ -77,7 +78,7 @@ public class AlbumService : IAlbumService
 	public async Task<IEnumerable<AlbumDto>> GetAllAlbumsByPartialTitleAsync(string partialTitle)
 	{
 		if (string.IsNullOrWhiteSpace(partialTitle))
-			throw new ArgumentException("Partial title cannot be empty.", nameof(partialTitle));
+			throw new UserInputException("Partial title cannot be empty.");
 
 		var albums = await _unitOfWork.Albums.GetAllNoTracking()
 			.Where(a => a.Title.Contains(partialTitle))
@@ -95,7 +96,7 @@ public class AlbumService : IAlbumService
 
 		await _unitOfWork.BeginTransactionAsync();
 		if (album.Songs.Any(s => s.Id == songId))
-			throw new InvalidOperationException("Song already exists in the album.");
+			throw new BadOperationException("Song already exists in the album.");
 
 		album.Songs.Add(song);
 		await _unitOfWork.Albums.UpdateAsync(album);
@@ -105,7 +106,7 @@ public class AlbumService : IAlbumService
 	public async Task UpdateAlbumAsync(AlbumUpdateDto albumUpdateDto)
 	{
 		if (string.IsNullOrWhiteSpace(albumUpdateDto.Title))
-			throw new ArgumentException("Album title cannot be empty.", nameof(albumUpdateDto.Title));
+			throw new UserInputException("Album title cannot be empty.");
 
 		var album = await _unitOfWork.Albums.GetByIdAsync(albumUpdateDto.Id);
 		_validator.Validate(album);

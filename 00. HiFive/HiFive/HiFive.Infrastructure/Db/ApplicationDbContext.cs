@@ -3,6 +3,7 @@ using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Throphies;
 using HiFive.Domain.Models.Users;
+using HiFive.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

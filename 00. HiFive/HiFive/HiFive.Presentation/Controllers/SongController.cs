@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Song;
 using HiFive.Presentation.Controllers.Requests.Music;
 using HiFive.Presentation.Extentions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -28,12 +29,14 @@ public class SongController : ControllerBase
 		return Ok(await _songService.CreateSongAsync(songDto));
 	}
 
+	[Authorize]
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _songService.GetSongByIdAsync(id));
 	}
 
+	[Authorize]
 	[HttpGet]
 	public async Task<IActionResult> GetAll()
 	{

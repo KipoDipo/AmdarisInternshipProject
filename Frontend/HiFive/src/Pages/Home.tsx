@@ -1,5 +1,5 @@
 import { Avatar, Box, ButtonBase, Stack, Typography } from "@mui/material";
-import { useSetSong, } from "../Contexts/SongContext";
+import { useSetSong, } from "../Contexts/UseSetSong";
 
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -64,16 +64,21 @@ function Category({name, songs}: {name: string, songs?: Song[]}) {
 
 function Home() {
   const [songs, setSongs] = useState<Song[]>([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get('https://localhost:7214/Song')
+    axios.get('https://localhost:7214/Song', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((response) => {
         setSongs(response.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-    }, [])
+    }, [token])
 
   return (
     <Stack margin={3}>

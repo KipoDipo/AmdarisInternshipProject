@@ -59,7 +59,7 @@ function AddAlbumPage() {
         });
 
         try {
-            var response = await axios.post("https://localhost:7214/Album", formData);
+            const response = await axios.post("https://localhost:7214/Album", formData);
             console.log(response);
         }
         catch(error) {

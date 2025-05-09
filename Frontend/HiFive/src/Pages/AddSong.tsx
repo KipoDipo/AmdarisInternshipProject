@@ -48,7 +48,7 @@ function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, on
                 onUpload();
             }
             else {
-                var response = await axios.post("https://localhost:7214/Song", formData)
+                const response = await axios.post("https://localhost:7214/Song", formData)
                 console.log(response.data);   
             }
         }

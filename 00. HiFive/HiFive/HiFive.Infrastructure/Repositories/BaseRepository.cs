@@ -1,4 +1,5 @@
 ﻿using HiFive.Application.Contracts.Repositories;
+using HiFive.Application.Exceptions;
 using HiFive.Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,7 +48,7 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 	{
 		var entity = await _dbContext.Set<T>().FindAsync(id);
 		if (entity == null)
-			throw new InvalidOperationException($"Entity with id {id} not found.");
+			throw new NotFoundException($"Entity with id {id} not found.");
 
 		_dbContext.Remove(entity);
 		await _dbContext.SaveChangesAsync();

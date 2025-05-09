@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Listener;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 
 namespace HiFive.Application.Services;
@@ -18,7 +19,7 @@ public class ListenerService : IListenerService
 	public async Task<ListenerDto> CreateListenerAsync(ListenerCreateDto listenerCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(listenerCreateDto.DisplayName))
-			throw new ArgumentException("Listener display name cannot be empty.", nameof(listenerCreateDto.DisplayName));
+			throw new UserInputException("Listener display name cannot be empty.");
 
 		await _unitOfWork.BeginTransactionAsync();
 		var listener = await _unitOfWork.Listeners.Register(listenerCreateDto);

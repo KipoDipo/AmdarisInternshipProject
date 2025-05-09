@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HiFive.Infrastructure;
+namespace HiFive.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>
 {

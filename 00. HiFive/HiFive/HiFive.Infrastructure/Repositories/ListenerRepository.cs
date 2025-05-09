@@ -1,6 +1,8 @@
 ﻿using HiFive.Application.Contracts.Repositories;
 using HiFive.Application.DTOs.Listener;
 using HiFive.Domain.Models.Users;
+using HiFive.Infrastructure.Exceptions;
+using HiFive.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +41,10 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			Email = listenerCreateDto.Email,
 			PhoneNumber = listenerCreateDto.PhoneNumber,
 		};
-		await _userManager.CreateAsync(newListener, listenerCreateDto.Password);
+		var result = await _userManager.CreateAsync(newListener, listenerCreateDto.Password);
+
+		if (!result.Succeeded)
+			throw new IdentityCreationException(result.Errors);
 
 		var listener = new Listener()
 		{

@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class ArtistService : IArtistService
 	public async Task<ArtistDto> CreateArtistAsync(ArtistCreateDto artistCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(artistCreateDto.DisplayName))
-			throw new ArgumentException("Artist display name cannot be empty.", nameof(artistCreateDto.DisplayName));
+			throw new UserInputException("Artist display name cannot be empty.");
 
 		await _unitOfWork.BeginTransactionAsync();
 		var artist = await _unitOfWork.Artists.Register(artistCreateDto);
@@ -54,7 +55,7 @@ public class ArtistService : IArtistService
 	public async Task<IEnumerable<ArtistDto>> GetArtistsByPartialNameAsync(string partialName)
 	{
 		if (string.IsNullOrWhiteSpace(partialName))
-			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
+			throw new UserInputException("Partial name cannot be empty.");
 		var artists = await _unitOfWork.Artists.GetAllByPartialName(partialName);
 
 		return artists.Select(ArtistDto.FromEntity);

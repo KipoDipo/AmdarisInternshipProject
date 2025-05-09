@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Song;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +20,10 @@ public class SongService : ISongService
 	public async Task<SongDto> CreateSongAsync(SongCreateDto songCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(songCreateDto.Title))
-			throw new ArgumentException("Song title cannot be empty.", nameof(songCreateDto.Title));
+			throw new UserInputException("Song title cannot be empty.");
 
 		if (songCreateDto.Data == null || songCreateDto.Data.Length == 0)
-			throw new ArgumentNullException(nameof(songCreateDto.Data), "Song data cannot be null or empty.");
+			throw new UserInputException("Song data cannot be null or empty.");
 
 		var artist = await _unitOfWork.Artists.GetByIdAsync(songCreateDto.ArtistId);
 		_validator.Validate(artist);
@@ -77,7 +78,7 @@ public class SongService : ISongService
 	public async Task<IEnumerable<SongDto>> GetSongsByPartialNameAsync(string partialName)
 	{
 		if (string.IsNullOrWhiteSpace(partialName))
-			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
+			throw new UserInputException("Partial name cannot be empty.");
 
 		var songs = await _unitOfWork.Songs.GetAllByPartialName(partialName);
 
@@ -111,7 +112,7 @@ public class SongService : ISongService
 	public async Task UpdateSongAsync(SongUpdateDto songUpdateDto)
 	{
 		if (string.IsNullOrWhiteSpace(songUpdateDto.Title))
-			throw new ArgumentException("Song title cannot be empty.", nameof(songUpdateDto.Title));
+			throw new UserInputException("Song title cannot be empty.");
 
 		var song = await _unitOfWork.Songs.GetByIdAsync(songUpdateDto.Id);
 		_validator.Validate(song);

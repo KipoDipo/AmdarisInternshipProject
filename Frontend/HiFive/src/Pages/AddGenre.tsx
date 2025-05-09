@@ -6,7 +6,7 @@ function AddGenrePage() {
     const [inputGenreText, setInputGenreText] = useState("")
 
     const handleUpload = async () => {
-        var response = await axios.post("https://localhost:7214/Genre", {name: inputGenreText})
+        const response = await axios.post("https://localhost:7214/Genre", {name: inputGenreText})
         console.log(response)
     }
 

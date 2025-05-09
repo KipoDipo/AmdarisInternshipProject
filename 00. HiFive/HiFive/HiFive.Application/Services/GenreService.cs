@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Genre;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class GenreService : IGenreService
 	public async Task<GenreDto> CreateGenreAsync(GenreCreateDto genreCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(genreCreateDto.Name))
-			throw new ArgumentException("Genre name cannot be empty.", nameof(genreCreateDto.Name));
+			throw new UserInputException("Genre name cannot be empty.");
 
 		var genre = new Domain.Models.Music.Genre()
 		{
@@ -57,7 +58,7 @@ public class GenreService : IGenreService
 	public async Task<IEnumerable<GenreDto>> GetAllGenresByPartialNameAsync(string partialName)
 	{
 		if (string.IsNullOrWhiteSpace(partialName))
-			throw new ArgumentException("Partial name cannot be empty.", nameof(partialName));
+			throw new UserInputException("Partial name cannot be empty.");
 
 		var genres = await _unitOfWork.Genres.GetAllNoTracking()
 			.Where(g => g.Name.Contains(partialName, StringComparison.CurrentCultureIgnoreCase))
@@ -77,7 +78,7 @@ public class GenreService : IGenreService
 	public async Task UpdateGenreAsync(GenreDto genreDto)
 	{
 		if (string.IsNullOrWhiteSpace(genreDto.Name))
-			throw new ArgumentException("Genre name cannot be empty.", nameof(genreDto.Name));
+			throw new UserInputException("Genre name cannot be empty.");
 
 		var genre = await _unitOfWork.Genres.GetByIdAsync(genreDto.Id);
 		_validator.Validate(genre);

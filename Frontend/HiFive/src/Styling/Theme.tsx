@@ -7,8 +7,11 @@ const colors = {
 
   white: '#FFFFFF',
   gray: '#3B3B3B',
+  lightGray: '#6B6B6B',
   black: '#1B1B1B',
 }
+
+export const textWidth = 300;
 
 export const theme = createTheme({
   palette: {
@@ -124,5 +127,17 @@ export const theme = createTheme({
         }
       }
     },
+
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          ":disabled": {
+            color: colors.lightGray,
+            backgroundColor: colors.black,
+            boxShadow: `0 0 10px ${colors.gray}`
+          }
+        }
+      }
+    }
   }
 })

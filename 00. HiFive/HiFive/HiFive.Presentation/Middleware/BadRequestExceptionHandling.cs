@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using HiFive.Application.Exceptions;
+using HiFive.Infrastructure.Exceptions;
+using System.Text.Json;
 
 namespace HiFive.Presentation.Middleware;
 
@@ -19,9 +21,24 @@ public class BadRequestExceptionHandling
 		{
 			await _next(context);
 		}
-		catch (Exception ex)
+		catch (IdentityCreationException ex)
 		{
-			_logger.LogWarning(ex, "Bad request exception occurred: {Message}", ex.Message);
+			_logger.LogWarning(ex, "Identity creation request exception occurred: {Message}", ex.Message);
+			context.Response.StatusCode = StatusCodes.Status400BadRequest;
+			context.Response.ContentType = "application/json";
+
+			var result = JsonSerializer.Serialize(new
+			{
+				StatusCode = context.Response.StatusCode,
+				Message = ex.Message,
+				Errors = ex.Errors
+			});
+
+			await context.Response.WriteAsync(result);
+		}
+		catch (HiFiveException ex)
+		{
+			_logger.LogWarning(ex, "Application exception occurred: {Message}", ex.Message);
 			context.Response.StatusCode = StatusCodes.Status400BadRequest;
 			context.Response.ContentType = "application/json";
 			var result = JsonSerializer.Serialize(new
@@ -32,6 +49,20 @@ public class BadRequestExceptionHandling
 			});
 
 			await context.Response.WriteAsync(result);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Internal error occurred: {Message}", ex.Message);
+			context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+			context.Response.ContentType = "application/json";
+			var result = JsonSerializer.Serialize(new
+			{
+				StatusCode = context.Response.StatusCode,
+				Message = "Internal server error..."
+			});
+
+			await context.Response.WriteAsync(result);
+
 		}
 	}
 }

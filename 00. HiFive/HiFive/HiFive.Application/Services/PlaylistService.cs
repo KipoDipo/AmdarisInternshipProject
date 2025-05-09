@@ -1,6 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Playlist;
 using HiFive.Application.DTOs.Song;
+using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ public class PlaylistService : IPlaylistService
 	public async Task<PlaylistDto> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto)
 	{
 		if (string.IsNullOrWhiteSpace(playlistCreateDto.Title))
-			throw new ArgumentException("Playlist name cannot be empty.", nameof(playlistCreateDto.Title));
+			throw new UserInputException("Playlist name cannot be empty.");
 
 		var user = await _unitOfWork.Listeners.GetByIdAsync(playlistCreateDto.OwnerId);
 		_validator.Validate(user);
@@ -70,7 +71,7 @@ public class PlaylistService : IPlaylistService
 	public async Task UpdatePlaylistAsync(PlaylistUpdateDto playlistUpdateDto)
 	{
 		if (string.IsNullOrWhiteSpace(playlistUpdateDto.Title))
-			throw new ArgumentException("Playlist title cannot be empty.", nameof(playlistUpdateDto.Title));
+			throw new UserInputException("Playlist title cannot be empty.");
 
 		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistUpdateDto.Id);
 		_validator.Validate(playlist);

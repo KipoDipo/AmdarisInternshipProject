@@ -3,6 +3,7 @@ using HiFive.Application.UnitOfWork;
 using HiFive.Domain.Contracts;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure.Db;
+using HiFive.Infrastructure.Identity;
 using HiFive.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 

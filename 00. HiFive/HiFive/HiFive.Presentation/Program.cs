@@ -4,10 +4,15 @@ using HiFive.Application.Services;
 using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
+using HiFive.Infrastructure.Identity;
+using HiFive.Presentation;
 using HiFive.Presentation.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -45,10 +50,33 @@ builder.Services.AddScoped<IListenerService, ListenerService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IImageFileService, ImageFileService>();
+builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+
+		ValidIssuer = builder.Configuration["Jwt:Issuer"],
+		ValidAudience = builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(
+			Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
+		)
+	};
+});
 
 builder.Services.AddCors(options =>
 {
@@ -79,6 +107,7 @@ app.UseMiddleware<BadRequestExceptionHandling>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.UseCors("AllowAll");
