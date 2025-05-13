@@ -4,6 +4,7 @@ type Song =
     title: string;
     artistId: string;
     artistName: string;
+    album: string;
     albumId: string;
     duration: number;
     coverImageId: string;

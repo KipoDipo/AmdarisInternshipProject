@@ -8,6 +8,7 @@ public class AlbumDto
 	public required DateTime ReleaseDate { get; set; }
 
 	public Guid ArtistId { get; set; }
+	public Guid? CoverImageId { get; set; }
 
 	public static AlbumDto FromEntity(Domain.Models.Music.Album album)
 	{
@@ -16,7 +17,8 @@ public class AlbumDto
 			Id = album.Id,
 			Title = album.Title,
 			ReleaseDate = album.ReleaseDate,
-			ArtistId = album.ArtistId
+			ArtistId = album.ArtistId,
+			CoverImageId = album.CoverImageId
 		};
 	}
 }

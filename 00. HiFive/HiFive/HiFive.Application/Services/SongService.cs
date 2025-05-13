@@ -103,6 +103,8 @@ public class SongService : ISongService
 		_validator.Validate(artist);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
+			.Include(s => s.Artist)
+			.Include(s => s.Album)
 			.Where(s => s.ArtistId == artistId)
 			.ToListAsync();
 

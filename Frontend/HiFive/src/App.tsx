@@ -15,6 +15,7 @@ import Login from "./Pages/Login";
 import { SongProvider } from "./Contexts/SongProvider";
 import LogoAndName from "./Components/LogoAndName";
 import AccountEdit from "./Pages/AccountEdit";
+import Artist from "./Pages/Artist";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -49,16 +50,27 @@ function App() {
                                 </Stack>
                                 :
                                 <SongProvider>
-                                    <SideBar />
-                                    <Routes>
-                                        <Route index element={<Home />} />
-                                        <Route path="/account" element={<Account />} />
-                                        <Route path="/account-edit" element={<AccountEdit />} />
-                                        <Route path="/add-song/" element={<AddSongPage />} />
-                                        <Route path="/add-genre/" element={<AddGenrePage />} />
-                                        <Route path="/add-album/" element={<AddAlbumPage />} />
-                                        {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
-                                    </Routes>
+                                    <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                                        <SideBar />
+                                        <Box
+                                            sx={{
+                                                flex: 1,
+                                                overflowY: 'auto',
+                                                paddingBottom: '80px', // space for the PlaybackBar height
+                                            }}
+                                        >
+                                            <Routes>
+                                                <Route index element={<Home />} />
+                                                <Route path="/account" element={<Account />} />
+                                                <Route path="/account-edit" element={<AccountEdit />} />
+                                                <Route path="/add-song/" element={<AddSongPage />} />
+                                                <Route path="/add-genre/" element={<AddGenrePage />} />
+                                                <Route path="/add-album/" element={<AddAlbumPage />} />
+                                                <Route path="/artist/:id" element={<Artist />} />
+                                                {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
+                                            </Routes>
+                                        </Box>
+                                    </Box>
                                     <PlaybackBar />
                                 </SongProvider>
                         }

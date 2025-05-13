@@ -3,6 +3,7 @@ import { OptionalTextField } from "../Components/TextFields";
 import { useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
 import { ListenerDetails } from "../Models/ListenerDetails";
+import { textWidth } from "../Styling/Theme";
 
 export default function Form() {
     const [displayName, setDisplayName] = useState("");
@@ -37,7 +38,7 @@ export default function Form() {
     };
 
     return (
-        <Stack gap={3} margin={3}>
+        <Stack gap={3} margin={3} width={textWidth}>
             <OptionalTextField
                 label="Display Name"
                 value={displayName}

@@ -14,6 +14,7 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 	{
 		return await _dbContext.Set<Song>()
 			.Include(s => s.Artist)
+			.Include(s => s.Album)
 			.FirstOrDefaultAsync(s => s.Id == id);
 	}
 
@@ -28,8 +29,9 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 	public override async Task<Song?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Song>()
-			.Include(s => s.Genres)
+			.Include(s => s.Artist)
 			.Include(s => s.Album)
+			.Include(s => s.Genres)
 			.FirstOrDefaultAsync(s => s.Id == id);
 	}
 }

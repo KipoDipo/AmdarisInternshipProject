@@ -1,6 +1,7 @@
 import { Button, Stack, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { textWidth } from "../Styling/Theme";
 
 function AddGenrePage() {
     const [inputGenreText, setInputGenreText] = useState("")
@@ -11,7 +12,7 @@ function AddGenrePage() {
     }
 
     return(
-        <Stack margin={3} gap={3}>
+        <Stack margin={3} gap={3} width={textWidth}>
             <TextField
                 label="Name"
                 value={inputGenreText}

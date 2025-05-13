@@ -11,6 +11,7 @@ import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded';
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
 import { Song } from '../Models/Song';
 import { useSong } from '../Contexts/UseSong';
+import { Link } from 'react-router-dom';
 
 function Controls({size}: {size?:number}) {
   const theme = useTheme();
@@ -63,7 +64,7 @@ function Info({song}: {song?: Song}) {
       <Avatar sx={{width: 64, height: 64}} variant='rounded' src={song?.coverImageId ? `https://localhost:7214/Image/${song?.coverImageId}` : ''} alt={song?.title}/>
       <Stack minWidth={0}>
       <Typography variant='h5' sx={typographySx}>{song?.title}</Typography>
-      <Typography variant='subtitle1' sx={typographySx}>{song?.artistName}</Typography>
+      <Typography variant='subtitle1' sx={typographySx} component={Link} to={`/artist/${song?.artistId}`} >{song?.artistName}</Typography>
       </Stack>
     </Stack>
     )

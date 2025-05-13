@@ -138,6 +138,14 @@ export const theme = createTheme({
           }
         }
       }
+    },
+
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: colors.white
+        }
+      }
     }
   }
 })
