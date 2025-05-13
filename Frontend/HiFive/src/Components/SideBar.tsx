@@ -55,7 +55,7 @@ function SideBar() {
                     <Tab label='Home' icon={<HomeRoundedIcon/>} iconPosition='start' component={Link} to='/'/>
                     <Tab label='Explore'icon={<SearchRoundedIcon/>} iconPosition='start'/>
                     <Tab label='Account' icon={<PersonRoundedIcon/>} iconPosition='start' component={Link} to='/account'/>
-                    <Tab label='Settings'icon={<SettingsRoundedIcon/>} iconPosition='start'/>
+                    <Tab label='Settings'icon={<SettingsRoundedIcon/>} iconPosition='start' component={Link} to='/account-edit'/>
                     <Tab label='Go Premium'icon={<ElectricBoltRoundedIcon/>} iconPosition='start'/>
                     {/* 
                     <Divider sx={{background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0'}}/>

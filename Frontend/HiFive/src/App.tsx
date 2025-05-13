@@ -14,6 +14,7 @@ import { useState } from "react";
 import Login from "./Pages/Login";
 import { SongProvider } from "./Contexts/SongProvider";
 import LogoAndName from "./Components/LogoAndName";
+import AccountEdit from "./Pages/AccountEdit";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
                                     <Routes>
                                         <Route index element={<Home />} />
                                         <Route path="/account" element={<Account />} />
+                                        <Route path="/account-edit" element={<AccountEdit />} />
                                         <Route path="/add-song/" element={<AddSongPage />} />
                                         <Route path="/add-genre/" element={<AddGenrePage />} />
                                         <Route path="/add-album/" element={<AddAlbumPage />} />

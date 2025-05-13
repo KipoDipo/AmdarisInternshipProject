@@ -8,5 +8,6 @@ public class ListenerUpdateDto
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public string? Bio { get; set; }
-	public byte[]? ProfilePicture { get; set; }
+	public string? PhoneNumber { get; set; }
+	public Guid? ProfilePictureId { get; set; }
 }

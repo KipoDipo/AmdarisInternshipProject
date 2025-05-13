@@ -1,29 +1,53 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Playlist;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class PlaylistController : ControllerBase
 {
 	private readonly IPlaylistService _playlistService;
-	public PlaylistController(IPlaylistService playlistService)
+	private readonly ICurrentUserService _currentUserService;
+
+	public PlaylistController(IPlaylistService playlistService, ICurrentUserService currentUserService)
 	{
 		_playlistService = playlistService;
+		_currentUserService = currentUserService;
 	}
 
+	// Could be used so that an admin/the app can make a playlist for you
 	[HttpPost]
 	public async Task<IActionResult> Create(PlaylistCreateDto playlistCreateDto)
 	{
 		return Ok(await _playlistService.CreatePlaylistAsync(playlistCreateDto));
 	}
 
-	[HttpPost("add/{playlistid}-{songid}")]
-	public async Task<IActionResult> AddSongToPlaylist(Guid playlistid, Guid songid)
+	[HttpPost("create-my-playlist")]
+	public async Task<IActionResult> CreateMy(PlaylistCreateMyDto playlistCreateMyDto)
 	{
-		await _playlistService.AddSongToPlaylistAsync(playlistid, songid);
+		PlaylistCreateDto dto = new()
+		{
+			Title = playlistCreateMyDto.Title,
+			Description = playlistCreateMyDto.Description,
+			OwnerId = _currentUserService.Id
+		};
+		return await Create(dto);
+	}
+
+	[HttpPost("add/{playlistid}-{songid}")]
+	public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, Guid songid)
+	{
+		// check if user owns the playlist
+		var playlist = await _playlistService.GetPlaylistByIdAsync(playlistId);
+		if (playlist != null && playlist.OwnerId != _currentUserService.Id)
+			return Unauthorized();
+
+		await _playlistService.AddSongToPlaylistAsync(playlistId, songid);
 		return NoContent();
 	}
 
@@ -34,7 +58,7 @@ public class PlaylistController : ControllerBase
 	}
 
 	[HttpGet("details-id/{id}")]
-	public async Task<IActionResult> GeDetailstById(Guid id)
+	public async Task<IActionResult> GetDetailstById(Guid id)
 	{
 		return Ok(await _playlistService.GetPlaylistDetailsByIdAsync(id));
 	}
@@ -43,6 +67,12 @@ public class PlaylistController : ControllerBase
 	public async Task<IActionResult> GetPlaylistsByUserId(Guid id)
 	{
 		return Ok(await _playlistService.GetPlaylistsByUserIdAsync(id));
+	}
+
+	[HttpGet("my-playlists")]
+	public async Task<IActionResult> GetMyPlaylists()
+	{
+		return await GetPlaylistsByUserId(_currentUserService.Id);
 	}
 
 	[HttpPut]

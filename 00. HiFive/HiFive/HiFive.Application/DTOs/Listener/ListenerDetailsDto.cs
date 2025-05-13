@@ -19,6 +19,9 @@ public class ListenerDetailsDto
 	public Guid? EquippedTitleId { get; set; }
 	public List<Guid> TitleIds { get; set; } = [];
 
+	public List<Guid> FollowingArtists { get; set; } = [];
+	public List<Guid> FollowingListeners { get; set; } = [];
+
 
 	public static ListenerDetailsDto FromEntity(Domain.Models.Users.Listener listener)
 	{
@@ -34,7 +37,9 @@ public class ListenerDetailsDto
 			EquippedBadgeId = listener.EquippedBadgeId,
 			BadgeIds = listener.Badges.Select(b => b.Id).ToList(),
 			EquippedTitleId = listener.EquippedTitleId,
-			TitleIds = listener.Titles.Select(t => t.Id).ToList()
+			TitleIds = listener.Titles.Select(t => t.Id).ToList(),
+			FollowingArtists = listener.FollowingArtists.Select(l => l.Id).ToList(),
+			FollowingListeners = listener.FollowingListeners.Select(l => l.FollowedId).ToList()
 		};
 	}
 }

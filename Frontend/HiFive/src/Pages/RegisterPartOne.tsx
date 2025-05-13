@@ -1,8 +1,9 @@
 import { Button, Stack } from "@mui/material";
 import { RequiredTextField } from "../Components/TextFields";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { RegisterListenerRequest } from "../Models/RegisterListener";
 
-function RegisterPage({ setForm, onSubmit }: { setForm: (form: unknown) => void, onSubmit: () => void }) {
+function RegisterPage({ setForm, onSubmit }: { setForm: Dispatch<SetStateAction<RegisterListenerRequest | undefined>>, onSubmit: () => void }) {
 
     const [emailError, setEmailError] = useState(false);
     const [usernameError, setUsernameError] = useState(false);

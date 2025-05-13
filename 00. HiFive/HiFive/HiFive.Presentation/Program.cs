@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IListenerService, ListenerService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IImageFileService, ImageFileService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
@@ -78,14 +80,40 @@ builder.Services.AddAuthentication(options =>
 	};
 });
 
+builder.Services.AddSwaggerGen(options =>
+{
+	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		In = ParameterLocation.Header,
+		Type = SecuritySchemeType.Http,
+		Scheme = "Bearer"
+	});
+
+	options.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+			{
+				Reference = new OpenApiReference
+				{
+					Type = ReferenceType.SecurityScheme,
+					Id = "Bearer"
+				}
+			},
+			Array.Empty<string>()
+		}
+	});
+});
+
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowAll",
+	options.AddPolicy("AllowFrontend",
 		builder =>
 		{
-			builder.AllowAnyOrigin()
-				.AllowAnyMethod()
-				.AllowAnyHeader();
+			builder.WithOrigins("http://localhost:5173")
+				.AllowAnyHeader()
+				.AllowAnyMethod();
 		});
 });
 
@@ -107,10 +135,10 @@ app.UseMiddleware<BadRequestExceptionHandling>();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.UseAuthorization();
 
-app.UseCors("AllowAll");
 
 app.MapControllers();
 

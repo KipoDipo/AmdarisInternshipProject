@@ -62,6 +62,8 @@ public class ListenerService : IListenerService
 		listener.FirstName = listenerUpdateDto.FirstName ?? listener.FirstName;
 		listener.LastName = listenerUpdateDto.LastName ?? listener.LastName;
 		listener.Bio = listenerUpdateDto.Bio ?? listener.Bio;
+		// TODO: update PhoneNumber from UserManager
+		listener.ProfilePictureId = listenerUpdateDto.ProfilePictureId ?? listener.ProfilePictureId;
 
 		await _unitOfWork.Listeners.UpdateAsync(listener);
 		await _unitOfWork.CommitTransactionAsync();

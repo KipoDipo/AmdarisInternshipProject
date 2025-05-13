@@ -36,6 +36,20 @@ public class BadRequestExceptionHandling
 
 			await context.Response.WriteAsync(result);
 		}
+		catch (UnauthorizedException ex)
+		{
+			_logger.LogWarning(ex, "Unauthorized exception occured: {Message}", ex.Message);
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+			context.Response.ContentType = "application/json";
+
+			var result = JsonSerializer.Serialize(new
+			{
+				StatusCode = context.Response.StatusCode,
+				Message = ex.Message,
+			});
+
+			await context.Response.WriteAsync(result);
+		}
 		catch (HiFiveException ex)
 		{
 			_logger.LogWarning(ex, "Application exception occurred: {Message}", ex.Message);

@@ -1,6 +1,6 @@
 export type RegisterListenerRequest = {
     username: string 
-	displayname: string 
+	displayName: string 
 	email: string 
 	password: string 
 
