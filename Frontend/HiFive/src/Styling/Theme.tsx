@@ -74,7 +74,7 @@ export const theme = createTheme({
             },
           },
           '& .MuiFormLabel-root': {
-              color: colors.white,
+            color: colors.white,
           },
           '& .MuiSvgIcon-root': {
             color: colors.white,
@@ -104,7 +104,7 @@ export const theme = createTheme({
             }
           },
           '& .MuiFormLabel-root': {
-              color: colors.white,
+            color: colors.white,
           },
         },
       },
@@ -143,9 +143,25 @@ export const theme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: {
-          color: colors.white
-        }
+          color: colors.white,
+          borderBottom: `1px solid ${colors.lightGray}`,
+        },
+        head: {
+          background: colors.lightGray
+        },
       }
+    },
+
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          background: colors.gray,
+          transition: 'background-color 0.3s ease',
+          "&:hover": {
+            background: colors.black
+          },
+        },
+      },
     }
   }
 })

@@ -54,7 +54,7 @@ function Ids(number: number, ids: string[]) {
     return stacks;
 }
 
-function ChunkArray(arr, size) {
+function ChunkArray(arr: string[], size: number) {
     const result = [];
     for (let i = 0; i < arr.length; i += size) {
         result.push(arr.slice(i, i + size));
