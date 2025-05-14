@@ -29,7 +29,6 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 		return await _dbContext.Set<Artist>()
 			.Include(a => a.Albums)
 			.Include(a => a.Singles)
-			.Include(a => a.ProfilePicture)
 			.FirstOrDefaultAsync(a => a.Id == id);
 	}
 

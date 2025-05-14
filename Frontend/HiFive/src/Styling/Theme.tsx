@@ -80,6 +80,13 @@ export const theme = createTheme({
             color: colors.white,
           },
         },
+
+        option: {
+          transition: 'background-color 0.1s ease',
+          '&:hover': {
+            background: colors.lightGray
+          }
+        }
       },
     },
 

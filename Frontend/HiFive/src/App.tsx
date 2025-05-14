@@ -16,6 +16,7 @@ import { SongProvider } from "./Contexts/SongProvider";
 import LogoAndName from "./Components/LogoAndName";
 import AccountEdit from "./Pages/AccountEdit";
 import Artist from "./Pages/Artist";
+import Explore from "./Components/SearchBar";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -60,8 +61,8 @@ function App() {
                                             }}
                                         >
                                             <Routes>
-                                                <Route index element={<Home />} />
-                                                <Route path="/account" element={<Account />} />
+                                                <Route index element={<><Explore/><Home /></>}/>
+                                                <Route path="/account" element={<><Explore/><Account /></>} />
                                                 <Route path="/account-edit" element={<AccountEdit />} />
                                                 <Route path="/add-song/" element={<AddSongPage />} />
                                                 <Route path="/add-genre/" element={<AddGenrePage />} />
