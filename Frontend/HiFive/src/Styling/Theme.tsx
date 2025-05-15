@@ -80,12 +80,15 @@ export const theme = createTheme({
             color: colors.white,
           },
         },
-
+       
         option: {
           transition: 'background-color 0.1s ease',
-          '&:hover': {
-            background: colors.lightGray
-          }
+          '&.Mui-focused': {
+            backgroundColor: colors.lightGray,
+          },
+          '&[aria-selected="true"]': {
+            backgroundColor: colors.lightGray,
+          },
         }
       },
     },
