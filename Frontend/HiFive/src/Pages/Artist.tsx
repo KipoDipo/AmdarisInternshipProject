@@ -8,13 +8,9 @@ import { Album } from "../Models/Album";
 
 import { useSetSong } from "../Contexts/UseSetSong";
 import AlbumCategory from "../Components/AlbumCategory";
+import { TimeFormat } from "../Utils/TimeFormat";
 
-function timeFormat(seconds: number) {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
 
-    return `${min}:${String(sec).padStart(2, '0')}`
-}
 
 export default function Page() {
     const { id } = useParams();
@@ -91,7 +87,7 @@ export default function Page() {
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell>{song.album}</TableCell>
-                                                    <TableCell>{timeFormat(+song.duration)}</TableCell>
+                                                    <TableCell>{TimeFormat(+song.duration)}</TableCell>
                                                 </TableRow>
                                             )
                                         })

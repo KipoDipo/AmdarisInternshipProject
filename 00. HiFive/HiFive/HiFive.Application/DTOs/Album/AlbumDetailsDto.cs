@@ -8,6 +8,8 @@ public class AlbumDetailsDto
 
 	public string? Description { get; set; }
 
+	public Guid? CoverImageId { get; set; }
+
 	public required DateTime ReleaseDate { get; set; }
 
 	public Guid ArtistId { get; set; }
@@ -23,6 +25,7 @@ public class AlbumDetailsDto
 			Description = album.Description,
 			ReleaseDate = album.ReleaseDate,
 			ArtistId = album.ArtistId,
+			CoverImageId = album.CoverImageId,
 			SongIds = album.Songs.Select(s => s.Id).ToList()
 		};
 	}

@@ -8,6 +8,8 @@ public class PlaylistDetailsDto
 
 	public string? Description { get; set; }
 
+	public Guid? ThumbnailId { get; set; }
+
 	public Guid OwnerId { get; set; }
 
 	public static PlaylistDetailsDto FromEntity(Domain.Models.Music.Playlist playlist)
@@ -17,6 +19,7 @@ public class PlaylistDetailsDto
 			Id = playlist.Id,
 			Title = playlist.Title,
 			Description = playlist.Description,
+			ThumbnailId = playlist.ThumbnailId,
 			OwnerId = playlist.OwnerId,
 		};
 	}

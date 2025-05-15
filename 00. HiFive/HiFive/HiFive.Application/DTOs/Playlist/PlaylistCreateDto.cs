@@ -6,5 +6,7 @@ public class PlaylistCreateDto
 
 	public string? Description { get; set; }
 
+	public Guid? ThumbnailId { get; set; }
+
 	public Guid OwnerId { get; set; }
 }

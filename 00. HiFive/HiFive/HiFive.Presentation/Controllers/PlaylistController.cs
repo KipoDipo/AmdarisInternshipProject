@@ -1,5 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Playlist;
+using HiFive.Presentation.Controllers.Requests.Playlist;
+using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,11 +15,13 @@ public class PlaylistController : ControllerBase
 {
 	private readonly IPlaylistService _playlistService;
 	private readonly ICurrentUserService _currentUserService;
+	private readonly IImageFileService _imageFileService;
 
-	public PlaylistController(IPlaylistService playlistService, ICurrentUserService currentUserService)
+	public PlaylistController(IPlaylistService playlistService, ICurrentUserService currentUserService, IImageFileService imageFileService)
 	{
 		_playlistService = playlistService;
 		_currentUserService = currentUserService;
+		_imageFileService = imageFileService;
 	}
 
 	// Could be used so that an admin/the app can make a playlist for you
@@ -28,15 +32,19 @@ public class PlaylistController : ControllerBase
 	}
 
 	[HttpPost("create-my-playlist")]
-	public async Task<IActionResult> CreateMy(PlaylistCreateMyDto playlistCreateMyDto)
+	public async Task<IActionResult> CreateMy([FromForm] PlaylistCreateMyRequest request)
 	{
-		PlaylistCreateDto dto = new()
+		if (request.Thumbnail == null)
 		{
-			Title = playlistCreateMyDto.Title,
-			Description = playlistCreateMyDto.Description,
-			OwnerId = _currentUserService.Id
-		};
-		return await Create(dto);
+			var dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, null);
+			return await Create(dto);
+		}
+		else
+		{
+			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(request.Thumbnail));
+			var dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, imageDto.Id);
+			return await Create(dto);
+		}
 	}
 
 	[HttpPost("add/{playlistid}-{songid}")]
@@ -57,7 +65,7 @@ public class PlaylistController : ControllerBase
 		return Ok(await _playlistService.GetPlaylistByIdAsync(id));
 	}
 
-	[HttpGet("details-id/{id}")]
+	[HttpGet("details/{id}")]
 	public async Task<IActionResult> GetDetailstById(Guid id)
 	{
 		return Ok(await _playlistService.GetPlaylistDetailsByIdAsync(id));

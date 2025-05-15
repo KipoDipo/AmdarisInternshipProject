@@ -30,6 +30,7 @@ public class PlaylistService : IPlaylistService
 		{
 			Title = playlistCreateDto.Title,
 			Description = playlistCreateDto.Description,
+			ThumbnailId = playlistCreateDto.ThumbnailId,
 			OwnerId = playlistCreateDto.OwnerId,
 		};
 

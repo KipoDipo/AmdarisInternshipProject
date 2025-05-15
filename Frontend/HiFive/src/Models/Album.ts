@@ -4,6 +4,8 @@ type Album = {
 	title: string 
 	releaseDate: string 
 
+	description?: string
+
 	artistId: string 
 	coverImageId?: string 
 }

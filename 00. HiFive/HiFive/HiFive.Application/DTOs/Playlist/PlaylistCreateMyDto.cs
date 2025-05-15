@@ -5,4 +5,6 @@ public class PlaylistCreateMyDto
 	public required string Title { get; set; }
 
 	public string? Description { get; set; }
+
+	public Guid? ThumbnailId { get; set; }
 }

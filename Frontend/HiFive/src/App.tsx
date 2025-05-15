@@ -17,6 +17,9 @@ import LogoAndName from "./Components/LogoAndName";
 import AccountEdit from "./Pages/AccountEdit";
 import Artist from "./Pages/Artist";
 import Explore from "./Components/SearchBar";
+import Playlists from "./Pages/Playlists";
+import Playlist from "./Pages/Playlist";
+import Album from "./Pages/Album";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -67,7 +70,10 @@ function App() {
                                                 <Route path="/add-song/" element={<AddSongPage />} />
                                                 <Route path="/add-genre/" element={<AddGenrePage />} />
                                                 <Route path="/add-album/" element={<AddAlbumPage />} />
-                                                <Route path="/artist/:id" element={<Artist />} />
+                                                <Route path="/artist/:id" element={<><Explore/><Artist /></>} />
+                                                <Route path="/playlist/:id" element={<><Explore/><Playlist /></>} />
+                                                <Route path="/album/:id" element={<><Explore/><Album /></>} />
+                                                <Route path="/playlists" element={<><Explore/><Playlists /></>} />
                                                 {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
                                             </Routes>
                                         </Box>

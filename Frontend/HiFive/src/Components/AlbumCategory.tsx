@@ -2,7 +2,7 @@ import { Typography, Box, Stack } from "@mui/material";
 import { Album } from "../Models/Album";
 import AlbumComponent from "./AlbumComponent";
 
-export default function Category({name, albums}: {name: string, albums?: Album[]}) {
+export default function AlbumCategory({name, albums}: {name: string, albums?: Album[]}) {
   return (
     <>
       <Typography variant='h3'>{name}</Typography>
