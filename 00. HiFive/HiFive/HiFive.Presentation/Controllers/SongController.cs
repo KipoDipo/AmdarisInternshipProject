@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class SongController : ControllerBase
 {
 	private ISongService _songService;
 	private IImageFileService _imageFileService;
+	private ICurrentUserService _currentUserService;
 
-	public SongController(ISongService songService, IImageFileService imageFileService)
+	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService)
 	{
 		_songService = songService;
 		_imageFileService = imageFileService;
+		_currentUserService = currentUserService;
 	}
 
 	[HttpPost]
@@ -29,14 +32,12 @@ public class SongController : ControllerBase
 		return Ok(await _songService.CreateSongAsync(songDto));
 	}
 
-	[Authorize]
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _songService.GetSongByIdAsync(id));
 	}
 
-	[Authorize]
 	[HttpGet]
 	public async Task<IActionResult> GetAll()
 	{
@@ -84,6 +85,13 @@ public class SongController : ControllerBase
 	public async Task<IActionResult> GetListenerLikedSongs(Guid listenerId)
 	{
 		return Ok(await _songService.GetListenerLikedSongs(listenerId));
+	}
+
+	[Authorize]
+	[HttpGet("my-liked")]
+	public async Task<IActionResult> GetMyLikedSongs()
+	{
+		return Ok(await _songService.GetListenerLikedSongs(_currentUserService.Id));
 	}
 
 	[HttpGet("artist/{artistId}")]

@@ -56,6 +56,13 @@ public class ListenerController : ControllerBase
 		}
 	}
 
+	[HttpPost("like/{songId}")]
+	public async Task<IActionResult> LikeSong(Guid songId)
+	{
+		await _listenerService.LikeSongAsync(_currentUserService.Id, songId);
+		return NoContent();
+	}
+
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)
 	{

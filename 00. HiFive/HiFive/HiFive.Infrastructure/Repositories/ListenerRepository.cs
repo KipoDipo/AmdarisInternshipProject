@@ -32,6 +32,8 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			.Include(l => l.Titles)
 			.Include(l => l.FollowingArtists)
 			.Include(l => l.FollowingListeners)
+			.Include(l => l.LikedSongs)
+			.Include(l => l.LikedPlaylists)
 			.FirstOrDefaultAsync(x => x.Id == id);
 	}
 

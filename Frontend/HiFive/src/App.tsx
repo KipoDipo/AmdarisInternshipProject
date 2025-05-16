@@ -20,6 +20,7 @@ import Explore from "./Components/SearchBar";
 import Playlists from "./Pages/Playlists";
 import Playlist from "./Pages/Playlist";
 import Album from "./Pages/Album";
+import LikedSongs from "./Pages/LikedSongs";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
                                                 <Route path="/artist/:id" element={<><Explore/><Artist /></>} />
                                                 <Route path="/playlist/:id" element={<><Explore/><Playlist /></>} />
                                                 <Route path="/album/:id" element={<><Explore/><Album /></>} />
+                                                <Route path="/liked" element={<><Explore/><LikedSongs /></>} />
                                                 <Route path="/playlists" element={<><Explore/><Playlists /></>} />
                                                 {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
                                             </Routes>

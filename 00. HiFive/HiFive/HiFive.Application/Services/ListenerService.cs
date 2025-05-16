@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Listener;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
 
@@ -27,6 +28,22 @@ public class ListenerService : IListenerService
 
 		return ListenerDto.FromEntity(listener);
 	}
+	
+	public async Task LikeSongAsync(Guid listenerId, Guid songId)
+	{
+		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
+		_validator.Validate(song);
+
+		var listener = await _unitOfWork.Listeners.GetAll()
+			.Include(l => l.LikedSongs)
+			.Where(l => l.Id == listenerId)
+			.FirstOrDefaultAsync();
+		_validator.Validate(listener);
+
+		await _unitOfWork.BeginTransactionAsync();
+		listener.LikedSongs.Add(song);
+		await _unitOfWork.CommitTransactionAsync();
+	}
 
 	public async Task<ListenerDto> GetListenerByIdAsync(Guid listenerId)
 	{
@@ -50,6 +67,7 @@ public class ListenerService : IListenerService
 
 		return listeners.Select(ListenerDto.FromEntity).ToList();
 	}
+
 
 	public async Task UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto)
 	{

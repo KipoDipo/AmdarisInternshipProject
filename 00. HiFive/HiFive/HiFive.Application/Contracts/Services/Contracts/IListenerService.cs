@@ -6,6 +6,8 @@ public interface IListenerService
 {
 	Task<ListenerDto> CreateListenerAsync(ListenerCreateDto listenerCreateDto);
 
+	Task LikeSongAsync(Guid listenerId, Guid songId);
+
 	Task<ListenerDto> GetListenerByIdAsync(Guid listenerId);
 	Task<IEnumerable<ListenerDto>> GetListenersByPartialNameAsync(string partialName);
 	Task<ListenerDetailsDto> GetListenerDetailsByIdAsync(Guid listenerId);

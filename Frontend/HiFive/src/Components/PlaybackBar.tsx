@@ -19,6 +19,81 @@ import { textWidth } from '../Styling/Theme';
 import { baseURL, fetcher } from '../Fetcher';
 import { Playlist } from '../Models/Playlist';
 
+function Controls({size}: {size?:number}) {
+  const theme = useTheme();
+  const [isPlayingMusic, setPlayingMusic] = useState(false);
+  const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
+  const [hasLikedSong, setHasLikedSong] = useState(false);
+
+  if (!size)
+    size = 32;
+
+  const iconSize = size;
+  const smallFabSx = {width: iconSize, height: iconSize, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
+  const bigFabSx = {width: iconSize * 2, height: iconSize * 2, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
+  const smallFabSxAlt = {...smallFabSx, background: "transparent", color: theme.palette.secondary.light ,'&:hover': {transition:'color 0.2s ease', color:theme.palette.secondary.dark, background: theme.palette.primary.light}, boxShadow: "none"}
+  const smallFontSx = {fontSize: iconSize};
+  const bigFontSx = {fontSize: iconSize * 2};
+
+  function handlePlay() {
+    setPlayingMusic(!isPlayingMusic);
+  }
+
+  
+  const song = useSong();
+
+  async function likeSong() {
+    if (!song)
+      return;
+
+    await fetcher.post(`/Listener/like/${song.id}`)
+    setHasLikedSong(true);
+  }
+  
+  useEffect(() => {
+    if (!song)
+      return;
+
+    fetcher.get('/Song/my-liked')
+    .then((response) => {
+      const songs: Song[] = response.data;
+      setHasLikedSong(songs.some(s => s.id === song.id));
+    })
+  }, [song])
+
+  return (
+    <Stack
+    direction='row'
+    justifyContent='center'
+    alignItems='center'
+    spacing={3}
+    flex={0}
+  >
+      <Fab sx={{
+        ...smallFabSxAlt, 
+        color: hasLikedSong ? theme.palette.primary.main : theme.palette.secondary.light,
+        }} 
+        onClick={likeSong} centerRipple>
+        <ThumbUpRoundedIcon/>
+      </Fab>
+      <Fab sx={smallFabSx} centerRipple>
+        <SkipPreviousRoundedIcon sx={smallFontSx}/>
+      </Fab>
+      <Fab sx={bigFabSx} onClick={handlePlay} centerRipple>
+        {isPlayingMusic ? <PauseRoundedIcon sx={bigFontSx}/> : <PlayArrowRoundedIcon sx={bigFontSx}/>}
+      </Fab>
+      <Fab sx={smallFabSx} centerRipple>
+        <SkipNextRoundedIcon sx={smallFontSx}/>  
+      </Fab>
+      <Fab sx={smallFabSxAlt} onClick={() => setIsAddingToPlaylist(true)} centerRipple>
+        <QueueMusicRoundedIcon/>  
+      </Fab>
+
+      <AddToPlaylistDialog open={isAddingToPlaylist} setIsOpen={setIsAddingToPlaylist}/>
+  </Stack>
+  )
+}
+
 function AddToPlaylistDialog({open, setIsOpen}: {open: boolean, setIsOpen: (p: boolean) => void}) {
   const [playlists, setPlaylists] = useState<Playlist[]>()
   const [selectedPlaylist, setSelectedPlaylist] = useState("")
@@ -81,53 +156,6 @@ function AddToPlaylistDialog({open, setIsOpen}: {open: boolean, setIsOpen: (p: b
   )
 }
 
-function Controls({size}: {size?:number}) {
-  const theme = useTheme();
-  const [isPlayingMusic, setPlayingMusic] = useState(false);
-  const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
-
-  if (!size)
-    size = 32;
-
-  const iconSize = size;
-  const smallFabSx = {width: iconSize, height: iconSize, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
-  const bigFabSx = {width: iconSize * 2, height: iconSize * 2, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
-  const smallFabSxAlt = {...smallFabSx, background: "transparent", color: theme.palette.secondary.light ,'&:hover': {transition:'color 0.2s ease', color:theme.palette.secondary.dark, background: theme.palette.primary.light}, boxShadow: "none"}
-  const smallFontSx = {fontSize: iconSize};
-  const bigFontSx = {fontSize: iconSize * 2};
-
-  function handlePlay() {
-    setPlayingMusic(!isPlayingMusic);
-  }
-
-  return (
-    <Stack
-    direction='row'
-    justifyContent='center'
-    alignItems='center'
-    spacing={3}
-    flex={0}
-  >
-      <Fab sx={smallFabSxAlt} centerRipple>
-        <ThumbUpRoundedIcon/>
-      </Fab>
-      <Fab sx={smallFabSx} centerRipple>
-        <SkipPreviousRoundedIcon sx={smallFontSx}/>
-      </Fab>
-      <Fab sx={bigFabSx} onClick={handlePlay} centerRipple>
-        {isPlayingMusic ? <PauseRoundedIcon sx={bigFontSx}/> : <PlayArrowRoundedIcon sx={bigFontSx}/>}
-      </Fab>
-      <Fab sx={smallFabSx} centerRipple>
-        <SkipNextRoundedIcon sx={smallFontSx}/>  
-      </Fab>
-      <Fab sx={smallFabSxAlt} onClick={() => setIsAddingToPlaylist(true)} centerRipple>
-        <QueueMusicRoundedIcon/>  
-      </Fab>
-
-      <AddToPlaylistDialog open={isAddingToPlaylist} setIsOpen={setIsAddingToPlaylist}/>
-  </Stack>
-  )
-}
 
 function Info({song}: {song?: Song}) {
   const typographySx: TypographyOwnProps = {
