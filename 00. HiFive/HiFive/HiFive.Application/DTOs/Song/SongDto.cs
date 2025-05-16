@@ -21,7 +21,7 @@ public class SongDto
 			ArtistId = song.ArtistId,
 			ArtistName = song.Artist?.DisplayName ?? "",
 			Duration = song.Duration,
-			Album = song.Album?.Title ?? "",
+			Album = song.AlbumSong?.Album?.Title ?? "",
 			AlbumId = song.AlbumId,
 			CoverImageId = song.CoverImageId
 		};

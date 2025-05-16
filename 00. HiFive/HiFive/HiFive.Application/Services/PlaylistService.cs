@@ -3,6 +3,7 @@ using HiFive.Application.DTOs.Playlist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Join;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
@@ -98,14 +99,26 @@ public class PlaylistService : IPlaylistService
 
 	public async Task AddSongToPlaylistAsync(Guid playlistId, Guid songId)
 	{
-		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
+		var playlist = await _unitOfWork.Playlists.GetWithDetailsByIdAsync(playlistId);
 		_validator.Validate(playlist);
 
 		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		_validator.Validate(song);
 
 		await _unitOfWork.BeginTransactionAsync();
-		playlist.Songs.Add(song);
+
+		var maxOrderIndex = playlist.Songs.Any()
+			? playlist.Songs.Max(p => p.OrderIndex)
+			: 0;
+
+		var playlistSong = new PlaylistSong()
+		{
+			Playlist = playlist,
+			Song = song,
+			OrderIndex = maxOrderIndex + 1
+		};
+
+		playlist.Songs.Add(playlistSong);
 
 		await _unitOfWork.Playlists.UpdateAsync(playlist);
 		await _unitOfWork.CommitTransactionAsync();
@@ -113,14 +126,25 @@ public class PlaylistService : IPlaylistService
 
 	public async Task RemoveSongFromPlaylistAsync(Guid playlistId, Guid songId)
 	{
-		var playlist = await _unitOfWork.Playlists.GetByIdAsync(playlistId);
+		var playlist = await _unitOfWork.Playlists.GetWithDetailsByIdAsync(playlistId);
 		_validator.Validate(playlist);
+
 
 		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 		_validator.Validate(song);
 
+
 		await _unitOfWork.BeginTransactionAsync();
-		playlist.Songs.Remove(song);
+		var record = playlist.Songs.FirstOrDefault(s => s.SongId == songId);
+		if (record == null)
+			throw new NotFoundException("Record not found");
+		
+		playlist.Songs.Remove(record);
+		var index = 1;
+		foreach (var playlistSong in playlist.Songs.OrderBy(ps => ps.OrderIndex))
+		{
+			playlistSong.OrderIndex = index++;
+		}
 
 		await _unitOfWork.Playlists.UpdateAsync(playlist);
 		await _unitOfWork.CommitTransactionAsync();
@@ -132,7 +156,7 @@ public class PlaylistService : IPlaylistService
 		_validator.Validate(playlist);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
-			.Where(s => playlist.Songs.Contains(s) && !s.IsDeleted) // TODO: Query Filters
+			.Where(s => playlist.Songs.Any(ps => ps.SongId == s.Id) && !s.IsDeleted) // TODO: Query Filters
 			.ToListAsync();
 
 		return songs.Select(SongDto.FromEntity);

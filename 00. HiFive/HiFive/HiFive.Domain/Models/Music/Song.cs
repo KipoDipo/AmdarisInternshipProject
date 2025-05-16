@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
 
@@ -21,9 +22,9 @@ public class Song : IDeletable
 	public Artist Artist { get; set; } = null!;
 
 	public Guid? AlbumId { get; set; }
-	public Album? Album { get; set; }
+	public AlbumSong? AlbumSong { get; set; }
 
-	public List<Playlist> PlaylistsIn { get; set; } = [];
+	public List<PlaylistSong> PlaylistsIn { get; set; } = [];
 	public List<Listener> LikedBy { get; set; } = [];
 
 	public bool IsDeleted { get; set; }

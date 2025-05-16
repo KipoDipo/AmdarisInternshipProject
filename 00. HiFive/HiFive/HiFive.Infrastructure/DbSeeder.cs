@@ -1,6 +1,7 @@
 ﻿using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Listener;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Users;
@@ -174,7 +175,7 @@ public class DbSeeder
 		{
 			await unit.BeginTransactionAsync();
 
-			ReolAlbum = new Album() { Title = "Sigma", ReleaseDate = new DateTime(2016, 10, 19), ArtistId = Reol.Id, CoverImageId = reolCover .Id };
+			ReolAlbum = new Album() { Title = "Sigma", ReleaseDate = new DateTime(2016, 10, 19), ArtistId = Reol.Id, CoverImageId = reolCover.Id };
 			LotusJuiceAlbum = new Album() { Title = "Only a Test", ReleaseDate = new DateTime(2009, 8, 26), ArtistId = LotusJuice.Id, CoverImageId = lotusCover.Id };
 			DuaLipaAlbum = new Album() { Title = "Future Nostalgia", ReleaseDate = new DateTime(2020, 3, 27), ArtistId = DuaLipa.Id, CoverImageId = duaCover.Id };
 			LynyrdSkynyrdAlbum = new Album() { Title = "(Pronounced 'Lĕh-'nérd 'Skin-'nérd)", ReleaseDate = new DateTime(1973, 8, 13), ArtistId = LynyrdSkynyrd.Id, CoverImageId = lynyrdCover.Id };
@@ -213,26 +214,43 @@ public class DbSeeder
 			var metal = unit.Genres.GetAll().First(g => g.Name == "metal");
 
 
-			var ReolSong1 = new Song() { Title = "Give Me a Break Stop Now", Duration = (uint)TimeSpan.FromMinutes(3.45).TotalSeconds, Genres = [pop, electronic], Data = "blob", Album = ReolAlbum, Artist = Reol, CoverImage = reolCover };
-			var ReolSong2 = new Song() { Title = "ChiruChiru", Duration = (uint)TimeSpan.FromMinutes(3.30).TotalSeconds, Genres = [electronic], Data = "blob", Album = ReolAlbum, Artist = Reol, CoverImage = reolCover };
+			var ReolSong1 = new Song() { Title = "Give Me a Break Stop Now", Duration = (uint)TimeSpan.FromMinutes(3.45).TotalSeconds, Genres = [pop, electronic], Data = "blob", Artist = Reol, CoverImage = reolCover };
+			var ReolSong2 = new Song() { Title = "ChiruChiru", Duration = (uint)TimeSpan.FromMinutes(3.30).TotalSeconds, Genres = [electronic], Data = "blob", Artist = Reol, CoverImage = reolCover };
 
-			var LotusSong1 = new Song() { Title = "Mass Destruction", Duration = (uint)TimeSpan.FromMinutes(3.12).TotalSeconds, Genres = [rap, rock], Data = "blob", Album = LotusJuiceAlbum, Artist = LotusJuice, CoverImage = lotusCover };
-			var LotusSong2 = new Song() { Title = "Burn My Dread", Duration = (uint)TimeSpan.FromMinutes(4.05).TotalSeconds, Genres = [rap], Data = "blob", Album = LotusJuiceAlbum, Artist = LotusJuice, CoverImage = lotusCover };
+			var LotusSong1 = new Song() { Title = "Mass Destruction", Duration = (uint)TimeSpan.FromMinutes(3.12).TotalSeconds, Genres = [rap, rock], Data = "blob", Artist = LotusJuice, CoverImage = lotusCover };
+			var LotusSong2 = new Song() { Title = "Burn My Dread", Duration = (uint)TimeSpan.FromMinutes(4.05).TotalSeconds, Genres = [rap], Data = "blob", Artist = LotusJuice, CoverImage = lotusCover };
 
-			var DuaSong1 = new Song() { Title = "Levitating", Duration = (uint)TimeSpan.FromMinutes(3.23).TotalSeconds, Genres = [pop], Data = "blob", Album = DuaLipaAlbum, Artist = DuaLipa, CoverImage = duaCover };
-			var DuaSong2 = new Song() { Title = "Don't Start Now", Duration = (uint)TimeSpan.FromMinutes(3.03).TotalSeconds, Genres = [pop], Data = "blob", Album = DuaLipaAlbum, Artist = DuaLipa, CoverImage = duaCover };
+			var DuaSong1 = new Song() { Title = "Levitating", Duration = (uint)TimeSpan.FromMinutes(3.23).TotalSeconds, Genres = [pop], Data = "blob", Artist = DuaLipa, CoverImage = duaCover };
+			var DuaSong2 = new Song() { Title = "Don't Start Now", Duration = (uint)TimeSpan.FromMinutes(3.03).TotalSeconds, Genres = [pop], Data = "blob", Artist = DuaLipa, CoverImage = duaCover };
 
-			var SkynyrdSong1 = new Song() { Title = "Free Bird", Duration = (uint)TimeSpan.FromMinutes(9.08).TotalSeconds, Genres = [rock], Data = "blob", Album = LynyrdSkynyrdAlbum, Artist = LynyrdSkynyrd, CoverImage = lynyrdCover };
-			var SkynyrdSong2 = new Song() { Title = "Sweet Home Alabama", Duration = (uint)TimeSpan.FromMinutes(4.45).TotalSeconds, Genres = [rock], Data = "blob", Album = LynyrdSkynyrdAlbum, Artist = LynyrdSkynyrd, CoverImage = lynyrdCover };
+			var SkynyrdSong1 = new Song() { Title = "Free Bird", Duration = (uint)TimeSpan.FromMinutes(9.08).TotalSeconds, Genres = [rock], Data = "blob", Artist = LynyrdSkynyrd, CoverImage = lynyrdCover };
+			var SkynyrdSong2 = new Song() { Title = "Sweet Home Alabama", Duration = (uint)TimeSpan.FromMinutes(4.45).TotalSeconds, Genres = [rock], Data = "blob", Artist = LynyrdSkynyrd, CoverImage = lynyrdCover };
 
-			var FleetwoodSong1 = new Song() { Title = "Dreams", Duration = (uint)TimeSpan.FromMinutes(4.18).TotalSeconds, Genres = [rock, pop], Data = "blob", Album = FleetwoodMacAlbum, Artist = FleetwoodMac, CoverImage = fleetwoodCover };
-			var FleetwoodSong2 = new Song() { Title = "Go Your Own Way", Duration = (uint)TimeSpan.FromMinutes(3.43).TotalSeconds, Genres = [rock], Data = "blob", Album = FleetwoodMacAlbum, Artist = FleetwoodMac, CoverImage = fleetwoodCover };
+			var FleetwoodSong1 = new Song() { Title = "Dreams", Duration = (uint)TimeSpan.FromMinutes(4.18).TotalSeconds, Genres = [rock, pop], Data = "blob", Artist = FleetwoodMac, CoverImage = fleetwoodCover };
+			var FleetwoodSong2 = new Song() { Title = "Go Your Own Way", Duration = (uint)TimeSpan.FromMinutes(3.43).TotalSeconds, Genres = [rock], Data = "blob", Artist = FleetwoodMac, CoverImage = fleetwoodCover };
 
-			var FloydSong1 = new Song() { Title = "Time", Duration = (uint)TimeSpan.FromMinutes(6.53).TotalSeconds, Genres = [rock], Data = "blob", Album = PinkFloydAlbum, Artist = PinkFloyd, CoverImage = pinkCover };
-			var FloydSong2 = new Song() { Title = "Money", Duration = (uint)TimeSpan.FromMinutes(6.22).TotalSeconds, Genres = [rock], Data = "blob", Album = PinkFloydAlbum, Artist = PinkFloyd, CoverImage = pinkCover };
+			var FloydSong1 = new Song() { Title = "Time", Duration = (uint)TimeSpan.FromMinutes(6.53).TotalSeconds, Genres = [rock], Data = "blob", Artist = PinkFloyd, CoverImage = pinkCover };
+			var FloydSong2 = new Song() { Title = "Money", Duration = (uint)TimeSpan.FromMinutes(6.22).TotalSeconds, Genres = [rock], Data = "blob", Artist = PinkFloyd, CoverImage = pinkCover };
 
-			var SabatonSong1 = new Song() { Title = "Ghost Division", Duration = (uint)TimeSpan.FromMinutes(3.51).TotalSeconds, Genres = [metal], Data = "blob", Album = SabatonAlbum, Artist = Sabaton, CoverImage = sabatonCover };
-			var SabatonSong2 = new Song() { Title = "The Art of War", Duration = (uint)TimeSpan.FromMinutes(5.10).TotalSeconds, Genres = [metal], Data = "blob", Album = SabatonAlbum, Artist = Sabaton, CoverImage = sabatonCover };
+			var SabatonSong1 = new Song() { Title = "Ghost Division", Duration = (uint)TimeSpan.FromMinutes(3.51).TotalSeconds, Genres = [metal], Data = "blob", Artist = Sabaton, CoverImage = sabatonCover };
+			var SabatonSong2 = new Song() { Title = "The Art of War", Duration = (uint)TimeSpan.FromMinutes(5.10).TotalSeconds, Genres = [metal], Data = "blob", Artist = Sabaton, CoverImage = sabatonCover };
+
+
+			ReolSong1.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong1, OrderIndex = 0 };
+			ReolSong2.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong2, OrderIndex = 1 };
+			LotusSong1.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong1, OrderIndex = 0 };
+			LotusSong2.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong2, OrderIndex = 1 };
+			DuaSong1.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong1, OrderIndex = 0 };
+			DuaSong2.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong2, OrderIndex = 1 };
+			SkynyrdSong1.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong1, OrderIndex = 0 };
+			SkynyrdSong2.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong2, OrderIndex = 1 };
+			FleetwoodSong1.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong1, OrderIndex = 0 };
+			FleetwoodSong2.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong2, OrderIndex = 1 };
+			FloydSong1.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong1, OrderIndex = 0 };
+			FloydSong2.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong2, OrderIndex = 1 };
+			SabatonSong1.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong1, OrderIndex = 0 };
+			SabatonSong2.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong2, OrderIndex = 1 };
+
 
 			await unit.BeginTransactionAsync();
 

@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Throphies;
@@ -32,6 +33,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
 	#region Misc
 	public DbSet<ImageFile> ImageFiles { get; set; }
+	#endregion
+
+	#region Join
+	public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+	public DbSet<AlbumSong> AlbumSongs { get; set; }
 	#endregion
 
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

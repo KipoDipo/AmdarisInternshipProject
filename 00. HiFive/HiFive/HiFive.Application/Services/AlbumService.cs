@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Album;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Join;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
@@ -35,12 +36,19 @@ public class AlbumService : IAlbumService
 		};
 		await _unitOfWork.Albums.AddAsync(album);
 
+		int index = 1;
 		foreach (var songId in albumCreateDto.SongIds)
 		{
 			var song = await _unitOfWork.Songs.GetByIdAsync(songId);
 			_validator.Validate(song);
 
-			song.Album = album;
+			song.AlbumSong = new AlbumSong()
+			{
+				Song = song,
+				Album = album,
+				OrderIndex = index++
+			};
+
 		}
 
 		await _unitOfWork.CommitTransactionAsync();
@@ -98,7 +106,7 @@ public class AlbumService : IAlbumService
 		if (album.Songs.Any(s => s.Id == songId))
 			throw new BadOperationException("Song already exists in the album.");
 
-		album.Songs.Add(song);
+		album.Songs.Add(new AlbumSong() { Album = album, Song = song, OrderIndex = album.Songs.Count + 1});
 		await _unitOfWork.Albums.UpdateAsync(album);
 		await _unitOfWork.CommitTransactionAsync();
 	}

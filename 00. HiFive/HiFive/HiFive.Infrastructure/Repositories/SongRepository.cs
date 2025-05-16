@@ -14,7 +14,8 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 	{
 		return await _dbContext.Set<Song>()
 			.Include(s => s.Artist)
-			.Include(s => s.Album)
+			.Include(s => s.AlbumSong)
+			.ThenInclude(a => a.Album)
 			.FirstOrDefaultAsync(s => s.Id == id);
 	}
 
@@ -30,7 +31,7 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 	{
 		return await _dbContext.Set<Song>()
 			.Include(s => s.Artist)
-			.Include(s => s.Album)
+			.Include(s => s.AlbumSong)
 			.Include(s => s.Genres)
 			.FirstOrDefaultAsync(s => s.Id == id);
 	}

@@ -15,6 +15,7 @@ public class AlbumRepository : BaseRepository<Album>, IAlbumRepository
 		return await _dbContext.Set<Album>()
 			.Include(a => a.Artist)
 			.Include(a => a.Songs)
+			.ThenInclude(s => s.Song)
 			.FirstOrDefaultAsync(a => a.Id == id);
 	}
 }

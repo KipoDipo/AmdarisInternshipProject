@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
 
@@ -10,7 +11,7 @@ public class Playlist : IDeletable
 
 	public required string Title { get; set; }
 	public string? Description { get; set; }
-	public List<Song> Songs { get; set; } = [];
+	public List<PlaylistSong> Songs { get; set; } = [];
 
 
 	public Guid? ThumbnailId { get; set; }

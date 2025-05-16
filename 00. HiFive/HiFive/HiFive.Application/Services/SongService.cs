@@ -58,7 +58,7 @@ public class SongService : ISongService
 
 		return SongDto.FromEntity(song);
 	}
-	
+
 	public async Task<IEnumerable<SongDto>> GetAllSongsAsync()
 	{
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
@@ -104,7 +104,7 @@ public class SongService : ISongService
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Include(s => s.Artist)
-			.Include(s => s.Album)
+			.Include(s => s.AlbumSong)
 			.Where(s => s.ArtistId == artistId)
 			.ToListAsync();
 
@@ -146,7 +146,7 @@ public class SongService : ISongService
 		var playlist = await _unitOfWork.Playlists.GetWithDetailsByIdAsync(playlistId);
 		_validator.Validate(playlist);
 
-		return playlist.Songs.Select(SongDto.FromEntity);
+		return playlist.Songs.OrderBy(s => s.OrderIndex).Select(x => SongDto.FromEntity(x.Song));
 	}
 
 	public async Task<IEnumerable<SongDto>> GetAllSongsByAlbumIdAsync(Guid albumId)
@@ -154,7 +154,7 @@ public class SongService : ISongService
 		var album = await _unitOfWork.Albums.GetWithDetailsByIdAsync(albumId); // TODO: there's 1 extra join here for Artist
 		_validator.Validate(album);
 
-		return album.Songs.Select(SongDto.FromEntity);
+		return album.Songs.OrderBy(s => s.OrderIndex).Select(a => SongDto.FromEntity(a.Song));
 	}
 
 }

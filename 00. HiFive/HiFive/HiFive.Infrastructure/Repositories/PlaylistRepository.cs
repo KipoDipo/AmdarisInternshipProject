@@ -14,6 +14,7 @@ public class PlaylistRepository : BaseRepository<Playlist>, IPlaylistRepository
 	{
 		return await _dbContext.Set<Playlist>()
 			.Include(p => p.Songs)
+			.ThenInclude(s => s.Song)
 			.ThenInclude(s => s.Artist)
 			.FirstOrDefaultAsync(p => p.Id == id);
 	}

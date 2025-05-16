@@ -125,11 +125,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
-//	var unit = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-//	await DbSeeder.Seed(unit);
-//}
+using (var scope = app.Services.CreateScope())
+{
+	var unit = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+	await DbSeeder.Seed(unit);
+}
 
 app.UseMiddleware<BadRequestExceptionHandling>();
 
