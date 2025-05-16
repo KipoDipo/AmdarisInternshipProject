@@ -14,7 +14,7 @@ export default function Page() {
 
     useEffect(() => {
         fetcher.get('Playlist/my-playlists')
-            .then((response) => { console.log(response.data); setPlaylists(response.data) })
+            .then((response) => setPlaylists(response.data))
     }, [])
 
     return (
@@ -31,7 +31,6 @@ export default function Page() {
                     <AddPlaylist onSubmit={() => setOpenDialog(false)} />
                 </DialogContent>
             </Dialog>
-
         </Stack>
     )
 }

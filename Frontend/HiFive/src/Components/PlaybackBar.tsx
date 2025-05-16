@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Slider, Stack, Typography, Fab, TypographyOwnProps, IconButton, useTheme, Box, Avatar } from '@mui/material'
+import { Slider, Stack, Typography, Fab, TypographyOwnProps, IconButton, useTheme, Box, Avatar, Dialog, MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
@@ -9,13 +9,82 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded';
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
+import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
+import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
+
 import { Song } from '../Models/Song';
 import { useSong } from '../Contexts/UseSong';
 import { Link } from 'react-router-dom';
+import { textWidth } from '../Styling/Theme';
+import { baseURL, fetcher } from '../Fetcher';
+import { Playlist } from '../Models/Playlist';
+
+function AddToPlaylistDialog({open, setIsOpen}: {open: boolean, setIsOpen: (p: boolean) => void}) {
+  const [playlists, setPlaylists] = useState<Playlist[]>()
+  const [selectedPlaylist, setSelectedPlaylist] = useState("")
+
+  const song = useSong();
+
+  async function addToPlaylist() {
+    if (!song)
+      return;
+
+    try {
+      await fetcher.post(`/Playlist/add/${selectedPlaylist}/song/${song.id}`)
+      setIsOpen(false);
+    }
+    catch(error) {
+      console.error(error)
+    }
+  }
+  useEffect(() => {
+    if (!open)
+      return;
+
+    fetcher.get('/Playlist/my-playlists')
+    .then((response) => setPlaylists(response.data))
+  }, [open])
+
+
+  return (
+    <Dialog open={open} onClose={() => setIsOpen(false)} fullWidth maxWidth="sm">
+        <Stack margin={3} gap={3} alignItems='center'>
+          <Stack gap={3} alignItems='center' direction='row'>
+            <Avatar src={`${baseURL}Image/${song?.coverImageId}`} variant='rounded' sx={{width: 80, height: 80}}/>
+            <Stack>
+              <Typography variant='h5'>{song?.title}</Typography>
+              <Typography>{song?.artistName}</Typography>
+            </Stack>
+          </Stack>
+          <FormControl fullWidth>
+            <InputLabel>Select Playlist</InputLabel>
+            <Select 
+              label="Select Playlist"
+              value={selectedPlaylist}
+              onChange={(event) => setSelectedPlaylist(event.target.value)}
+            >
+              {
+                playlists?.map((p) => 
+                  <MenuItem key={p.id} value={p.id}>
+                    <Stack direction='row' gap={3} alignItems='center'>
+                      <Avatar src={`${baseURL}Image/${p.thumbnailId}`} variant='rounded'/>
+                      <Typography>{p.title}</Typography>
+                    </Stack>
+                  </MenuItem>
+                )
+              }
+            </Select>
+          </FormControl>
+          <Button variant='contained' sx={{width:textWidth}} onClick={addToPlaylist}>Add</Button>
+        </Stack>
+      </Dialog>
+  )
+}
 
 function Controls({size}: {size?:number}) {
   const theme = useTheme();
   const [isPlayingMusic, setPlayingMusic] = useState(false);
+  const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
 
   if (!size)
     size = 32;
@@ -23,6 +92,7 @@ function Controls({size}: {size?:number}) {
   const iconSize = size;
   const smallFabSx = {width: iconSize, height: iconSize, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
   const bigFabSx = {width: iconSize * 2, height: iconSize * 2, minWidth: 0, minHeight: 0, color: theme.palette.secondary.dark, background: theme.palette.primary.main, '&:hover': {background: theme.palette.primary.light}};
+  const smallFabSxAlt = {...smallFabSx, background: "transparent", color: theme.palette.secondary.light ,'&:hover': {transition:'color 0.2s ease', color:theme.palette.secondary.dark, background: theme.palette.primary.light}, boxShadow: "none"}
   const smallFontSx = {fontSize: iconSize};
   const bigFontSx = {fontSize: iconSize * 2};
 
@@ -38,6 +108,9 @@ function Controls({size}: {size?:number}) {
     spacing={3}
     flex={0}
   >
+      <Fab sx={smallFabSxAlt} centerRipple>
+        <ThumbUpRoundedIcon/>
+      </Fab>
       <Fab sx={smallFabSx} centerRipple>
         <SkipPreviousRoundedIcon sx={smallFontSx}/>
       </Fab>
@@ -47,6 +120,11 @@ function Controls({size}: {size?:number}) {
       <Fab sx={smallFabSx} centerRipple>
         <SkipNextRoundedIcon sx={smallFontSx}/>  
       </Fab>
+      <Fab sx={smallFabSxAlt} onClick={() => setIsAddingToPlaylist(true)} centerRipple>
+        <QueueMusicRoundedIcon/>  
+      </Fab>
+
+      <AddToPlaylistDialog open={isAddingToPlaylist} setIsOpen={setIsAddingToPlaylist}/>
   </Stack>
   )
 }

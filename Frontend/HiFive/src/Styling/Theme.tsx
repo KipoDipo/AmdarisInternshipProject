@@ -55,6 +55,53 @@ export const theme = createTheme({
         }
       }
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: colors.white
+        }
+      }
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: colors.white,
+            },
+            '&:hover fieldset': {
+              borderColor: colors.yellow,
+            }
+          },
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: colors.white,
+            },
+            '&:hover': {
+              borderColor: colors.yellow,
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: colors.yellow,
+            },
+            '& input': {
+              color: colors.white,
+            },
+          },
+          '& .MuiFormLabel-root': {
+            color: colors.white,
+          },
+          '& .MuiSvgIcon-root': {
+            color: colors.white,
+          },
+        },
+      },
+    },
 
     MuiAutocomplete: {
       styleOverrides: {
@@ -80,7 +127,7 @@ export const theme = createTheme({
             color: colors.white,
           },
         },
-       
+
         option: {
           transition: 'background-color 0.1s ease',
           '&.Mui-focused': {

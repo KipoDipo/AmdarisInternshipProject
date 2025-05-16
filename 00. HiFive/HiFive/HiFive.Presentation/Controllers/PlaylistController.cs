@@ -47,7 +47,7 @@ public class PlaylistController : ControllerBase
 		}
 	}
 
-	[HttpPost("add/{playlistid}-{songid}")]
+	[HttpPost("add/{playlistId}/song/{songid}")]
 	public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, Guid songid)
 	{
 		// check if user owns the playlist
