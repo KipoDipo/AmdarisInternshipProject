@@ -107,9 +107,7 @@ public class PlaylistService : IPlaylistService
 
 		await _unitOfWork.BeginTransactionAsync();
 
-		var maxOrderIndex = playlist.Songs.Any()
-			? playlist.Songs.Max(p => p.OrderIndex)
-			: 0;
+		var maxOrderIndex = playlist.Songs.Count();
 
 		var playlistSong = new PlaylistSong()
 		{

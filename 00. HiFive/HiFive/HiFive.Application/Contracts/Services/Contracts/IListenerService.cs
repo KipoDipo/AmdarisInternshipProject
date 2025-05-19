@@ -1,4 +1,5 @@
-﻿using HiFive.Application.DTOs.Listener;
+﻿using HiFive.Application.DTOs.Artist;
+using HiFive.Application.DTOs.Listener;
 
 namespace HiFive.Application.Contracts.Services.Contracts;
 
@@ -7,8 +8,11 @@ public interface IListenerService
 	Task<ListenerDto> CreateListenerAsync(ListenerCreateDto listenerCreateDto);
 
 	Task LikeSongAsync(Guid listenerId, Guid songId);
+	Task FollowArtistAsync(Guid listenerId, Guid artistId);
+	Task UnfollowArtistAsync(Guid listenerId, Guid artistId);
 
 	Task<ListenerDto> GetListenerByIdAsync(Guid listenerId);
+	Task<IEnumerable<ArtistDto>> GetFollowingArtists(Guid listenerId);
 	Task<IEnumerable<ListenerDto>> GetListenersByPartialNameAsync(string partialName);
 	Task<ListenerDetailsDto> GetListenerDetailsByIdAsync(Guid listenerId);
 

@@ -2,13 +2,16 @@ import { useParams } from "react-router-dom"
 import { ArtistDetails } from "../Models/ArtistDetails";
 import { useEffect, useState } from "react";
 import { baseURL, fetcher } from "../Fetcher";
-import { Avatar, Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
 
 import { useSetSong } from "../Contexts/UseSetSong";
 import AlbumCategory from "../Components/AlbumCategory";
 import { TimeFormat } from "../Utils/TimeFormat";
+import { textWidth } from "../Styling/Theme";
+import { ListenerDetails } from "../Models/ListenerDetails";
+import { Artist } from "../Models/Artist";
 
 
 
@@ -18,6 +21,54 @@ export default function Page() {
     const [artist, setArtist] = useState<ArtistDetails>();
     const [albums, setAlbums] = useState<Album[]>();
     const [songs, setSongs] = useState<Song[]>();
+    const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
+
+    const [user, setUser] = useState<ListenerDetails>();
+
+    async function handleFollow() {
+        if (isFollowing)
+            unfollow();
+        else
+            follow();
+    }
+
+    async function follow() {
+        if (!artist)
+            return;
+
+        fetcher.post(`/Listener/follow-artist/${artist.id}`);
+        setIsFollowing(true);
+    }
+    async function unfollow() {
+        if (!artist)
+            return;
+
+        fetcher.post(`/Listener/unfollow-artist/${artist.id}`);
+        setIsFollowing(false);
+    }
+
+    useEffect(() => {
+        fetcher.get('/Listener')
+            .then((response) => setUser(response.data));
+    }, [])
+
+    useEffect(() => {
+        if (!user || !id)
+            return;
+
+        fetcher.get(`Listener/following-artists`)
+            .then((response) => {
+                const following: Artist[] = response.data;
+                let found = false;
+                following.forEach(a => {
+                    if (a.id == id) {
+                        found = true;
+                        return;
+                    }
+                })
+                setIsFollowing(found);
+            });
+    }, [user, id])
 
     useEffect(() => {
         if (!id)
@@ -51,8 +102,9 @@ export default function Page() {
                                 :
                                 <Box sx={{ width: '400px', height: `400px` }}></Box>
                         }
-                        <Stack>
+                        <Stack gap={3}>
                             <Typography variant='h2'>{artist?.displayName}</Typography>
+                            <Button variant='contained' onClick={handleFollow} sx={{ width: textWidth }}>{isFollowing == null ? "..." : (isFollowing ? "Unfollow" : "Follow")}</Button>
                         </Stack>
                     </Stack>
                     <Stack>

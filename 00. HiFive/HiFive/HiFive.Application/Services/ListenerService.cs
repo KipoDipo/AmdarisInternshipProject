@@ -1,4 +1,5 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Listener;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
@@ -85,5 +86,46 @@ public class ListenerService : IListenerService
 
 		await _unitOfWork.Listeners.UpdateAsync(listener);
 		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task FollowArtistAsync(Guid listenerId, Guid artistId)
+	{
+		var listener = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(listenerId);
+		_validator.Validate(listener);
+
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		_validator.Validate(artist);
+
+		await _unitOfWork.BeginTransactionAsync();
+
+		listener.FollowingArtists.Add(artist);
+
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task UnfollowArtistAsync(Guid listenerId, Guid artistId)
+	{
+		var listener = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(listenerId);
+		_validator.Validate(listener);
+
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		_validator.Validate(artist);
+
+		var followedArtist = listener.FollowingArtists.FirstOrDefault(a => a.Id == artistId);
+		_validator.Validate(followedArtist);
+
+		await _unitOfWork.BeginTransactionAsync();
+
+		listener.FollowingArtists.Remove(followedArtist);
+
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task<IEnumerable<ArtistDto>> GetFollowingArtists(Guid listenerId)
+	{
+		var listener = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(listenerId);
+		_validator.Validate(listener);
+
+		return listener.FollowingArtists.Select(ArtistDto.FromEntity);
 	}
 }

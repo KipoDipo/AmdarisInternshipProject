@@ -16,6 +16,6 @@ export type ListenerDetails = {
 	equippedTitleId?: string 
 	titleIds: string[]
 
-	followedArtists: string[]
-	followedListeners: string[]
+	followingArtists: string[]
+	followingListeners: string[]
 }

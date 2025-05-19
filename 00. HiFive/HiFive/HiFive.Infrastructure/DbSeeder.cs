@@ -236,20 +236,20 @@ public class DbSeeder
 			var SabatonSong2 = new Song() { Title = "The Art of War", Duration = (uint)TimeSpan.FromMinutes(5.10).TotalSeconds, Genres = [metal], Data = "blob", Artist = Sabaton, CoverImage = sabatonCover };
 
 
-			ReolSong1.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong1, OrderIndex = 0 };
-			ReolSong2.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong2, OrderIndex = 1 };
-			LotusSong1.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong1, OrderIndex = 0 };
-			LotusSong2.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong2, OrderIndex = 1 };
-			DuaSong1.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong1, OrderIndex = 0 };
-			DuaSong2.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong2, OrderIndex = 1 };
-			SkynyrdSong1.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong1, OrderIndex = 0 };
-			SkynyrdSong2.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong2, OrderIndex = 1 };
-			FleetwoodSong1.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong1, OrderIndex = 0 };
-			FleetwoodSong2.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong2, OrderIndex = 1 };
-			FloydSong1.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong1, OrderIndex = 0 };
-			FloydSong2.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong2, OrderIndex = 1 };
-			SabatonSong1.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong1, OrderIndex = 0 };
-			SabatonSong2.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong2, OrderIndex = 1 };
+			ReolSong1.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong1, OrderIndex = 1 };
+			ReolSong2.AlbumSong = new AlbumSong() { Album = ReolAlbum, Song = ReolSong2, OrderIndex = 2 };
+			LotusSong1.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong1, OrderIndex = 1 };
+			LotusSong2.AlbumSong = new AlbumSong() { Album = LotusJuiceAlbum, Song = LotusSong2, OrderIndex = 2 };
+			DuaSong1.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong1, OrderIndex = 1 };
+			DuaSong2.AlbumSong = new AlbumSong() { Album = DuaLipaAlbum, Song = DuaSong2, OrderIndex = 2 };
+			SkynyrdSong1.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong1, OrderIndex = 1 };
+			SkynyrdSong2.AlbumSong = new AlbumSong() { Album = LynyrdSkynyrdAlbum, Song = SkynyrdSong2, OrderIndex = 2 };
+			FleetwoodSong1.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong1, OrderIndex = 1 };
+			FleetwoodSong2.AlbumSong = new AlbumSong() { Album = FleetwoodMacAlbum, Song = FleetwoodSong2, OrderIndex = 2 };
+			FloydSong1.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong1, OrderIndex = 1 };
+			FloydSong2.AlbumSong = new AlbumSong() { Album = PinkFloydAlbum, Song = FloydSong2, OrderIndex = 2 };
+			SabatonSong1.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong1, OrderIndex = 1 };
+			SabatonSong2.AlbumSong = new AlbumSong() { Album = SabatonAlbum, Song = SabatonSong2, OrderIndex = 2 };
 
 
 			await unit.BeginTransactionAsync();

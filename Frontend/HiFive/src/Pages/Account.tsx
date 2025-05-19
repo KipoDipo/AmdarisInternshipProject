@@ -4,15 +4,32 @@ import { ListenerDetails } from "../Models/ListenerDetails";
 import { baseURL, fetcher } from "../Fetcher";
 import { theme } from "../Styling/Theme";
 import { Link } from "react-router-dom";
+import { Artist } from "../Models/Artist";
 
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
+    const [artists, setArtists] = useState<Artist[]>([])
 
     useEffect(() => {
         fetcher.get("/Listener")
             .then((response) => setUser(response.data))
             .catch(error => console.error(error))
     }, [])
+
+    useEffect(() => {
+        if (!user)
+            return;
+
+        const fetchUsers = async () =>
+        {
+            const responses = await Promise.all(
+                user.followingArtists.map((a) => fetcher.get(`/Artist/id/${a}`))
+            )
+            setArtists(responses.map(res => res.data));
+        }
+
+        fetchUsers();
+    }, [user])
 
     return (
         <Stack margin={3}>
@@ -37,8 +54,8 @@ export default function Account() {
                 </Stack>
 
                 <Stack gap={3}>
-                    <UserList title="Friends" ids={user?.followedListeners ?? []}/>
-                    <UserList title="Artists" ids={user?.followedArtists ?? []}/>
+                    <UserList title="Friends" ids={user?.followingListeners ?? []}/>
+                    <UserList title="Artists" ids={artists?.map(a => a.profilePictureId) ?? []}/>
                     <TrophyList />
                 </Stack>
             </Stack>
@@ -69,10 +86,10 @@ function UserList({ title, ids }: { title: string, ids: string[] }) {
                 <Typography variant='h4'>{title}</Typography>
                 <Typography component={Link} to="/TODO">See all</Typography>
             </Stack>
-            <AvatarGroup max={7}>
+            <AvatarGroup max={6}>
                 {
-                    Ids(ids.length > 7 ? ids.length : 7, ids).map((id, index) =>
-                        <Avatar key={index} sx={{ width: 80, height: 80, opacity:id? '100%' : '0%'}} src={id ? id : ""}>Test</Avatar>
+                    Ids(ids.length > 6 ? ids.length : 6, ids).map((id, index) =>
+                        <Avatar key={index} sx={{ width: 80, height: 80, opacity:id? '100%' : '0%'}} src={id ? `${baseURL}Image/${id}` : ""}>Test</Avatar>
                     )
                 }
             </AvatarGroup>

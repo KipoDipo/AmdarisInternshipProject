@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Playlist } from "../Models/Playlist";
 import { Song } from "../Models/Song";
 import { baseURL, fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
