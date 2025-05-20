@@ -6,12 +6,13 @@ import { Avatar, Box, Button, Paper, Stack, Table, TableBody, TableCell, TableCo
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
 
-import { useSetSong } from "../Contexts/UseSetSong";
 import AlbumCategory from "../Components/AlbumCategory";
 import { TimeFormat } from "../Utils/TimeFormat";
 import { textWidth } from "../Styling/Theme";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { Artist } from "../Models/Artist";
+import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
+import { CreateQueue } from "../Utils/QueueUtils";
 
 
 
@@ -89,7 +90,7 @@ export default function Page() {
             .then((response) => setSongs(response.data))
     }, [artist])
 
-    const setSong = useSetSong();
+    const setQueue = useSetQueue();
 
     return (
         <Stack margin={3}>
@@ -129,7 +130,7 @@ export default function Page() {
                                     {
                                         songs?.map((song, index) => {
                                             return (
-                                                <TableRow key={index} onClick={() => setSong(song)} sx={{ cursor: 'pointer' }}>
+                                                <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                     <TableCell>
                                                         <Stack direction='row' alignItems='center' gap={3} >
                                                             <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>

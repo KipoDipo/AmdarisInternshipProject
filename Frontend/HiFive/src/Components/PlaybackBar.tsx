@@ -13,11 +13,12 @@ import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 
 import { Song } from '../Models/Song';
-import { useSong } from '../Contexts/UseSong';
 import { Link } from 'react-router-dom';
 import { textWidth } from '../Styling/Theme';
 import { baseURL, fetcher } from '../Fetcher';
 import { Playlist } from '../Models/Playlist';
+import { useQueue } from '../Contexts/Queue/UseQueue';
+import { useSetQueue } from '../Contexts/Queue/UseSetQueue';
 
 function Controls({size}: {size?:number}) {
   const theme = useTheme();
@@ -40,26 +41,41 @@ function Controls({size}: {size?:number}) {
   }
 
   
-  const song = useSong();
+  const queue = useQueue();
+  const setQueue = useSetQueue();
 
   async function likeSong() {
-    if (!song)
+    if (!queue || !queue.songs)
       return;
 
-    await fetcher.post(`/Listener/like/${song.id}`)
+    await fetcher.post(`/Listener/like/${queue.songs[queue.current].id}`)
     setHasLikedSong(true);
   }
   
   useEffect(() => {
-    if (!song)
+    if (!queue || !queue.songs)
       return;
 
     fetcher.get('/Song/my-liked')
     .then((response) => {
       const songs: Song[] = response.data;
-      setHasLikedSong(songs.some(s => s.id === song.id));
+      setHasLikedSong(songs.some(s => s.id === queue.songs[queue.current].id));
     })
-  }, [song])
+  }, [queue])
+
+  function skipPrevious() {
+    if (queue?.current === 0)
+      return;
+
+    setQueue(prev => ({...prev, current: prev.current - 1}))
+  }
+
+  function skipNext() {
+    if (queue && queue?.current >= queue?.songs.length - 1)
+      return;
+
+    setQueue(prev => ({...prev, current: prev.current + 1}))
+  }
 
   return (
     <Stack
@@ -76,13 +92,13 @@ function Controls({size}: {size?:number}) {
         onClick={likeSong} centerRipple>
         <ThumbUpRoundedIcon/>
       </Fab>
-      <Fab sx={smallFabSx} centerRipple>
+      <Fab sx={smallFabSx} centerRipple onClick={skipPrevious}>
         <SkipPreviousRoundedIcon sx={smallFontSx}/>
       </Fab>
       <Fab sx={bigFabSx} onClick={handlePlay} centerRipple>
         {isPlayingMusic ? <PauseRoundedIcon sx={bigFontSx}/> : <PlayArrowRoundedIcon sx={bigFontSx}/>}
       </Fab>
-      <Fab sx={smallFabSx} centerRipple>
+      <Fab sx={smallFabSx} centerRipple onClick={skipNext}>
         <SkipNextRoundedIcon sx={smallFontSx}/>  
       </Fab>
       <Fab sx={smallFabSxAlt} onClick={() => setIsAddingToPlaylist(true)} centerRipple>
@@ -98,14 +114,14 @@ function AddToPlaylistDialog({open, setIsOpen}: {open: boolean, setIsOpen: (p: b
   const [playlists, setPlaylists] = useState<Playlist[]>()
   const [selectedPlaylist, setSelectedPlaylist] = useState("")
 
-  const song = useSong();
+  const queue = useQueue();
 
   async function addToPlaylist() {
-    if (!song)
+    if (!queue || !queue.songs)
       return;
 
     try {
-      await fetcher.post(`/Playlist/add/${selectedPlaylist}/song/${song.id}`)
+      await fetcher.post(`/Playlist/add/${selectedPlaylist}/song/${queue.songs[queue.current].id}`)
       setIsOpen(false);
     }
     catch(error) {
@@ -125,10 +141,10 @@ function AddToPlaylistDialog({open, setIsOpen}: {open: boolean, setIsOpen: (p: b
     <Dialog open={open} onClose={() => setIsOpen(false)} fullWidth maxWidth="sm">
         <Stack margin={3} gap={3} alignItems='center'>
           <Stack gap={3} alignItems='center' direction='row'>
-            <Avatar src={`${baseURL}Image/${song?.coverImageId}`} variant='rounded' sx={{width: 80, height: 80}}/>
+            <Avatar src={`${baseURL}Image/${queue?.songs[queue.current]?.coverImageId}`} variant='rounded' sx={{width: 80, height: 80}}/>
             <Stack>
-              <Typography variant='h5'>{song?.title}</Typography>
-              <Typography>{song?.artistName}</Typography>
+              <Typography variant='h5'>{queue?.songs[queue.current]?.title}</Typography>
+              <Typography>{queue?.songs[queue.current]?.artistName}</Typography>
             </Stack>
           </Stack>
           <FormControl fullWidth>
@@ -218,14 +234,14 @@ function Actions({size}: {size?:number}) {
 
 function PlayBar() {
   const theme = useTheme();
-  const song = useSong();
+  const queue = useQueue();
 
   const controlsSize = 32;
 
   return (
     <Box width='100vw' sx={{background: theme.palette.secondary.main}}>
       <Stack direction='row' justifyContent='space-between' sx={{margin: 2}}>
-        <Info song={song}/>
+        <Info song={queue?.songs[queue.current]}/>
         <Controls size={controlsSize}/>
         <Actions size={24}/>
       </Stack>

@@ -1,14 +1,15 @@
 import { Stack, Typography } from "@mui/material";
-import { useSetSong } from "../Contexts/UseSetSong";
 import { baseURL } from "../Fetcher";
 import { Song } from "../Models/Song";
 import ClickableAvatar from "./ClickableAvatar";
+import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
+import { CreateQueue } from "../Utils/QueueUtils";
 
 export default function SongComponent({song} : {song: Song}) {
-  const setSong = useSetSong();
+  const setQueue = useSetQueue();
 
   const handleClick = () => {
-    setSong(song);
+    setQueue(CreateQueue([song]));
   }
   
   return (

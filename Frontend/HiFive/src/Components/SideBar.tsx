@@ -57,11 +57,11 @@ function SideBar() {
                     <Tab label='Account' icon={<PersonRoundedIcon />} iconPosition='start' component={Link} to='/account' />
                     <Tab label='Settings' icon={<SettingsRoundedIcon />} iconPosition='start' component={Link} to='/account-edit' />
                     <Tab label='Go Premium' icon={<ElectricBoltRoundedIcon />} iconPosition='start' />
-                    <Divider sx={{background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0'}}/>
-                    <Typography variant='h4' sx={{margin: '10px'}}>Library</Typography>
-                    <Tab label='Liked'icon={<ThumbUpRoundedIcon/>} iconPosition='start' component={Link} to='/liked'/>
-                    <Tab label='Queue'icon={<QueueMusicRoundedIcon/>} iconPosition='start'/>
-                    <Tab label='Playlists'icon={<SubscriptionsRoundedIcon/>} component={Link} to='/playlists' iconPosition='start'/>
+                    <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
+                    <Typography variant='h4' sx={{ margin: '10px' }}>Library</Typography>
+                    <Tab label='Liked' icon={<ThumbUpRoundedIcon />} iconPosition='start' component={Link} to='/liked' />
+                    <Tab label='Queue' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/queue' />
+                    <Tab label='Playlists' icon={<SubscriptionsRoundedIcon />} component={Link} to='/playlists' iconPosition='start' />
                     <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
                     <Typography variant='h4' sx={{ margin: '10px' }}>Dev</Typography>
                     <Tab label='Add Song' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-song' />

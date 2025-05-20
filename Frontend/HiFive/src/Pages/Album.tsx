@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { Song } from "../Models/Song";
 import { baseURL, fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { useSetSong } from "../Contexts/UseSetSong";
 import { TimeFormat } from "../Utils/TimeFormat";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { Album } from "../Models/Album";
+import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
+import { CreateQueue } from "../Utils/QueueUtils";
 
 export default function Page() {
     const { id } = useParams();
@@ -14,7 +15,7 @@ export default function Page() {
     const [album, setAlbum] = useState<Album>()
     const [songs, setSongs] = useState<Song[]>()
 
-    const setSong = useSetSong();
+    const setQueue = useSetQueue();
 
     useEffect(() => {
         if (!id)
@@ -27,6 +28,13 @@ export default function Page() {
             .then((response) => setSongs(response.data));
     }, [id])
 
+    function play() {
+        if (!songs)
+            return;
+
+        setQueue({songs: songs, current: 0});
+    }
+
     return (
         <Stack gap={3} margin={3} direction='row' justifyContent='space-evenly' alignItems='center' height='80%'>
             <Stack gap={2} alignItems='center'>
@@ -36,7 +44,7 @@ export default function Page() {
                 }
                 <Typography variant='h5'>{album?.title}</Typography>
                 <Typography variant='body1' width='200px' textAlign='center'>{album?.description}</Typography>
-                <Fab centerRipple>
+                <Fab centerRipple onClick={play}>
                     {<PlayArrowRoundedIcon fontSize='large' />}
                 </Fab>
             </Stack>
@@ -60,7 +68,7 @@ export default function Page() {
                                     {
                                         songs?.map((song, index) => {
                                             return (
-                                                <TableRow key={index} onClick={() => setSong(song)} sx={{ cursor: 'pointer' }}>
+                                                <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                     <TableCell align='left'>
                                                         <Stack direction='row' alignItems='center' gap={3} >
                                                             <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>

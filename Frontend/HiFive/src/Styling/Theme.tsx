@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material";
 const colors = {
   yellow: '#FFFF69',
   yellowLight: '#FFFFAB',
-  yellowDark: '#FFFF34',
+  yellowDark: '#4f4f1f',
 
   white: '#FFFFFF',
   gray: '#3B3B3B',
@@ -129,8 +129,8 @@ export const theme = createTheme({
         },
 
         option: {
-          transition: 'background-color 0.1s ease',
           '&.Mui-focused': {
+            transition: 'background-color 0.1s ease',
             backgroundColor: colors.lightGray,
           },
           '&[aria-selected="true"]': {

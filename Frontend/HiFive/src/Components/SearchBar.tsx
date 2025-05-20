@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { baseURL, fetcher } from "../Fetcher";
 import { Song } from "../Models/Song";
 import { textWidth, theme } from "../Styling/Theme";
-import { useSetSong } from "../Contexts/UseSetSong";
 import { Artist } from "../Models/Artist";
 import { Link } from "react-router-dom";
+import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
+import { CreateQueue } from "../Utils/QueueUtils";
 
 type SongExt = Song & { type: 'song' }
 type ArtistExt = Artist & { type: 'artist' }
@@ -63,7 +64,7 @@ export default function SearchBar() {
             setOptions([]);
     }, [debouncedInput]);
 
-    const setSong = useSetSong();
+    const setQueue = useSetQueue();
 
     const updateOptions = async (query: string) => {
         if (!query) {
@@ -114,7 +115,7 @@ export default function SearchBar() {
                         return;
 
                     if (newValue.type === 'song')
-                        setSong(newValue);
+                        setQueue(CreateQueue([newValue]));
 
                     inputRef.current?.blur();
                 }}

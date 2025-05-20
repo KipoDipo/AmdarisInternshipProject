@@ -10,12 +10,17 @@ import { Link } from "react-router-dom";
 export default function Page() {
     const [playlists, setPlaylists] = useState<Playlist[]>();
     const [openDialog, setOpenDialog] = useState(false);
-
+    const [updatePage, setUpdatePage] = useState(0)
 
     useEffect(() => {
         fetcher.get('Playlist/my-playlists')
             .then((response) => setPlaylists(response.data))
-    }, [])
+    }, [updatePage])
+
+    function handleSubmit() {
+        setOpenDialog(false);
+        setUpdatePage(l => l + 1);
+    }
 
     return (
         <Stack margin={3} direction='row' flexWrap='wrap' gap={3}>
@@ -28,7 +33,7 @@ export default function Page() {
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
                 <DialogTitle>Create a new Playlist</DialogTitle>
                 <DialogContent>
-                    <AddPlaylist onSubmit={() => setOpenDialog(false)} />
+                    <AddPlaylist onSubmit={handleSubmit} />
                 </DialogContent>
             </Dialog>
         </Stack>
