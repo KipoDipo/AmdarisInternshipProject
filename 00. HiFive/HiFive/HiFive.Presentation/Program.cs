@@ -1,18 +1,9 @@
-using HiFive.Application.Contracts.Services.Contracts;
-using HiFive.Application.Services;
-using HiFive.Application.UnitOfWork;
-using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
-using HiFive.Infrastructure.Identity;
-using HiFive.Presentation;
+using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Middleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -20,6 +11,7 @@ Log.Logger = new LoggerConfiguration()
 	.CreateLogger();
 
 builder.Host.UseSerilog();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -32,45 +24,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IValidator, Validator>();
-builder.Services.AddScoped<ISongService, SongService>();
-builder.Services.AddScoped<IAlbumService, AlbumService>();
-builder.Services.AddScoped<IPlaylistService, PlaylistService>();
-builder.Services.AddScoped<IGenreService, GenreService>();
-builder.Services.AddScoped<IArtistService, ArtistService>();
-builder.Services.AddScoped<IListenerService, ListenerService>();
-builder.Services.AddScoped<IPlaylistService, PlaylistService>();
-builder.Services.AddScoped<IAlbumService, AlbumService>();
-builder.Services.AddScoped<IImageFileService, ImageFileService>();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddScoped<JwtService>();
+//builder.Services.Configure<Jwt>(builder.Configuration.GetSection(nameof(Jwt)));
+builder.Services.AddOptions<Jwt>()
+	.BindConfiguration(nameof(Jwt));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-	.AddEntityFrameworkStores<ApplicationDbContext>()
-	.AddDefaultTokenProviders();
+builder.Services.RegisterServices();
 
-builder.Services.AddAuthentication(options =>
-{
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-	options.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
+builder.Services.AddIdentityAndJwtAuthentication(builder.Configuration);
 
-		ValidIssuer = builder.Configuration["Jwt:Issuer"],
-		ValidAudience = builder.Configuration["Jwt:Audience"],
-		IssuerSigningKey = new SymmetricSecurityKey(
-			Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
-		)
-	};
-});
 
 builder.Services.AddSwaggerGen(options =>
 {

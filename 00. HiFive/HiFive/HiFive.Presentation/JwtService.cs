@@ -1,4 +1,5 @@
 ﻿using HiFive.Infrastructure.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,11 +9,11 @@ namespace HiFive.Presentation;
 
 public class JwtService
 {
-	private IConfiguration _configuration;
+	private Jwt _jwtOptions;
 
-	public JwtService(IConfiguration configuration)
+	public JwtService(IOptions<Jwt> options)
 	{
-		_configuration = configuration;
+		_jwtOptions = options.Value;
 	}
 
 	public string GenerateToken(ApplicationUser user)
@@ -24,12 +25,12 @@ public class JwtService
 			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};
 
-		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
 		var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 		var token = new JwtSecurityToken(
-			issuer: _configuration["Jwt:Issuer"],
-			audience: _configuration["Jwt:Audience"],
+			issuer: _jwtOptions.Issuer,
+			audience: _jwtOptions.Audience,
 			claims: claims,
 			expires: DateTime.Now.AddHours(2),
 			signingCredentials: creds
