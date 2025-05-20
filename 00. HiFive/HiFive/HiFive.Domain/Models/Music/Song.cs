@@ -25,7 +25,7 @@ public class Song : IDeletable
 	public AlbumSong? AlbumSong { get; set; }
 
 	public List<PlaylistSong> PlaylistsIn { get; set; } = [];
-	public List<Listener> LikedBy { get; set; } = [];
+	public List<ListenerLikedSong> LikedBy { get; set; } = [];
 
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedOn { get; set; }

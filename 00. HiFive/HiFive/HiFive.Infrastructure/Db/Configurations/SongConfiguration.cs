@@ -10,5 +10,10 @@ public class SongConfiguration : IEntityTypeConfiguration<Song>
 		builder
 			.Property(s => s.Title)
 			.HasMaxLength(64);
+
+		builder
+			.HasOne(s => s.Artist)
+			.WithMany(a => a.Singles)
+			.OnDelete(DeleteBehavior.NoAction);
 	}
 }

@@ -37,6 +37,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
 	#region Join
 	public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+	public DbSet<ListenerLikedSong> ListenerLikedSongs { get; set; }
 	public DbSet<AlbumSong> AlbumSongs { get; set; }
 	#endregion
 
@@ -50,17 +51,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 		base.OnModelCreating(builder);
 
 		builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-
-		var entityTypes = builder.Model.GetEntityTypes();
-
-		var foreignKeys = entityTypes
-			.SelectMany(x => x.GetForeignKeys())
-			.Where(x => x.DeleteBehavior == DeleteBehavior.Cascade);
-
-		foreach (var foreignKey in foreignKeys)
-		{
-			foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
-		}
 	}
 
 	public override int SaveChanges()

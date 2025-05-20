@@ -8,6 +8,7 @@ public interface IListenerService
 	Task<ListenerDto> CreateListenerAsync(ListenerCreateDto listenerCreateDto);
 
 	Task LikeSongAsync(Guid listenerId, Guid songId);
+	Task UnlikeSongAsync(Guid listenerId, Guid songId);
 	Task FollowArtistAsync(Guid listenerId, Guid artistId);
 	Task UnfollowArtistAsync(Guid listenerId, Guid artistId);
 

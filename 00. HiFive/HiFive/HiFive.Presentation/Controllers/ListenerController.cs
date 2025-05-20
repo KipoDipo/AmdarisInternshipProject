@@ -63,6 +63,13 @@ public class ListenerController : ControllerBase
 		return NoContent();
 	}
 
+	[HttpPost("unlike/{songId}")]
+	public async Task<IActionResult> UnlikeSong(Guid songId)
+	{
+		await _listenerService.UnlikeSongAsync(_currentUserService.Id, songId);
+		return NoContent();
+	}
+
 	[HttpPost("follow-artist/{artistId}")]
 	public async Task<IActionResult> FollowArtist(Guid artistId)
 	{

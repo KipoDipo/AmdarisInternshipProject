@@ -44,12 +44,18 @@ function Controls({size}: {size?:number}) {
   const queue = useQueue();
   const setQueue = useSetQueue();
 
-  async function likeSong() {
+  async function handleLike() {
     if (!queue || !queue.songs)
       return;
 
-    await fetcher.post(`/Listener/like/${queue.songs[queue.current].id}`)
-    setHasLikedSong(true);
+    if (!hasLikedSong) {
+      await fetcher.post(`/Listener/like/${queue.songs[queue.current].id}`)
+      setHasLikedSong(true);  
+    }
+    else {
+      await fetcher.post(`/Listener/unlike/${queue.songs[queue.current].id}`)
+      setHasLikedSong(false);  
+    }
   }
   
   useEffect(() => {
@@ -89,7 +95,7 @@ function Controls({size}: {size?:number}) {
         ...smallFabSxAlt, 
         color: hasLikedSong ? theme.palette.primary.main : theme.palette.secondary.light,
         }} 
-        onClick={likeSong} centerRipple>
+        onClick={handleLike} centerRipple>
         <ThumbUpRoundedIcon/>
       </Fab>
       <Fab sx={smallFabSx} centerRipple onClick={skipPrevious}>

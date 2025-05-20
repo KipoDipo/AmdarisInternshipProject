@@ -1,4 +1,4 @@
-﻿using HiFive.Domain.Models.Users;
+﻿using HiFive.Domain.Models.Join;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,12 +14,12 @@ public class ListenerFollowerConfiguration : IEntityTypeConfiguration<ListenerFo
 		builder // Listener that follows
 			.HasOne(lf => lf.Follower)
 			.WithMany(l => l.FollowingListeners)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.NoAction);
 
 		builder // Listener that is being followed
 			.HasOne(lf => lf.Followed)
 			.WithMany(l => l.FollowedByListeners)
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.NoAction);
 
 	}
 }

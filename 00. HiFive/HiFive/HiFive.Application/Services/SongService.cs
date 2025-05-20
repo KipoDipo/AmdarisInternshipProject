@@ -133,13 +133,14 @@ public class SongService : ISongService
 	{
 		var listener = await _unitOfWork.Listeners.GetAllNoTracking()
 			.Include(l => l.LikedSongs)
+			.ThenInclude(l => l.LikedSong)
 			.ThenInclude(s => s.Artist)
 			.Where(l => l.Id == listenerId)
 			.FirstOrDefaultAsync();
 
 		_validator.Validate(listener);
 
-		return listener.LikedSongs.Select(SongDto.FromEntity);
+		return listener.LikedSongs.Select(l => SongDto.FromEntity(l.LikedSong));
 	}
 
 	public async Task<IEnumerable<SongDto>> GetAllSongsByPlaylistIdAsync(Guid playlistId)

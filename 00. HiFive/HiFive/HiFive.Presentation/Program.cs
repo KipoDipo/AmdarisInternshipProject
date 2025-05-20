@@ -1,4 +1,3 @@
-//#define USE_INMEMORY_DB
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.Services;
 using HiFive.Application.UnitOfWork;
@@ -22,18 +21,11 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-#if (USE_INMEMORY_DB)
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-	options.UseInMemoryDatabase("testing_grounds");
-});
-#else
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	options.UseSqlServer("Data Source=localhost;Initial Catalog=testing_grounds;Integrated Security=True;Encrypt=False",
 		b => b.MigrationsAssembly("HiFive.Infrastructure"));
 });
-#endif
 
 builder.Services.AddControllers();
 

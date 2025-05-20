@@ -1,4 +1,5 @@
 ﻿using HiFive.Domain.Contracts;
+using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Music;
 using HiFive.Domain.Models.Throphies;
 
@@ -14,7 +15,7 @@ public class Listener : User
 	public List<Playlist> CreatedPlaylists { get; set; } = [];
 
 	public List<Playlist> LikedPlaylists { get; set; } = [];
-	public List<Song> LikedSongs { get; set; } = [];
+	public List<ListenerLikedSong> LikedSongs { get; set; } = [];
 
 	public List<Badge> Badges { get; set; } = [];
 	public List<Title> Titles { get; set; } = [];

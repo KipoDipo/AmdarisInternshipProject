@@ -19,15 +19,22 @@ export default function Page() {
             .then((response) => setSongs(response.data));
     }, [])
 
+    function startPlaylist() {
+        if (!songs)
+            return;
+
+        setQueue(CreateQueue(songs));
+    }
+
     return (
         <Stack gap={3} margin={3} direction='row' justifyContent='space-evenly' alignItems='center' height='80%'>
             <Stack gap={2} alignItems='center'>
                 <Avatar variant='rounded' sx={{ width: 200, height: 200 }}>
-                    <ThumbUpRounded sx={{fontSize: 80}}/>
+                    <ThumbUpRounded sx={{ fontSize: 80 }} />
                 </Avatar>
                 <Typography variant='h5'>{'Your liked songs'}</Typography>
                 <Typography variant='body1' width='200px' textAlign='center'>{'Songs that you like will appear here'}</Typography>
-                <Fab centerRipple disabled={!(songs && songs.length > 0)}>
+                <Fab centerRipple onClick={startPlaylist} disabled={!(songs && songs.length > 0)}>
                     {<PlayArrowRoundedIcon fontSize='large' />}
                 </Fab>
             </Stack>

@@ -1,4 +1,6 @@
-﻿namespace HiFive.Domain.Models.Users;
+﻿using HiFive.Domain.Models.Users;
+
+namespace HiFive.Domain.Models.Join;
 
 public class ListenerFollower
 {

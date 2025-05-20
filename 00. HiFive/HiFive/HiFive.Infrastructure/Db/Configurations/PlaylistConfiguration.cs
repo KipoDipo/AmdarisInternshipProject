@@ -18,6 +18,7 @@ public class PlaylistConfiguration : IEntityTypeConfiguration<Playlist>
 
 		builder
 			.HasOne(p => p.Owner)
-			.WithMany(p => p.CreatedPlaylists);
+			.WithMany(p => p.CreatedPlaylists)
+			.OnDelete(DeleteBehavior.NoAction);
 	}
 }

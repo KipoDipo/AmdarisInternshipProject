@@ -3,6 +3,7 @@ using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Listener;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Join;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
@@ -42,7 +43,47 @@ public class ListenerService : IListenerService
 		_validator.Validate(listener);
 
 		await _unitOfWork.BeginTransactionAsync();
-		listener.LikedSongs.Add(song);
+
+		var maxOrderIndex = listener.LikedSongs.Count();
+
+		var likedSong = new ListenerLikedSong()
+		{
+			Listener = listener,
+			LikedSong = song,
+			OrderIndex = maxOrderIndex
+		};
+
+		listener.LikedSongs.Add(likedSong);
+
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task UnlikeSongAsync(Guid listenerId, Guid songId)
+	{
+		var song = await _unitOfWork.Songs.GetByIdAsync(songId);
+		_validator.Validate(song);
+
+		var listener = await _unitOfWork.Listeners.GetAll()
+			.Include(l => l.LikedSongs)
+			.Where(l => l.Id == listenerId)
+			.FirstOrDefaultAsync();
+		_validator.Validate(listener);
+
+		await _unitOfWork.BeginTransactionAsync();
+
+		var record = listener.LikedSongs.FirstOrDefault(s => s.LikedSongId == songId);
+		if (record == null)
+			throw new NotFoundException("Record not found");
+
+		listener.LikedSongs.Remove(record);
+		var index = 1;
+		foreach (var listenerLikedSong in listener.LikedSongs.OrderBy(ps => ps.OrderIndex))
+		{
+			listenerLikedSong.OrderIndex = index++;
+		}
+
+		await _unitOfWork.Listeners.UpdateAsync(listener);
+
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
