@@ -41,6 +41,11 @@ public static class ServiceCollectionExtentions
 			.AddEntityFrameworkStores<ApplicationDbContext>()
 			.AddDefaultTokenProviders();
 
+		services.Configure<IdentityOptions>(options =>
+		{
+			options.User.RequireUniqueEmail = true;
+		});
+
 		services.AddAuthentication(options =>
 		{
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
