@@ -15,12 +15,14 @@ public class SongController : ControllerBase
 	private ISongService _songService;
 	private IImageFileService _imageFileService;
 	private ICurrentUserService _currentUserService;
+	private BlobService _blobService;
 
-	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService)
+	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService)
 	{
 		_songService = songService;
 		_imageFileService = imageFileService;
 		_currentUserService = currentUserService;
+		_blobService = blobService;
 	}
 
 	[HttpPost]
@@ -30,6 +32,19 @@ public class SongController : ControllerBase
 		var imageDto = await _imageFileService.UploadImageAsync(imageCreateDto);
 		var songDto = song.ToSongCreateDto(imageDto.Id);
 		return Ok(await _songService.CreateSongAsync(songDto));
+	}
+
+	[HttpGet("download/{songId}")]
+	public async Task<IActionResult> DownloadOgg(Guid songId)
+	{
+		var song = await _songService.GetSongByIdAsync(songId);
+
+		var (stream, contentType) = await _blobService.DownloadFileAsync(song.Data);
+
+		if (stream == null)
+			return NotFound();
+
+		return File(stream, contentType);
 	}
 
 	[HttpGet("id/{id}")]

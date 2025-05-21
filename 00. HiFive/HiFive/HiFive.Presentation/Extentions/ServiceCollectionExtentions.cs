@@ -27,7 +27,9 @@ public static class ServiceCollectionExtentions
 		services.AddScoped<IAlbumService, AlbumService>();
 		services.AddScoped<IImageFileService, ImageFileService>();
 		services.AddScoped<ICurrentUserService, CurrentUserService>();
+		services.AddScoped<BlobService>();
 		services.AddScoped<JwtService>();
+
 		return services;
 	}
 

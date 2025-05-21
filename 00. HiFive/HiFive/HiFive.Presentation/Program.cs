@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Middleware;
@@ -29,6 +30,8 @@ builder.Services.AddOptions<Jwt>()
 	.BindConfiguration(nameof(Jwt));
 
 builder.Services.RegisterServices();
+
+builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration["Azure:Key"]));
 
 builder.Services.AddIdentityAndJwtAuthentication(builder.Configuration);
 

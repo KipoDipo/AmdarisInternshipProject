@@ -1,4 +1,5 @@
 export function TimeFormat(seconds: number) {
+    seconds = Math.round(seconds);
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
 

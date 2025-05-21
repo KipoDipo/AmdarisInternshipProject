@@ -7,6 +7,7 @@ public class SongDto
 	public required string Title { get; set; }
 	public required Guid ArtistId { get; set; }
 	public required string ArtistName { get; set; }
+	public required string Data { get; set; }
 	public string? Album { get; set; }
 	public Guid? AlbumId { get; set; }
 	public uint Duration { get; set; }
@@ -19,6 +20,7 @@ public class SongDto
 			Id = song.Id,
 			Title = song.Title,
 			ArtistId = song.ArtistId,
+			Data = song.Data,
 			ArtistName = song.Artist?.DisplayName ?? "",
 			Duration = song.Duration,
 			Album = song.AlbumSong?.Album?.Title ?? "",
