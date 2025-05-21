@@ -8,6 +8,7 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { Album } from "../Models/Album";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Page() {
     const { id } = useParams();
@@ -17,22 +18,30 @@ export default function Page() {
 
     const setQueue = useSetQueue();
 
+    const notify = useNotification();
+
     useEffect(() => {
         if (!id)
             return;
 
         fetcher.get(`/Album/details/${id}`)
-            .then((response) => setAlbum(response.data));
+            .then((response) => setAlbum(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+
 
         fetcher.get(`/Song/album/${id}`)
-            .then((response) => setSongs(response.data));
-    }, [id])
+            .then((response) => setSongs(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+
+    }, [id, notify])
+
 
     function play() {
         if (!songs)
             return;
 
-        setQueue({songs: songs, current: 0});
+        notify({message: "Queuing Album..."});
+        setQueue({ songs: songs, current: 0 });
     }
 
     return (

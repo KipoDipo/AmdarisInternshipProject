@@ -13,6 +13,7 @@ import { ListenerDetails } from "../Models/ListenerDetails";
 import { Artist } from "../Models/Artist";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 
 
@@ -48,10 +49,13 @@ export default function Page() {
         setIsFollowing(false);
     }
 
+    const notify = useNotification();
+
     useEffect(() => {
         fetcher.get('/Listener')
-            .then((response) => setUser(response.data));
-    }, [])
+            .then((response) => setUser(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [notify])
 
     useEffect(() => {
         if (!user || !id)
@@ -68,27 +72,33 @@ export default function Page() {
                     }
                 })
                 setIsFollowing(found);
-            });
-    }, [user, id])
+            })
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [user, id, notify])
 
     useEffect(() => {
         if (!id)
             return;
 
         fetcher.get(`/Artist/details/${id}`)
-            .then((response) => setArtist(response.data));
-    }, [id])
+            .then((response) => setArtist(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [id, notify])
 
     useEffect(() => {
         if (!artist)
             return;
 
         fetcher.get(`/Album/artist/${artist?.id}`)
-            .then((response) => setAlbums(response.data));
+            .then((response) => setAlbums(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+
 
         fetcher.get(`/Song/artist/${artist?.id}`)
             .then((response) => setSongs(response.data))
-    }, [artist])
+            .catch(error => notify({ message: error, severity: 'error' }))
+
+    }, [artist, notify])
 
     const setQueue = useSetQueue();
 

@@ -7,6 +7,7 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { ThumbUpRounded } from "@mui/icons-material";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Page() {
 
@@ -14,14 +15,19 @@ export default function Page() {
 
     const setQueue = useSetQueue();
 
+    const notify = useNotification();
+
     useEffect(() => {
         fetcher.get(`/Song/my-liked`)
-            .then((response) => setSongs(response.data));
-    }, [])
+            .then((response) => setSongs(response.data))
+            .catch((error) => notify({message: error, severity: 'error', duration: 10000}))
+    }, [notify])
 
     function startPlaylist() {
         if (!songs)
             return;
+
+        notify({message: "Queuing Liked Songs..."});
 
         setQueue(CreateQueue(songs));
     }

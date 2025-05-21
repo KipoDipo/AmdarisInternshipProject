@@ -5,23 +5,26 @@ import { baseURL, fetcher } from "../Fetcher";
 import { theme } from "../Styling/Theme";
 import { Link } from "react-router-dom";
 import { Artist } from "../Models/Artist";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
     const [artists, setArtists] = useState<Artist[]>([])
 
+    const notify = useNotification();
+
     useEffect(() => {
         fetcher.get("/Listener")
             .then((response) => setUser(response.data))
-            .catch(error => console.error(error))
-    }, [])
+            .catch(error => notify({ message: error, severity: 'error' }))
+
+    }, [notify])
 
     useEffect(() => {
         if (!user)
             return;
 
-        const fetchUsers = async () =>
-        {
+        const fetchUsers = async () => {
             const responses = await Promise.all(
                 user.followingArtists.map((a) => fetcher.get(`/Artist/id/${a}`))
             )
@@ -54,8 +57,8 @@ export default function Account() {
                 </Stack>
 
                 <Stack gap={3}>
-                    <UserList title="Friends" ids={user?.followingListeners ?? []}/>
-                    <UserList title="Artists" ids={artists?.map(a => a.profilePictureId) ?? []}/>
+                    <UserList title="Friends" ids={user?.followingListeners ?? []} />
+                    <UserList title="Artists" ids={artists?.map(a => a.profilePictureId) ?? []} />
                     <TrophyList />
                 </Stack>
             </Stack>
@@ -89,7 +92,7 @@ function UserList({ title, ids }: { title: string, ids: string[] }) {
             <AvatarGroup max={6}>
                 {
                     Ids(ids.length > 6 ? ids.length : 6, ids).map((id, index) =>
-                        <Avatar key={index} sx={{ width: 80, height: 80, opacity:id? '100%' : '0%'}} src={id ? `${baseURL}Image/${id}` : ""}>Test</Avatar>
+                        <Avatar key={index} sx={{ width: 80, height: 80, opacity: id ? '100%' : '0%' }} src={id ? `${baseURL}Image/${id}` : ""}>Test</Avatar>
                     )
                 }
             </AvatarGroup>

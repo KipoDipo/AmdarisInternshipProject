@@ -6,16 +6,20 @@ import { FieldValues, useForm } from "react-hook-form";
 import { textWidth } from "../Styling/Theme";
 import { Playlist } from "../Models/Playlist";
 import { Link } from "react-router-dom";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Page() {
     const [playlists, setPlaylists] = useState<Playlist[]>();
     const [openDialog, setOpenDialog] = useState(false);
     const [updatePage, setUpdatePage] = useState(0)
 
+    const notify = useNotification();
+
     useEffect(() => {
         fetcher.get('Playlist/my-playlists')
             .then((response) => setPlaylists(response.data))
-    }, [updatePage])
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [updatePage, notify])
 
     function handleSubmit() {
         setOpenDialog(false);
@@ -68,6 +72,8 @@ function PlaylistComponent({ data }: { data: Playlist }) {
 function AddPlaylist({ onSubmit }: { onSubmit: () => void }) {
     const { register, handleSubmit } = useForm();
 
+    const notify = useNotification();
+
     async function submit(data: FieldValues) {
         const form = new FormData();
         form.append('title', data.title);
@@ -75,12 +81,12 @@ function AddPlaylist({ onSubmit }: { onSubmit: () => void }) {
         form.append('thumbnail', data.thumbnail[0] as Blob);
 
         try {
-            const response = await fetcher.post('/Playlist/create-my-playlist', form);
-            console.log(response);
+            await fetcher.post('/Playlist/create-my-playlist', form);
+            notify({message: "Playlist Created!", severity: 'success'});
             onSubmit();
         }
         catch (error) {
-            console.error(error);
+            notify({ message: error, severity: 'error' });
         }
     }
 

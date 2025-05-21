@@ -22,6 +22,7 @@ import Album from "./Pages/Album";
 import LikedSongs from "./Pages/LikedSongs";
 import { QueueProvider } from "./Contexts/Queue/QueueProvider";
 import Queue from "./Pages/Queue";
+import { NotificationProvider } from "./Contexts/Snackbar/NotificationProvider";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -43,49 +44,52 @@ function App() {
             />
             <Box sx={{ position: 'relative', zIndex: 1 }} width="100vw" minHeight="100vh">
                 <Stack direction="row">
-                    <BrowserRouter>
-                        {
-                            !logged ?
-                                <Stack width='100vw' height='100vh' justifyContent='center' alignItems='center' gap={3}>
-                                    <LogoAndName />
-                                    <Routes>
-                                        <Route path="/register" element={<Register />}></Route>
-                                        <Route path="/login" element={<Login setLogged={setLogged} />}></Route>
-                                        <Route path="*" element={<Navigate to='/login' />}></Route>
-                                    </Routes>
-                                </Stack>
-                                :
-                                <QueueProvider>
-                                    <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-                                        <SideBar />
-                                        <Box
-                                            sx={{
-                                                flex: 1,
-                                                overflowY: 'auto',
-                                                paddingBottom: '80px', // space for the PlaybackBar height
-                                            }}
-                                        >
-                                            <Routes>
-                                                <Route index element={<><Explore /><Home /></>} />
-                                                <Route path="/account" element={<><Explore /><Account /></>} />
-                                                <Route path="/account-edit" element={<AccountEdit />} />
-                                                <Route path="/add-song/" element={<AddSongPage />} />
-                                                <Route path="/add-genre/" element={<AddGenrePage />} />
-                                                <Route path="/add-album/" element={<AddAlbumPage />} />
-                                                <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
-                                                <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
-                                                <Route path="/album/:id" element={<><Explore /><Album /></>} />
-                                                <Route path="/liked" element={<><Explore /><LikedSongs /></>} />
-                                                <Route path="/playlists" element={<><Explore /><Playlists /></>} />
-                                                <Route path="/queue" element={<><Explore /><Queue /></>} />
-                                                {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
-                                            </Routes>
+                    <NotificationProvider>
+
+                        <BrowserRouter>
+                            {
+                                !logged ?
+                                    <Stack width='100vw' height='100vh' justifyContent='center' alignItems='center' gap={3}>
+                                        <LogoAndName />
+                                        <Routes>
+                                            <Route path="/register" element={<Register />}></Route>
+                                            <Route path="/login" element={<Login setLogged={setLogged} />}></Route>
+                                            <Route path="*" element={<Navigate to='/login' />}></Route>
+                                        </Routes>
+                                    </Stack>
+                                    :
+                                    <QueueProvider>
+                                        <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                                            <SideBar />
+                                            <Box
+                                                sx={{
+                                                    flex: 1,
+                                                    overflowY: 'auto',
+                                                    paddingBottom: '80px', // space for the PlaybackBar height
+                                                }}
+                                            >
+                                                <Routes>
+                                                    <Route index element={<><Explore /><Home /></>} />
+                                                    <Route path="/account" element={<><Explore /><Account /></>} />
+                                                    <Route path="/account-edit" element={<AccountEdit />} />
+                                                    <Route path="/add-song/" element={<AddSongPage />} />
+                                                    <Route path="/add-genre/" element={<AddGenrePage />} />
+                                                    <Route path="/add-album/" element={<AddAlbumPage />} />
+                                                    <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
+                                                    <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
+                                                    <Route path="/album/:id" element={<><Explore /><Album /></>} />
+                                                    <Route path="/liked" element={<><Explore /><LikedSongs /></>} />
+                                                    <Route path="/playlists" element={<><Explore /><Playlists /></>} />
+                                                    <Route path="/queue" element={<><Explore /><Queue /></>} />
+                                                    {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
+                                                </Routes>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                    <PlaybackBar />
-                                </QueueProvider>
-                        }
-                    </BrowserRouter>
+                                        <PlaybackBar />
+                                    </QueueProvider>
+                            }
+                        </BrowserRouter>
+                    </NotificationProvider>
                 </Stack>
             </Box>
         </ThemeProvider>

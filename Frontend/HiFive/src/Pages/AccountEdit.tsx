@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { textWidth } from "../Styling/Theme";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Form() {
     const [displayName, setDisplayName] = useState("");
@@ -13,11 +14,13 @@ export default function Form() {
     const [profilePicture, setProfilePicture] = useState<File>();
 
     const [user, setUser] = useState<ListenerDetails>()
+    
+    const notify = useNotification();
 
     useEffect(() => {
         fetcher.get("/Listener")
             .then((response) => setUser(response.data))
-            .catch(error => console.error(error))
+            .catch(error => notify({ message: error, severity: 'error' }))
     }, [])
 
     useEffect(() => {
@@ -30,12 +33,14 @@ export default function Form() {
         setBio(user.bio ?? "")
     }, [user])
 
+
     const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setProfilePicture(file);
         }
     };
+
 
     return (
         <Stack gap={3} margin={3} width={textWidth}>
@@ -74,15 +79,21 @@ export default function Form() {
             <Stack direction='row' gap={3}>
                 <Button fullWidth onClick={async () => {
                     const form = new FormData();
-                    
+
                     form.append('displayName', displayName);
                     form.append('firstName', firstName);
                     form.append('lastName', lastName);
                     form.append('bio', bio);
                     form.append('profilePicture', profilePicture as Blob);
 
-                    const response = await fetcher.put('https://localhost:7214/Listener/update', form);
-                    console.log(response);
+                    try {
+                        await fetcher.put('https://localhost:7214/Listener/update', form);
+                        notify({message: "Updated successfully", severity: 'success'});
+                    }
+                    catch (error) {
+                        notify({message: error, severity: 'error'});
+                    }
+
                     setProfilePicture(undefined);
                 }} variant="contained">Update</Button>
             </Stack>

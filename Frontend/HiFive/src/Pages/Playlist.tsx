@@ -8,6 +8,7 @@ import { TimeFormat } from "../Utils/TimeFormat";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Page() {
     const { id } = useParams();
@@ -17,21 +18,26 @@ export default function Page() {
 
     const setQueue = useSetQueue();
 
+    const notify = useNotification();
+
     useEffect(() => {
         if (!id)
             return;
 
         fetcher.get(`/Playlist/details/${id}`)
-            .then((response) => setPlaylist(response.data));
+            .then((response) => setPlaylist(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
 
         fetcher.get(`/Song/playlist/${id}`)
-            .then((response) => setSongs(response.data));
-    }, [id])
+            .then((response) => setSongs(response.data))
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [id, notify])
 
     function startPlaylist() {
         if (!songs)
             return;
 
+        notify({message: "Queuing Playlist..."});
         setQueue(CreateQueue(songs));
     }
 

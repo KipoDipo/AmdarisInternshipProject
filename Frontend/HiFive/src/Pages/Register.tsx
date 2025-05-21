@@ -6,6 +6,7 @@ import { RegisterListenerRequest } from "../Models/RegisterListener";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { textWidth } from "../Styling/Theme";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 function Page() {
     const [hasFilledRequiredInfo, setHasFilledRequiredInfo] = useState(false);
@@ -14,6 +15,8 @@ function Page() {
     const [form, setForm] = useState<RegisterListenerRequest>()
 
     const navigate = useNavigate();
+
+    const notify = useNotification();
 
     useEffect(() => {
         // if (hasFilledRequiredInfo && hasFilledOptionalInfo) {
@@ -30,11 +33,13 @@ function Page() {
                     formData.append(key, value);
             }
             axios.post('https://localhost:7214/Listener', formData)
-                .then((response) => console.log(response))
-                .then(() => navigate('/login'))
-                .catch((error) => { console.error(error); setHasFilledRequiredInfo(false); })
+                .then(() => {
+                    notify({ message: "Account created successfully!", severity: 'success' })
+                    navigate('/login')
+                })
+                .catch((error) => { notify({ message: error, severity: 'error', duration: 5000 }); setHasFilledRequiredInfo(false); })
         }
-    }, [hasFilledRequiredInfo, form, navigate])
+    }, [hasFilledRequiredInfo, form, navigate, notify])
 
     return (
         <Stack direction='row' gap={10} >
@@ -44,7 +49,7 @@ function Page() {
             </Stack>
             <Stack alignItems='center' gap={3}>
                 <Typography variant='h4'>Already have an account?</Typography>
-                <Button component={Link} to="/login" variant='contained' sx={{width: textWidth}}>Login</Button>
+                <Button component={Link} to="/login" variant='contained' sx={{ width: textWidth }}>Login</Button>
             </Stack>
         </Stack>
     )

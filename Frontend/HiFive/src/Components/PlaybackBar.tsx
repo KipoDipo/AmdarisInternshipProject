@@ -20,6 +20,7 @@ import { Playlist } from '../Models/Playlist';
 import { useQueue } from '../Contexts/Queue/UseQueue';
 import { useSetQueue } from '../Contexts/Queue/UseSetQueue';
 import { TimeFormat } from '../Utils/TimeFormat';
+import { useNotification } from '../Contexts/Snackbar/UseNotification';
 
 function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { size?: number, onPlayToggle: () => void, isPlaying: boolean, duration: number, currentTime: number }) {
     const theme = useTheme();
@@ -39,22 +40,26 @@ function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { si
     const queue = useQueue();
     const setQueue = useSetQueue();
 
+    const notify = useNotification();
+
     async function handleLike() {
-        if (!queue || !queue.songs)
+        if (!queue || !queue.songs.length)
             return;
 
         if (!hasLikedSong) {
-            await fetcher.post(`/Listener/like/${queue.songs[queue.current].id}`)
             setHasLikedSong(true);
+            notify({ message: "Song has been liked" });
+            await fetcher.post(`/Listener/like/${queue.songs[queue.current].id}`)
         }
         else {
-            await fetcher.post(`/Listener/unlike/${queue.songs[queue.current].id}`)
             setHasLikedSong(false);
+            notify({ message: "Song has been unliked" });
+            await fetcher.post(`/Listener/unlike/${queue.songs[queue.current].id}`)
         }
     }
 
     useEffect(() => {
-        if (!queue || !queue.songs)
+        if (!queue || !queue.songs.length)
             return;
 
         fetcher.get('/Song/my-liked')
@@ -62,7 +67,8 @@ function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { si
                 const songs: Song[] = response.data;
                 setHasLikedSong(songs.some(s => s.id === queue.songs[queue.current].id));
             })
-    }, [queue])
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [queue, notify])
 
     function skipPrevious() {
         if (queue?.current === 0)
@@ -124,8 +130,10 @@ function AddToPlaylistDialog({ open, setIsOpen }: { open: boolean, setIsOpen: (p
 
     const queue = useQueue();
 
+    const notify = useNotification();
+
     async function addToPlaylist() {
-        if (!queue || !queue.songs)
+        if (!queue || !queue.songs.length)
             return;
 
         try {
@@ -133,7 +141,7 @@ function AddToPlaylistDialog({ open, setIsOpen }: { open: boolean, setIsOpen: (p
             setIsOpen(false);
         }
         catch (error) {
-            console.error(error)
+            notify({ message: error, severity: 'error' })
         }
     }
     useEffect(() => {
@@ -142,7 +150,8 @@ function AddToPlaylistDialog({ open, setIsOpen }: { open: boolean, setIsOpen: (p
 
         fetcher.get('/Playlist/my-playlists')
             .then((response) => setPlaylists(response.data))
-    }, [open])
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [open, notify])
 
 
     return (
@@ -210,8 +219,22 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
     const buttonSx = { width: iconSize * 1.2, height: iconSize * 1.2, minWidth: 0, minHeight: 0 };
     const fontSx = { fontSize: iconSize }
 
+    const notify = useNotification();
+
     function handleRepeat() {
-        setRepeatState((repeatState + 1) % 3);
+        const newState = (repeatState + 1) % 3;
+        switch (newState) {
+            case 0:
+                notify({ message: "No Repeat" });
+                break;
+            case 1:
+                notify({ message: "Repeat Queue" });
+                break;
+            case 2:
+                notify({ message: "Repeat Single" });
+                break;
+        }
+        setRepeatState(newState);
     }
 
     function handleShuffle() {
@@ -226,7 +249,7 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
                 step={0.01}
                 value={volume}
                 onChange={(_e, val) => onVolumeChange(Array.isArray(val) ? val[0] : val)}
-                sx={{ width: 100, marginRight: 2}}
+                sx={{ width: 100, marginRight: 2 }}
             />
             <IconButton sx={buttonSx} onClick={handleRepeat}>
                 {repeatState == 0 && <RepeatRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light }} />}
@@ -336,20 +359,24 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
         }
     };
 
+    const notify = useNotification();
+
     const handleEnded = () => {
-        if (!queue || !queue.songs)
+        if (!queue || !queue.songs.length)
             return;
 
         switch (repeatState) {
             case 0: // no repeat
                 if (queue.current != queue.songs.length - 1)
                     setQueue({ ...queue, current: queue.current + 1 });
+                else
+                    notify({ message: "Reached end of queue...", duration: 5000 })
                 break;
             case 1: // repeat queue
                 setQueue({ ...queue, current: (queue.current + 1) % queue.songs.length });
                 break;
             case 2: // single repeat
-                setQueue({ ...queue});
+                setQueue({ ...queue });
                 break;
         }
     }
@@ -373,7 +400,7 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
             <audio
                 ref={audioRef}
                 autoPlay
-                src={audioUrl}
+                src={audioUrl ? audioUrl : undefined}
                 onLoadedMetadata={handleLoadedMetadata}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={handleEnded}
@@ -385,6 +412,9 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
 function PlaybackBar() {
     const queue = useQueue();
     const [audioUrl, setAudioUrl] = useState("")
+
+    const notify = useNotification();
+
     useEffect(() => {
         if (!queue || !queue.songs || !queue.songs[queue.current])
             return;
@@ -396,8 +426,9 @@ function PlaybackBar() {
 
                 setAudioUrl(url);
             })
+            .catch(error => notify({ message: error, severity: 'error' }))
 
-    }, [queue])
+    }, [queue, notify])
 
     return (
         <Stack position='fixed' bottom={0} left={0} component='footer'>
