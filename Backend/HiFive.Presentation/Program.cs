@@ -25,7 +25,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.Configure<Jwt>(builder.Configuration.GetSection(nameof(Jwt)));
 builder.Services.AddOptions<Jwt>()
 	.BindConfiguration(nameof(Jwt));
 

@@ -1,4 +1,5 @@
-﻿using HiFive.Application.Contracts.Services.Contracts;
+﻿using HiFive.Application.AwardSystem;
+using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.Services;
 using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
@@ -27,6 +28,8 @@ public static class ServiceCollectionExtentions
 		services.AddScoped<IAlbumService, AlbumService>();
 		services.AddScoped<IImageFileService, ImageFileService>();
 		services.AddScoped<ICurrentUserService, CurrentUserService>();
+		services.AddScoped<ITrophyService, TrophyService>();
+		services.AddScoped<Awarder>();
 		services.AddScoped<BlobService>();
 		services.AddScoped<JwtService>();
 

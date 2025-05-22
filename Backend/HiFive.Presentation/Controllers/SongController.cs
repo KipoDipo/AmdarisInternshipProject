@@ -35,7 +35,7 @@ public class SongController : ControllerBase
 	}
 
 	[HttpGet("download/{songId}")]
-	public async Task<IActionResult> DownloadOgg(Guid songId)
+	public async Task<IActionResult> DownloadSong(Guid songId)
 	{
 		var song = await _songService.GetSongByIdAsync(songId);
 

@@ -16,6 +16,7 @@ public interface IUnitOfWork : IDisposable
 
 	IBadgeRepository Badges { get; }
 	ITitleRepository Titles { get; }
+	IConditionRepository Conditions { get; }
 
 	IImageFileRepository Images { get; }
 

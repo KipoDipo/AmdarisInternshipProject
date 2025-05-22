@@ -10,8 +10,11 @@ public class TitleRepository : BaseRepository<Title>, ITitleRepository
 	{
 	}
 
-	public override Task<Title?> GetWithDetailsByIdAsync(Guid id)
+	public override async Task<Title?> GetWithDetailsByIdAsync(Guid id)
 	{
-		throw new NotImplementedException();
+		return await _dbContext.Set<Title>()
+			.Include(b => b.Artist)
+			.Include(b => b.Condition)
+			.FirstOrDefaultAsync(b => b.Id == id);
 	}
 }

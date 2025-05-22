@@ -1,6 +1,7 @@
-﻿using HiFive.Application.Contracts.Services.Contracts;
+﻿using HiFive.Application.AwardSystem;
+using HiFive.Application.AwardSystem.BadgeStrategies;
+using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Listener;
-using HiFive.Application.DTOs.Misc;
 using HiFive.Infrastructure.Identity;
 using HiFive.Presentation.Controllers.Requests.Listener;
 using HiFive.Presentation.Extentions;
@@ -19,14 +20,16 @@ public class ListenerController : ControllerBase
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly JwtService _jwtService;
 	private readonly ICurrentUserService _currentUserService;
+	private readonly Awarder _awarder;
 
-	public ListenerController(IListenerService listenerService, IImageFileService imageFileService, UserManager<ApplicationUser> userManager, JwtService jwtService, ICurrentUserService currentUserService)
+	public ListenerController(IListenerService listenerService, IImageFileService imageFileService, UserManager<ApplicationUser> userManager, JwtService jwtService, ICurrentUserService currentUserService, Awarder awarder)
 	{
 		_listenerService = listenerService;
 		_imageFileService = imageFileService;
 		_userManager = userManager;
 		_jwtService = jwtService;
 		_currentUserService = currentUserService;
+		_awarder = awarder;
 	}
 
 	[HttpPost("login")]
@@ -45,14 +48,16 @@ public class ListenerController : ControllerBase
 	{
 		if (listener.ProfilePicture == null)
 		{
-			var listenerDto = listener.ToListenerCreateDto(null);
-			return Ok(await _listenerService.CreateListenerAsync(listenerDto));
+			var listenerDto = await _listenerService.CreateListenerAsync(listener.ToListenerCreateDto(null));
+			await _awarder.Award(listenerDto.Id, new Registered());
+			return Ok(listenerDto);
 		}
 		else
 		{
 			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(listener.ProfilePicture));
-			var listenerDto = listener.ToListenerCreateDto(imageDto.Id);
-			return Ok(await _listenerService.CreateListenerAsync(listenerDto));
+			var listenerDto = await _listenerService.CreateListenerAsync(listener.ToListenerCreateDto(imageDto.Id));
+			await _awarder.Award(listenerDto.Id, new Registered());
+			return Ok(listenerDto);
 		}
 	}
 

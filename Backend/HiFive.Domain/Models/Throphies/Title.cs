@@ -10,6 +10,12 @@ public class Title : IDeletable
 	public required string Name { get; set; }
 	public required string Description { get; set; }
 
+	public Guid ConditionId { get; set; }
+	public Condition Condition { get; set; } = null!;
+
+	public Guid? ArtistId { get; set; }
+	public Artist? Artist { get; set; }
+
 	public List<Listener> Owners { get; set; } = [];
 
 	public bool IsDeleted { get; set; }

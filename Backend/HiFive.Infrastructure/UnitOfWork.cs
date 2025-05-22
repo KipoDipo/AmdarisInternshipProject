@@ -1,7 +1,5 @@
 ﻿using HiFive.Application.Contracts.Repositories;
 using HiFive.Application.UnitOfWork;
-using HiFive.Domain.Contracts;
-using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure.Db;
 using HiFive.Infrastructure.Identity;
 using HiFive.Infrastructure.Repositories;
@@ -24,6 +22,7 @@ public class UnitOfWork : IUnitOfWork
 	public IBadgeRepository Badges { get; }
 	public ITitleRepository Titles { get; }
 	public IImageFileRepository Images { get; }
+	public IConditionRepository Conditions { get; }
 
 	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
 	{
@@ -39,6 +38,7 @@ public class UnitOfWork : IUnitOfWork
 		Badges = new BadgeRepository(dbContext);
 		Titles = new TitleRepository(dbContext);
 		Images = new ImageFileRepository(dbContext);
+		Conditions = new ConditionRepository(dbContext);
 	}
 
 	public async Task BeginTransactionAsync()

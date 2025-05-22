@@ -17,8 +17,8 @@ public class Listener : User
 	public List<Playlist> LikedPlaylists { get; set; } = [];
 	public List<ListenerLikedSong> LikedSongs { get; set; } = [];
 
-	public List<Badge> Badges { get; set; } = [];
-	public List<Title> Titles { get; set; } = [];
+	public List<ListenerBadge> Badges { get; set; } = [];
+	public List<ListenerTitle> Titles { get; set; } = [];
 
 	public Guid? EquippedBadgeId { get; set; }
 	public Badge? EquippedBadge { get; set; }

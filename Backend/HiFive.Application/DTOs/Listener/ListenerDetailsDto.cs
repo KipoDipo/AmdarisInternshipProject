@@ -35,9 +35,9 @@ public class ListenerDetailsDto
 			ProfilePictureId = listener.ProfilePictureId,
 			CreatedPlaylistsIds = listener.CreatedPlaylists.Select(p => p.Id).ToList(),
 			EquippedBadgeId = listener.EquippedBadgeId,
-			BadgeIds = listener.Badges.Select(b => b.Id).ToList(),
+			BadgeIds = listener.Badges.Select(b => b.BadgeId).ToList(),
 			EquippedTitleId = listener.EquippedTitleId,
-			TitleIds = listener.Titles.Select(t => t.Id).ToList(),
+			TitleIds = listener.Titles.Select(t => t.TitleId).ToList(),
 			FollowingArtists = listener.FollowingArtists.Select(l => l.Id).ToList(),
 			FollowingListeners = listener.FollowingListeners.Select(l => l.FollowedId).ToList()
 		};

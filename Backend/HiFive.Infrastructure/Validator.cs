@@ -10,8 +10,8 @@ public class Validator : IValidator
 	public void Validate<T>([NotNull] T? entity) where T : IDeletable
 	{
 		if (entity == null)
-			throw new NotFoundException($"{nameof(entity)} was not found.");
+			throw new NotFoundException($"{typeof(T).Name} was not found.");
 		if (entity.IsDeleted)
-			throw new NotFoundException($"{nameof(entity)} is deleted.");
+			throw new NotFoundException($"{typeof(T).Name} is deleted.");
 	}
 }
