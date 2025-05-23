@@ -9,9 +9,4 @@ public class GenreRepository : BaseRepository<Genre>, IGenreRepository
 	public GenreRepository(DbContext dbContext) : base(dbContext)
 	{
 	}
-
-	public override Task<Genre?> GetWithDetailsByIdAsync(Guid id)
-	{
-		throw new NotImplementedException();
-	}
 }

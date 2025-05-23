@@ -9,9 +9,4 @@ public class ConditionRepository : BaseRepository<Condition>, IConditionReposito
 	public ConditionRepository(DbContext dbContext) : base(dbContext)
 	{
 	}
-
-	public override Task<Condition?> GetWithDetailsByIdAsync(Guid id)
-	{
-		return GetByIdAsync(id);
-	}
 }

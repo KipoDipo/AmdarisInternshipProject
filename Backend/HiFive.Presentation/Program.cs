@@ -1,3 +1,8 @@
+#define SEED
+#if (SEED)
+using HiFive.Application.UnitOfWork;
+using HiFive.Infrastructure;
+#endif
 using Azure.Storage.Blobs;
 using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Extentions;
@@ -80,11 +85,13 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
-//	var unit = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-//	await DbSeeder.Seed(unit);
-//}
+#if (SEED)
+using (var scope = app.Services.CreateScope())
+{
+	var unit = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+	await DbSeeder.Seed(unit);
+}
+#endif
 
 app.UseMiddleware<BadRequestExceptionHandling>();
 

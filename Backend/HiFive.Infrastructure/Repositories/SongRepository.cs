@@ -27,7 +27,7 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 			.ToListAsync();
 	}
 
-	public override async Task<Song?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Song?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Song>()
 			.Include(s => s.Artist)

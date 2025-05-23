@@ -10,7 +10,7 @@ public class DistributorRepository : BaseRepository<Distributor>, IDistributorRe
 	{
 	}
 
-	public override Task<Distributor?> GetWithDetailsByIdAsync(Guid id)
+	public Task<Distributor?> GetWithDetailsByIdAsync(Guid id)
 	{
 		throw new NotImplementedException();
 	}

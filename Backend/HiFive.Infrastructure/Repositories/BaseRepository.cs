@@ -36,8 +36,6 @@ public abstract class BaseRepository<T> : IRepository<T> where T : class, IDelet
 		return await _dbContext.Set<T>().FindAsync(id);
 	}
 
-	public abstract Task<T?> GetWithDetailsByIdAsync(Guid id);
-
 	public virtual async Task UpdateAsync(T entity)
 	{
 		_dbContext.Update(entity);

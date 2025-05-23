@@ -10,7 +10,7 @@ public class AlbumRepository : BaseRepository<Album>, IAlbumRepository
 	{
 	}
 
-	public override async Task<Album?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Album?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Album>()
 			.Include(a => a.Artist)

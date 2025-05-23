@@ -11,6 +11,9 @@ public interface ITrophyService
 	Task AwardBadge(Guid listenerId, Guid badgeId);
 	Task AwardTitle(Guid listenerId, Guid titleId);
 
+	Task<BadgeDto> GetBadgeById(Guid badgeId);
+	Task<TitleDto> GetTitleById(Guid titleId);
+	
 	Task<BadgeDto> GetBadgeByConditionKeyAndArtist(string conditionKey, Guid? artistId = null);
 	Task<Condition> GetConditionByKey(string conditionKey);
 	Task<TitleDto> GetTitleByConditionKeyAndArtist(string conditionKey, Guid? artistId = null);

@@ -136,4 +136,20 @@ public class TrophyService : ITrophyService
 
 		return TitleDto.FromEntity(title);
 	}
+
+	public async Task<BadgeDto> GetBadgeById(Guid badgeId)
+	{
+		var badge = await _unitOfWork.Badges.GetByIdAsync(badgeId);
+		_validator.Validate(badge);
+
+		return BadgeDto.FromEntity(badge);
+	}
+
+	public async Task<TitleDto> GetTitleById(Guid titleId)
+	{
+		var title = await _unitOfWork.Titles.GetByIdAsync(titleId);
+		_validator.Validate(title);
+
+		return TitleDto.FromEntity(title);
+	}
 }

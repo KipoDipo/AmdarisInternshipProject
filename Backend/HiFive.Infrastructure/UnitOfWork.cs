@@ -23,6 +23,7 @@ public class UnitOfWork : IUnitOfWork
 	public ITitleRepository Titles { get; }
 	public IImageFileRepository Images { get; }
 	public IConditionRepository Conditions { get; }
+	public IListenerDataRepository ListenerData { get; }
 
 	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
 	{
@@ -39,6 +40,7 @@ public class UnitOfWork : IUnitOfWork
 		Titles = new TitleRepository(dbContext);
 		Images = new ImageFileRepository(dbContext);
 		Conditions = new ConditionRepository(dbContext);
+		ListenerData = new ListenerDataRepository(dbContext);
 	}
 
 	public async Task BeginTransactionAsync()

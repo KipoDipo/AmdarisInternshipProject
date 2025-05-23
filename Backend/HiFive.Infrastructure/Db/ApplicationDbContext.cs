@@ -2,6 +2,7 @@
 using HiFive.Domain.Models.Join;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Music;
+using HiFive.Domain.Models.Statistics;
 using HiFive.Domain.Models.Throphies;
 using HiFive.Domain.Models.Users;
 using HiFive.Infrastructure.Identity;
@@ -29,10 +30,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 	#region Throphies
 	public DbSet<Badge> Badges { get; set; }
 	public DbSet<Title> Titles { get; set; }
+	public DbSet<Condition> Conditions { get; set; }
 	#endregion
 
 	#region Misc
 	public DbSet<ImageFile> ImageFiles { get; set; }
+	public DbSet<ListenerData> ListenerData { get; set; }
 	#endregion
 
 	#region Join

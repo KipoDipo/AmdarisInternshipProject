@@ -10,7 +10,7 @@ public class PlaylistRepository : BaseRepository<Playlist>, IPlaylistRepository
 	{
 	}
 
-	public override async Task<Playlist?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Playlist?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Playlist>()
 			.Include(p => p.Songs)

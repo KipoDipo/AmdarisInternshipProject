@@ -18,6 +18,8 @@ public interface IUnitOfWork : IDisposable
 	ITitleRepository Titles { get; }
 	IConditionRepository Conditions { get; }
 
+	IListenerDataRepository ListenerData { get; }
+
 	IImageFileRepository Images { get; }
 
 	Task BeginTransactionAsync();

@@ -9,9 +9,4 @@ public class ImageFileRepository : BaseRepository<ImageFile>, IImageFileReposito
 	public ImageFileRepository(DbContext dbContext) : base(dbContext)
 	{
 	}
-
-	public override Task<ImageFile?> GetWithDetailsByIdAsync(Guid id)
-	{
-		throw new NotImplementedException();
-	}
 }

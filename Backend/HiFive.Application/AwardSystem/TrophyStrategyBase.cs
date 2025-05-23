@@ -1,9 +1,15 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
-using HiFive.Domain.Models.Users;
 
 namespace HiFive.Application.AwardSystem;
 
 public abstract class TrophyStrategyBase : ITrophyStrategy
 {
-	public abstract Task Execute(Guid listenerId, ITrophyService service);
+	public abstract string ConditionKey { get; }
+
+	public virtual async Task Execute(Guid listenerId, ITrophyService service)
+	{
+		var badge = await service.GetBadgeByConditionKeyAndArtist(ConditionKey);
+
+		await service.AwardBadge(listenerId, badge.Id);
+	}
 }

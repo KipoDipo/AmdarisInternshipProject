@@ -21,13 +21,25 @@ public class TrophyController : ControllerBase
 		_imageFileService = imageFileService;
 	}
 
-	[HttpGet("get-badge")]
+	[HttpGet("get-badge/{id}")]
+	public async Task<IActionResult> GetBadgeById(Guid id)
+	{
+		return Ok(await _trophyService.GetBadgeById(id));
+	}
+
+	[HttpGet("get-title/{id}")]
+	public async Task<IActionResult> GetTitleById(Guid id)
+	{
+		return Ok(await _trophyService.GetTitleById(id));
+	}
+
+	[HttpGet("get-badge/alt")]
 	public async Task<IActionResult> GetBadgeByKey(string key, Guid? artist = null)
 	{
 		return Ok(await _trophyService.GetBadgeByConditionKeyAndArtist(key, artist));
 	}
 
-	[HttpGet("get-title")]
+	[HttpGet("get-title/alt")]
 	public async Task<IActionResult> GetTitleByKey(string key, Guid? artist = null)
 	{
 		return Ok(await _trophyService.GetTitleByConditionKeyAndArtist(key, artist));

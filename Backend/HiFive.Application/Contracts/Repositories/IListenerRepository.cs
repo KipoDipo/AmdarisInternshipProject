@@ -4,6 +4,6 @@ using HiFive.Domain.Models.Users;
 
 namespace HiFive.Application.Contracts.Repositories;
 
-public interface IListenerRepository : IRepository<Listener>, IRegisterable<Listener, ListenerCreateDto>, IGettableByPartialName<Listener>
+public interface IListenerRepository : IRepository<Listener>, IRegisterable<Listener, ListenerCreateDto>, IGettableWithDetails<Listener>, IGettableByPartialName<Listener>
 {
 }

@@ -15,14 +15,16 @@ public class SongController : ControllerBase
 	private ISongService _songService;
 	private IImageFileService _imageFileService;
 	private ICurrentUserService _currentUserService;
+	private IListenerDataService _listenerDataService;
 	private BlobService _blobService;
 
-	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService)
+	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService, IListenerDataService listenerDataService)
 	{
 		_songService = songService;
 		_imageFileService = imageFileService;
 		_currentUserService = currentUserService;
 		_blobService = blobService;
+		_listenerDataService = listenerDataService;
 	}
 
 	[HttpPost]
@@ -43,7 +45,7 @@ public class SongController : ControllerBase
 
 		if (stream == null)
 			return NotFound();
-
+		await _listenerDataService.AddListenedSong(_currentUserService.Id, songId);
 		return File(stream, contentType);
 	}
 

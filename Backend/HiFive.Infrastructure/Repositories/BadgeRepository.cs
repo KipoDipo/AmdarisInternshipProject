@@ -10,7 +10,7 @@ public class BadgeRepository : BaseRepository<Badge>, IBadgeRepository
 	{
 	}
 
-	public override async Task<Badge?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Badge?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Badge>()
 			.Include(b => b.Artist)

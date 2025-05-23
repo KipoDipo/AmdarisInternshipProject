@@ -1,4 +1,6 @@
-﻿using HiFive.Application.Contracts.Services.Contracts;
+﻿using HiFive.Application.AwardSystem;
+using HiFive.Application.AwardSystem.BadgeStrategies;
+using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Playlist;
 using HiFive.Presentation.Controllers.Requests.Playlist;
 using HiFive.Presentation.Extentions;
@@ -16,12 +18,14 @@ public class PlaylistController : ControllerBase
 	private readonly IPlaylistService _playlistService;
 	private readonly ICurrentUserService _currentUserService;
 	private readonly IImageFileService _imageFileService;
+	private readonly Awarder _awarder;
 
-	public PlaylistController(IPlaylistService playlistService, ICurrentUserService currentUserService, IImageFileService imageFileService)
+	public PlaylistController(IPlaylistService playlistService, ICurrentUserService currentUserService, IImageFileService imageFileService, Awarder awarder)
 	{
 		_playlistService = playlistService;
 		_currentUserService = currentUserService;
 		_imageFileService = imageFileService;
+		_awarder = awarder;
 	}
 
 	// Could be used so that an admin/the app can make a playlist for you
@@ -34,17 +38,24 @@ public class PlaylistController : ControllerBase
 	[HttpPost("create-my-playlist")]
 	public async Task<IActionResult> CreateMy([FromForm] PlaylistCreateMyRequest request)
 	{
+		PlaylistCreateDto dto;
 		if (request.Thumbnail == null)
 		{
-			var dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, null);
-			return await Create(dto);
+			dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, null);
 		}
 		else
 		{
 			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(request.Thumbnail));
-			var dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, imageDto.Id);
-			return await Create(dto);
+			dto = request.ToPlaylistCreateMyDto(_currentUserService.Id, imageDto.Id);
 		}
+
+		var result = await Create(dto);
+
+		var playlists = await _playlistService.GetPlaylistsByUserIdAsync(_currentUserService.Id);
+		if (playlists.Count() == 3)
+			await _awarder.Award(_currentUserService.Id, new Created3Playlists());
+
+		return result;
 	}
 
 	[HttpPost("add/{playlistId}/song/{songid}")]

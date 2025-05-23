@@ -79,6 +79,9 @@ public class ListenerController : ControllerBase
 	public async Task<IActionResult> FollowArtist(Guid artistId)
 	{
 		await _listenerService.FollowArtistAsync(_currentUserService.Id, artistId);
+		var following = await _listenerService.GetFollowingArtists(_currentUserService.Id);
+		if (following.Count() == 5)
+			await _awarder.Award(_currentUserService.Id, new Followed5Artists());
 		return NoContent();
 	}
 
@@ -128,6 +131,7 @@ public class ListenerController : ControllerBase
 		{
 			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(request.ProfilePicture));
 			var listenerUpdateDto = request.ToListenerUpdateDto(id, imageDto.Id);
+			await _awarder.Award(id, new UploadedProfilePicture());
 			await Update(listenerUpdateDto);
 			return NoContent();
 		}

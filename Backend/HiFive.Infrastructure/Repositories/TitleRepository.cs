@@ -10,7 +10,7 @@ public class TitleRepository : BaseRepository<Title>, ITitleRepository
 	{
 	}
 
-	public override async Task<Title?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Title?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Title>()
 			.Include(b => b.Artist)

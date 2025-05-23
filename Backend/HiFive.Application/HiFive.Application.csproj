@@ -16,4 +16,8 @@
     <ProjectReference Include="..\HiFive.Domain\HiFive.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AwardSystem\TitleStrategies\" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ public class AdminRepository : BaseRepository<Admin>, IAdminRepository
 	{
 	}
 
-	public override Task<Admin?> GetWithDetailsByIdAsync(Guid id)
+	public Task<Admin?> GetWithDetailsByIdAsync(Guid id)
 	{
 		throw new NotImplementedException();
 	}

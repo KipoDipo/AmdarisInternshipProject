@@ -24,7 +24,7 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			.ToListAsync();
 	}
 
-	public override async Task<Listener?> GetWithDetailsByIdAsync(Guid id)
+	public async Task<Listener?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Listener>()
 			.Include(l => l.CreatedPlaylists)
