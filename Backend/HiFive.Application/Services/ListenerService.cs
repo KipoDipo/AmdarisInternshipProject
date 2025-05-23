@@ -119,11 +119,12 @@ public class ListenerService : IListenerService
 		await _unitOfWork.BeginTransactionAsync();
 
 		listener.DisplayName = listenerUpdateDto.DisplayName ?? listener.DisplayName;
-		listener.FirstName = listenerUpdateDto.FirstName ?? listener.FirstName;
-		listener.LastName = listenerUpdateDto.LastName ?? listener.LastName;
-		listener.Bio = listenerUpdateDto.Bio ?? listener.Bio;
-		// TODO: update PhoneNumber from UserManager
+		listener.FirstName = listenerUpdateDto.FirstName;
+		listener.LastName = listenerUpdateDto.LastName;
+		listener.Bio = listenerUpdateDto.Bio;
 		listener.ProfilePictureId = listenerUpdateDto.ProfilePictureId ?? listener.ProfilePictureId;
+		listener.EquippedBadgeId = listenerUpdateDto.EquippedBadgeId ?? listener.EquippedBadgeId;
+		listener.EquippedTitleId = listenerUpdateDto.EquippedTitleId ?? listener.EquippedTitleId;
 
 		await _unitOfWork.Listeners.UpdateAsync(listener);
 		await _unitOfWork.CommitTransactionAsync();

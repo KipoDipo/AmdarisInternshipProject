@@ -8,6 +8,8 @@ public class ListenerUpdateMeRequest
 	public string? Bio { get; set; }
 	public string? PhoneNumber { get; set; }
 	public IFormFile? ProfilePicture { get; set; }
+	public Guid? EquippedBadgeId { get; set; }
+	public Guid? EquippedTitleId { get; set; }
 
 	public ListenerUpdateDto ToListenerUpdateDto(Guid listenerId, Guid? profilePictureId)
 	{
@@ -19,7 +21,9 @@ public class ListenerUpdateMeRequest
 			LastName = LastName,
 			Bio = Bio,
 			ProfilePictureId = profilePictureId,
-			PhoneNumber = PhoneNumber
+			PhoneNumber = PhoneNumber,
+			EquippedBadgeId = EquippedBadgeId,
+			EquippedTitleId = EquippedTitleId
 		};
 	}
 

@@ -10,4 +10,6 @@ public class ListenerUpdateDto
 	public string? Bio { get; set; }
 	public string? PhoneNumber { get; set; }
 	public Guid? ProfilePictureId { get; set; }
+	public Guid? EquippedBadgeId { get; set; }
+	public Guid? EquippedTitleId { get; set; }
 }

@@ -8,6 +8,7 @@ import { Artist } from "../Models/Artist";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Badge } from "../Models/Badge";
 import { Title } from "../Models/Title";
+import AppBadge from "../Components/AppBadge";
 
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
@@ -43,7 +44,9 @@ export default function Account() {
                     <Stack direction='row' alignItems='center' gap={3}>
                         {
                             user ?
-                                <Avatar src={`${baseURL}Image/${user?.profilePictureId}`} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                <AppBadge badgeId={user.equippedBadgeId}>
+                                    <Avatar src={`${baseURL}Image/${user.profilePictureId}`} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                </AppBadge>
                                 :
                                 <Box sx={{ width: '400px', height: `400px` }}></Box>
                         }

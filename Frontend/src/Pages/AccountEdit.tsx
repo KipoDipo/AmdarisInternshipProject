@@ -1,103 +1,189 @@
-import { Button, Stack } from "@mui/material";
+import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { OptionalTextField } from "../Components/TextFields";
 import { useEffect, useState } from "react";
-import { fetcher } from "../Fetcher";
+import { baseURL, fetcher } from "../Fetcher";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { textWidth } from "../Styling/Theme";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import { Controller, useForm } from "react-hook-form";
+import { Badge } from "../Models/Badge";
+import { Title } from "../Models/Title";
+
+type FormData = {
+    displayName: string
+    firstName: string
+    lastName: string
+    bio: string
+    equippedBadgeId: string,
+    equippedTitleId: string,
+    profilePicture: FileList
+}
 
 export default function Form() {
-    const [displayName, setDisplayName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [bio, setBio] = useState("");
-    const [profilePicture, setProfilePicture] = useState<File>();
+    const { control, register, handleSubmit, reset } = useForm<FormData>();
 
     const [user, setUser] = useState<ListenerDetails>()
-    
+    const [badges, setBadges] = useState<Badge[]>();
+    const [titles, setTitles] = useState<Title[]>();
+
     const notify = useNotification();
 
     useEffect(() => {
         fetcher.get("/Listener")
             .then((response) => setUser(response.data))
             .catch(error => notify({ message: error, severity: 'error' }))
-    }, [])
+    }, [notify])
 
     useEffect(() => {
-        if (user === undefined)
+        if (!user)
             return;
 
-        setDisplayName(user.displayName ?? "")
-        setFirstName(user.firstName ?? "")
-        setLastName(user.lastName ?? "")
-        setBio(user.bio ?? "")
-    }, [user])
-
-
-    const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setProfilePicture(file);
+        const fetchTitles = async (): Promise<Title[]> => {
+            const requests = user.titleIds.map(id => fetcher.get(`Trophy/get-title/${id}`));
+            const responses = await Promise.all(requests);
+            return responses.map(res => res.data).reverse();
         }
-    };
 
+        const fetchBadges = async (): Promise<Badge[]> => {
+            const requests = user.badgeIds.map(id => fetcher.get(`Trophy/get-badge/${id}`));
+            const responses = await Promise.all(requests);
+            return responses.map(res => res.data).reverse();
+        }
+
+        const fetchData = async () => {
+            setTitles(await fetchTitles());
+            setBadges(await fetchBadges());
+        }
+
+        fetchData();
+
+        reset({
+            displayName: user.displayName ?? "",
+            firstName: user.firstName ?? "",
+            lastName: user.lastName ?? "",
+            bio: user.bio ?? "",
+            profilePicture: undefined,
+            equippedBadgeId: user.equippedBadgeId,
+            equippedTitleId: user.equippedTitleId
+        })
+    }, [user, reset])
+
+    const onSubmit = async (data: FormData) => {
+        const form = new FormData();
+
+        form.append('displayName', data.displayName);
+        form.append('firstName', data.firstName);
+        form.append('lastName', data.lastName);
+        if (data.equippedBadgeId)
+            form.append('equippedBadgeId', data.equippedBadgeId);
+        if (data.equippedTitleId)
+            form.append('equippedTitleId', data.equippedTitleId);
+        form.append('bio', data.bio);
+        if (data.profilePicture)
+            form.append('profilePicture', data.profilePicture[0] as Blob);
+        try {
+            await fetcher.put('https://localhost:7214/Listener/update', form);
+            notify({ message: "Updated successfully", severity: 'success' });
+        }
+        catch (error) {
+            notify({ message: error, severity: 'error' });
+        }
+        reset({ ...data, profilePicture: undefined })
+    }
 
     return (
-        <Stack gap={3} margin={3} width={textWidth}>
-            <OptionalTextField
-                label="Display Name"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-            />
-            <OptionalTextField
-                label="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-            />
-            <OptionalTextField
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-            />
-            <OptionalTextField
-                label="Bio"
-                multiline
-                rows={5}
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-            />
-            <OptionalTextField
-                label="Profile Picture"
-                type='file'
-                slotProps={{
-                    inputLabel: {
-                        shrink: true,
-                    }
-                }}
-                onChange={handleImageFileChange}
-            />
-            <Stack direction='row' gap={3}>
-                <Button fullWidth onClick={async () => {
-                    const form = new FormData();
+        <>
+            {
+                user &&
+                <Stack gap={3} margin={3} width={textWidth}>
+                    <FormControl fullWidth>
+                        <InputLabel>Select Displayed Badge</InputLabel>
+                        <Controller
+                            control={control}
+                            name='equippedBadgeId'
+                            defaultValue={user.equippedBadgeId}
+                            render={({ field }) =>
+                                <Select
+                                    {...field}
+                                    label="Select Dispalyed Badge"
+                                    MenuProps={{ PaperProps: { style: { maxHeight: '70vh' } } }}
+                                >
+                                    {
+                                        badges?.map((b) =>
+                                            <MenuItem key={b.id} value={b.id}>
+                                                <Stack direction='row' gap={3} alignItems='center'>
+                                                    <Avatar src={`${baseURL}Image/${b.imageId}`} variant='rounded' />
+                                                    <Typography>{b.name}</Typography>
+                                                </Stack>
+                                            </MenuItem>
+                                        )
+                                    }
+                                </Select>
 
-                    form.append('displayName', displayName);
-                    form.append('firstName', firstName);
-                    form.append('lastName', lastName);
-                    form.append('bio', bio);
-                    form.append('profilePicture', profilePicture as Blob);
+                            }
+                        />
+                    </FormControl>
+                    <FormControl fullWidth>
+                        <InputLabel>Select Equipped Title</InputLabel>
+                        <Controller
+                            control={control}
+                            name='equippedTitleId'
+                            render={({ field }) =>
+                                <Select
+                                    {...field}
+                                    label="Select Equpped Title"
+                                    defaultValue={user?.equippedTitleId}
+                                    MenuProps={{ PaperProps: { style: { maxHeight: '70vh' } } }}
+                                >
+                                    {
+                                        titles?.map((t) =>
+                                            <MenuItem key={t.id} value={t.id}>
+                                                <Stack direction='row' gap={3} alignItems='center'>
+                                                    <Typography>{t.name}</Typography>
+                                                </Stack>
+                                            </MenuItem>
+                                        )
+                                    }
+                                </Select>
 
-                    try {
-                        await fetcher.put('https://localhost:7214/Listener/update', form);
-                        notify({message: "Updated successfully", severity: 'success'});
-                    }
-                    catch (error) {
-                        notify({message: error, severity: 'error'});
-                    }
+                            }
+                        />
+                    </FormControl>
 
-                    setProfilePicture(undefined);
-                }} variant="contained">Update</Button>
-            </Stack>
-        </Stack>
+                    <OptionalTextField
+                        label="Display Name"
+                        {...register('displayName')}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                    />
+                    <OptionalTextField
+                        label="First Name"
+                        {...register('firstName')}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                    />
+                    <OptionalTextField
+                        label="Last Name"
+                        {...register('lastName')}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                    />
+                    <OptionalTextField
+                        label="Bio"
+                        multiline
+                        rows={5}
+                        {...register('bio')}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                    />
+                    <OptionalTextField
+                        label="Profile Picture"
+                        type='file'
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        {...register('profilePicture')}
+                    />
+                    <Stack direction='row' gap={3}>
+                        <Button fullWidth onClick={handleSubmit(onSubmit)} variant="contained">Update</Button>
+                    </Stack>
+                </Stack>
+            }
+        </>
     )
 }
 

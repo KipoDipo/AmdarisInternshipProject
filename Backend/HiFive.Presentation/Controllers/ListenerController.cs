@@ -144,7 +144,7 @@ public class ListenerController : ControllerBase
 	}
 
 	[HttpPut]
-	public async Task<IActionResult> Update(ListenerUpdateDto listener)
+	public async Task<IActionResult> Update([FromForm] ListenerUpdateDto listener)
 	{
 		await _listenerService.UpdateListenerAsync(listener);
 		return NoContent();
