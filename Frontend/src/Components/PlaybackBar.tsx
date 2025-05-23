@@ -315,12 +315,20 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [volume, setVolume] = useState(1)
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const [isShuffling, setIsShuffling] = useState(false)
     const [repeatState, setRepeatState] = useState(0)
 
     const setQueue = useSetQueue();
     const queue = useQueue();
+
+    const handlePlay = () => {
+        setIsPlaying(true);
+    }
+    const handlePause = () => {
+        setIsPlaying(false);
+    }
 
     const handleLoadedMetadata = () => {
         if (audioRef.current) {
@@ -388,7 +396,7 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
                 duration={duration}
                 currentTime={currentTime}
                 onPlayToggle={handlePlayToggle}
-                isPlaying={!audioRef.current?.paused}
+                isPlaying={isPlaying}
                 volume={volume}
                 onVolumeChange={handleVolumeChange}
                 isShuffling={isShuffling}
@@ -403,6 +411,8 @@ function PlayerWrapper({ audioUrl }: { audioUrl: string }) {
                 src={audioUrl ? audioUrl : undefined}
                 onLoadedMetadata={handleLoadedMetadata}
                 onTimeUpdate={handleTimeUpdate}
+                onPause={handlePause}
+                onPlay={handlePlay}
                 onEnded={handleEnded}
             />
         </Stack>
