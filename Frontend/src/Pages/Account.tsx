@@ -111,12 +111,12 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
         async function fetchTitles(): Promise<Title[]> {
             const requests = titleIds.map(id => fetcher.get(`Trophy/get-title/${id}`));
             const responses = await Promise.all(requests);
-            return responses.map(res => res.data);
+            return responses.map(res => res.data).reverse();
         }
         async function fetchBadges(): Promise<Badge[]> {
             const requests = badgeIds.map(id => fetcher.get(`Trophy/get-badge/${id}`));
             const responses = await Promise.all(requests);
-            return responses.map(res => res.data);
+            return responses.map(res => res.data).reverse();
         }
 
         async function fetchData() {
