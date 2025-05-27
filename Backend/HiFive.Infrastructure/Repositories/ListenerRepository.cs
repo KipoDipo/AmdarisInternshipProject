@@ -11,10 +11,12 @@ namespace HiFive.Infrastructure.Repositories;
 public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 {
 	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-	public ListenerRepository(DbContext dbContext, UserManager<ApplicationUser> userManager) : base(dbContext)
+	public ListenerRepository(DbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager) : base(dbContext)
 	{
 		_userManager = userManager;
+		_roleManager = roleManager;
 	}
 
 	public async Task<IEnumerable<Listener>> GetAllByPartialName(string partialName)
@@ -47,10 +49,18 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			Email = listenerCreateDto.Email,
 			PhoneNumber = listenerCreateDto.PhoneNumber,
 		};
+
+		if (!await _roleManager.RoleExistsAsync("Listener"))
+		{
+			await _roleManager.CreateAsync(new IdentityRole<Guid>("Listener"));
+		}
+
 		var result = await _userManager.CreateAsync(newListener, listenerCreateDto.Password);
 
 		if (!result.Succeeded)
 			throw new IdentityCreationException(result.Errors);
+
+		await _userManager.AddToRoleAsync(newListener, "Listener");
 
 		var listener = new Listener()
 		{
@@ -61,7 +71,6 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			Bio = listenerCreateDto.Bio,
 			ProfilePictureId = listenerCreateDto.ProfilePictureId,
 		};
-
 		await _dbContext.AddAsync(listener);
 
 		return listener;

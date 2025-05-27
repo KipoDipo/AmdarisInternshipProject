@@ -2,63 +2,28 @@
 using HiFive.Application.AwardSystem.BadgeStrategies;
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Listener;
-using HiFive.Infrastructure.Identity;
-using HiFive.Presentation.Controllers.Requests.Listener;
 using HiFive.Presentation.Extentions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Listener")]
 [Route("[controller]")]
 public class ListenerController : ControllerBase
 {
 	private readonly IListenerService _listenerService;
 	private readonly IImageFileService _imageFileService;
-	private readonly UserManager<ApplicationUser> _userManager;
-	private readonly JwtService _jwtService;
 	private readonly ICurrentUserService _currentUserService;
 	private readonly Awarder _awarder;
 
-	public ListenerController(IListenerService listenerService, IImageFileService imageFileService, UserManager<ApplicationUser> userManager, JwtService jwtService, ICurrentUserService currentUserService, Awarder awarder)
+	public ListenerController(IListenerService listenerService, IImageFileService imageFileService, ICurrentUserService currentUserService, Awarder awarder)
 	{
 		_listenerService = listenerService;
 		_imageFileService = imageFileService;
-		_userManager = userManager;
-		_jwtService = jwtService;
 		_currentUserService = currentUserService;
 		_awarder = awarder;
-	}
-
-	[HttpPost("login")]
-	public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
-	{
-		var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-		if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequest.Password))
-			return Unauthorized(new { Message = "Invalid Credentials" });
-
-		var token = _jwtService.GenerateToken(user);
-		return Ok(new { token });
-	}
-
-	[HttpPost]
-	public async Task<IActionResult> Create([FromForm] ListenerCreateRequest listener)
-	{
-		if (listener.ProfilePicture == null)
-		{
-			var listenerDto = await _listenerService.CreateListenerAsync(listener.ToListenerCreateDto(null));
-			await _awarder.Award(listenerDto.Id, new Registered());
-			return Ok(listenerDto);
-		}
-		else
-		{
-			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(listener.ProfilePicture));
-			var listenerDto = await _listenerService.CreateListenerAsync(listener.ToListenerCreateDto(imageDto.Id));
-			await _awarder.Award(listenerDto.Id, new Registered());
-			return Ok(listenerDto);
-		}
 	}
 
 	[HttpPost("like/{songId}")]

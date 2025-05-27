@@ -50,6 +50,12 @@ public static class ServiceCollectionExtentions
 			options.User.RequireUniqueEmail = true;
 		});
 
+		services.AddAuthorizationBuilder()
+			.AddPolicy("ListenerOnly", policy => policy.RequireRole("Listener"))
+			.AddPolicy("ArtistOnly", policy => policy.RequireRole("Artist"))
+			.AddPolicy("DistributorOnly", policy => policy.RequireRole("Distributor"))
+			.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+
 		services.AddAuthentication(options =>
 		{
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

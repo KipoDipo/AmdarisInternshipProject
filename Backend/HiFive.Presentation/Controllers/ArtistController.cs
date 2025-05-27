@@ -1,11 +1,13 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Presentation.Controllers.Requests.Users;
 using HiFive.Presentation.Extentions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Artist,Distributor,Admin")]
 [Route("[controller]")]
 public class ArtistController : ControllerBase
 {
@@ -18,26 +20,8 @@ public class ArtistController : ControllerBase
 		_imageFileService = imageFileService;
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> Create(ArtistCreateRequest artist)
-	{
-		if (artist.ProfilePicture == null)
-		{
-			var artistDto = artist.ToArtistCreateDto(null);
-
-			return Ok(await _artistService.CreateArtistAsync(artistDto));
-		}
-		else
-		{
-			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(artist.ProfilePicture));
-
-			var artistDto = artist.ToArtistCreateDto(imageDto.Id);
-
-			return Ok(await _artistService.CreateArtistAsync(artistDto));
-		}
-	}
-
 	[HttpGet("id/{id}")]
+	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _artistService.GetArtistByIdAsync(id));
@@ -50,12 +34,14 @@ public class ArtistController : ControllerBase
 	}
 
 	[HttpGet("name/{partialName}")]
+	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetByPartialName(string partialName)
 	{
 		return Ok(await _artistService.GetArtistsByPartialNameAsync(partialName));
 	}
 
 	[HttpGet("details/{id}")]
+	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetDetailsById(Guid id)
 	{
 		return Ok(await _artistService.GetArtistDetailsByIdAsync(id));

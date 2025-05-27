@@ -32,7 +32,7 @@ function Page() {
                 if (value !== undefined)
                     formData.append(key, value);
             }
-            axios.post('https://localhost:7214/Listener', formData)
+            axios.post('https://localhost:7214/User/listener', formData)
                 .then(() => {
                     notify({ message: "Account created successfully!", severity: 'success' })
                     navigate('/login')

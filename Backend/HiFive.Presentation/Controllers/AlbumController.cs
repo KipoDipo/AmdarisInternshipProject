@@ -3,11 +3,13 @@ using HiFive.Application.DTOs.Album;
 using HiFive.Domain.Models.Music;
 using HiFive.Presentation.Controllers.Requests.Album;
 using HiFive.Presentation.Extentions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Distributor,Admin")]
 [Route("[controller]")]
 public class AlbumController : ControllerBase
 {

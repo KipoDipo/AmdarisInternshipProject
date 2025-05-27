@@ -1,4 +1,4 @@
-#define SEED
+//#define SEED
 #if (SEED)
 using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
@@ -34,8 +34,6 @@ builder.Services.AddOptions<Jwt>()
 	.BindConfiguration(nameof(Jwt));
 
 builder.Services.RegisterServices();
-
-builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration["Azure:Key"]));
 
 builder.Services.AddIdentityAndJwtAuthentication(builder.Configuration);
 

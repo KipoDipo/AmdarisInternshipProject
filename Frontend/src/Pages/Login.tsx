@@ -32,7 +32,7 @@ function Form({ setLogged }: ({ setLogged: (logged: boolean) => void })) {
     async function handleClick() {
         try {
 
-            const response = await axios.post("https://localhost:7214/Listener/login", {
+            const response = await axios.post("https://localhost:7214/User/login", {
                 email,
                 password
             });

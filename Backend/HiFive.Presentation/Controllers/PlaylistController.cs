@@ -6,12 +6,11 @@ using HiFive.Presentation.Controllers.Requests.Playlist;
 using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Listener")]
 [Route("[controller]")]
 public class PlaylistController : ControllerBase
 {

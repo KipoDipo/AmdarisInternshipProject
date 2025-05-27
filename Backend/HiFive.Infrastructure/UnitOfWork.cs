@@ -25,10 +25,10 @@ public class UnitOfWork : IUnitOfWork
 	public IConditionRepository Conditions { get; }
 	public IListenerDataRepository ListenerData { get; }
 
-	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+	public UnitOfWork(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
 	{
 		_context = dbContext;
-		Listeners = new ListenerRepository(dbContext, userManager);
+		Listeners = new ListenerRepository(dbContext, userManager, roleManager);
 		Artists = new ArtistRepository(dbContext, userManager);
 		Distributors = new DistributorRepository(dbContext);
 		Admins = new AdminRepository(dbContext);

@@ -1,9 +1,11 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class ImageController : ControllerBase
 {

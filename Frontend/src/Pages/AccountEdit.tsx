@@ -101,7 +101,7 @@ export default function Form() {
                         <Controller
                             control={control}
                             name='equippedBadgeId'
-                            defaultValue={user.equippedBadgeId}
+                            defaultValue={user.equippedBadgeId ?? ""}
                             render={({ field }) =>
                                 <Select
                                     {...field}
@@ -132,7 +132,7 @@ export default function Form() {
                                 <Select
                                     {...field}
                                     label="Select Equpped Title"
-                                    defaultValue={user?.equippedTitleId}
+                                    defaultValue={user?.equippedTitleId ?? ""}
                                     MenuProps={{ PaperProps: { style: { maxHeight: '70vh' } } }}
                                 >
                                     {

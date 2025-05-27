@@ -53,7 +53,7 @@ public class ListenerServiceTests
 			mockUserManager.Setup(x => x.Users)
 				.Returns(context.Users);
 
-			var listenerService = new ListenerService(new UnitOfWork(context, mockUserManager.Object), new Validator());
+			var listenerService = new ListenerService(new UnitOfWork(context, mockUserManager.Object, null), new Validator());
 
 			// Act
 			var result = await listenerService.GetListenerByIdAsync(id1);
@@ -103,7 +103,7 @@ public class ListenerServiceTests
 				})
 				.Returns(Task.FromResult(IdentityResult.Success));
 
-			var listenerService = new ListenerService(new UnitOfWork(context, mockUserManager.Object), new Validator());
+			var listenerService = new ListenerService(new UnitOfWork(context, mockUserManager.Object, null), new Validator());
 
 			// Act
 			var result = await listenerService.CreateListenerAsync(listener);
