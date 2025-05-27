@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Distributor,Admin")]
+[Authorize]
 [Route("[controller]")]
 public class AlbumController : ControllerBase
 {
@@ -25,6 +25,7 @@ public class AlbumController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Roles = "Distributor,Admin")]
 	public async Task<IActionResult> Create([FromForm] AlbumCreateRequest album)
 	{
 		var albumCreateDto = album.ToAlbumCreateDto();
@@ -66,6 +67,7 @@ public class AlbumController : ControllerBase
 	}
 
 	[HttpPut]
+	[Authorize(Roles = "Distributor,Admin")]
 	public async Task<IActionResult> Update(AlbumUpdateDto album)
 	{
 		await _albumService.UpdateAlbumAsync(album);

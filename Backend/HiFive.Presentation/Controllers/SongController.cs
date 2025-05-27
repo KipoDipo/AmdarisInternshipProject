@@ -28,6 +28,7 @@ public class SongController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Roles = "Distributor,Admin")]
 	public async Task<IActionResult> Create([FromForm] SongCreateRequest song)
 	{
 		var imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);
@@ -89,6 +90,13 @@ public class SongController : ControllerBase
 	public async Task<IActionResult> GetSongsByAlbumId(Guid id)
 	{
 		return Ok(await _songService.GetAllSongsByAlbumIdAsync(id));
+	}
+
+	[HttpGet("my-history/")]
+	public async Task<IActionResult> GetSongsFromHistory(int count = 8, int lastNMonths = 1)
+	{
+		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, count, lastNMonths);
+		return Ok(songs);
 	}
 
 	[HttpPut]

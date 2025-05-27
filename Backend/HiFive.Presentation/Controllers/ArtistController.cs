@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HiFive.Presentation.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Artist,Distributor,Admin")]
+[Authorize]
 [Route("[controller]")]
 public class ArtistController : ControllerBase
 {
@@ -21,33 +21,32 @@ public class ArtistController : ControllerBase
 	}
 
 	[HttpGet("id/{id}")]
-	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		return Ok(await _artistService.GetArtistByIdAsync(id));
 	}
 
 	[HttpGet]
+	[Authorize(Roles = "Distributor,Admin")]
 	public async Task<IActionResult> GetAll()
 	{
 		return Ok(await _artistService.GetAllArtistsAsync());
 	}
 
 	[HttpGet("name/{partialName}")]
-	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetByPartialName(string partialName)
 	{
 		return Ok(await _artistService.GetArtistsByPartialNameAsync(partialName));
 	}
 
 	[HttpGet("details/{id}")]
-	[Authorize(Roles = "")]
 	public async Task<IActionResult> GetDetailsById(Guid id)
 	{
 		return Ok(await _artistService.GetArtistDetailsByIdAsync(id));
 	}
 
 	[HttpPut]
+	[Authorize(Roles = "Artist,Distributor,Admin")]
 	public async Task<IActionResult> Update(ArtistUpdateRequest artistRequest)
 	{
 		var artistUpdateDto = artistRequest.ToAristUpdateDto();
