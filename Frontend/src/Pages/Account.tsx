@@ -9,10 +9,13 @@ import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Badge } from "../Models/Badge";
 import { Title } from "../Models/Title";
 import AppBadge from "../Components/AppBadge";
+import FetchImage from "../Utils/FetchImage";
+import { Listener } from "../Models/Listener";
 
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
     const [artists, setArtists] = useState<Artist[]>([])
+    const [friends, setFriends] = useState<Listener[]>([])
 
     const notify = useNotification();
 
@@ -62,8 +65,14 @@ export default function Account() {
                 </Stack>
 
                 <Stack gap={3}>
-                    <UserList title="Friends" ids={user?.followingListeners ?? []} />
-                    <UserList title="Artists" ids={artists?.map(a => a.profilePictureId) ?? []} />
+                    {
+                        friends && friends.length > 0 &&
+                        <ListenerList title="Friends" listeners={friends ?? []} to='/TODO' />
+                    }
+                    {
+                        artists && artists.length > 0 &&
+                        <ArtistList title="Artists" to='/following-artists' artists={artists} />
+                    }
                     <TrophyList badgeIds={user?.badgeIds ?? []} titleIds={user?.titleIds ?? []} />
                 </Stack>
             </Stack>
@@ -71,12 +80,12 @@ export default function Account() {
     );
 }
 
-function Ids(number: number, ids: string[]) {
-    const stacks: string[] = [];
+function PaddingArray<T>(number: number, elements: T[]) {
+    const stack: (T | null)[] = [];
     for (let i = 0; i < number; i++) {
-        stacks.push(ids[i] ?? "")
+        stack.push(elements[i] !== undefined ? elements[i] : null)
     }
-    return stacks;
+    return stack;
 }
 
 function ChunkArray<T>(arr: T[], size: number) {
@@ -87,18 +96,52 @@ function ChunkArray<T>(arr: T[], size: number) {
     return result;
 }
 
-function UserList({ title, ids }: { title: string, ids: string[] }) {
+function ArtistList({ title, artists, to }: { title: string, artists: Artist[], to: string }) {
     return (
-        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10}>
-            <Stack direction='row' justifyContent='space-between' alignItems='center'>
+        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} alignItems='flex-start'>
+            <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Typography variant='h4'>{title}</Typography>
-                <Typography component={Link} to="/TODO">See all</Typography>
+                <Typography component={Link} to={to}>See all</Typography>
             </Stack>
             <AvatarGroup max={6}>
                 {
-                    Ids(ids.length > 6 ? ids.length : 6, ids).map((id, index) =>
-                        <Avatar key={index} sx={{ width: 80, height: 80, opacity: id ? '100%' : '0%' }} src={id ? `${baseURL}Image/${id}` : ""}>Test</Avatar>
-                    )
+                    PaddingArray(6, artists).map((artist, index) => {
+                        return (
+                            <Avatar
+                                key={index}
+                                component={artist ? Link : 'div'}
+                                to={artist ? `/artist/${artist.id}` : ''}
+                                sx={{ width: 80, height: 80, opacity: artist ? '100%' : '0%' }}
+                                src={artist ? FetchImage(artist.profilePictureId) : ''}
+                            />
+                        )
+                    })
+                }
+            </AvatarGroup>
+        </Stack>
+    )
+}
+
+function ListenerList({ title, listeners, to }: { title: string, listeners: Listener[], to: string }) {
+    return (
+        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} alignItems='flex-start'>
+            <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
+                <Typography variant='h4'>{title}</Typography>
+                <Typography component={Link} to={to}>See all</Typography>
+            </Stack>
+            <AvatarGroup max={6}>
+                {
+                    PaddingArray(6, listeners).map((listener, index) => {
+                        return (
+                            <Avatar
+                                key={index}
+                                component={listener ? Link : 'div'}
+                                to={listener ? `/listener/${listener.id}` : ''}
+                                sx={{ width: 80, height: 80, opacity: listener ? '100%' : '0%' }}
+                                src={(listener && listener.profilePictureId) ? FetchImage(listener.profilePictureId) : ''}
+                            />
+                        )
+                    })
                 }
             </AvatarGroup>
         </Stack>
