@@ -59,7 +59,6 @@ function Home() {
 
     return (
         <Stack margin={3} gap={3}>
-            {/* <SongCategory name="Songs in the DB" songs={songs} /> */}
             {
                 history.length > 0 ?
                 <SongCategory name="Listen again" songs={history} />

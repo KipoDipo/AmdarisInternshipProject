@@ -11,6 +11,8 @@ public interface ITrophyService
 	Task AwardBadge(Guid listenerId, Guid badgeId);
 	Task AwardTitle(Guid listenerId, Guid titleId);
 
+	Task<IEnumerable<ListenerBadgeDto>> GetListenerBadges(Guid listenerId);
+
 	Task<BadgeDto> GetBadgeById(Guid badgeId);
 	Task<TitleDto> GetTitleById(Guid titleId);
 	

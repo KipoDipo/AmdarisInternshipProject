@@ -24,6 +24,7 @@ import { QueueProvider } from "./Contexts/Queue/QueueProvider";
 import Queue from "./Pages/Queue";
 import { NotificationProvider } from "./Contexts/Snackbar/NotificationProvider";
 import FollowingArtists from "./Pages/FollowingArtists";
+import Badges from "./Pages/Badges";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
                                                     <Route path="/playlists" element={<><Explore /><Playlists /></>} />
                                                     <Route path="/queue" element={<><Explore /><Queue /></>} />
                                                     <Route path="/following-artists" element={<><Explore /><FollowingArtists /></>} />
+                                                    <Route path="/my-badges" element={<><Explore /><Badges /></>} />
                                                     {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
                                                 </Routes>
                                             </Box>

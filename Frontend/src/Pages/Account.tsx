@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Box, Stack, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Skeleton, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { fetcher } from "../Fetcher";
@@ -43,44 +43,44 @@ export default function Account() {
 
     return (
         user && artists ?
-        <Stack margin={3}>
-            <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
-                <Stack gap={3}>
-                    <Stack direction='row' alignItems='center' gap={3}>
-                        {
-                            user ?
-                                <AppBadge badgeId={user.equippedBadgeId}>
-                                    <Avatar src={FetchImage(user.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
-                                </AppBadge>
-                                :
-                                <Box sx={{ width: '400px', height: `400px` }}></Box>
-                        }
+            <Stack margin={3}>
+                <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
+                    <Stack gap={3}>
+                        <Stack direction='row' alignItems='center' gap={3}>
+                            {
+                                user ?
+                                    <AppBadge badgeId={user.equippedBadgeId}>
+                                        <Avatar src={FetchImage(user.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                    </AppBadge>
+                                    :
+                                    <Box sx={{ width: '400px', height: `400px` }}></Box>
+                            }
+                            <Stack>
+                                <Typography variant='h2'>{user?.displayName}</Typography>
+                                <Typography variant='h5'>{user?.firstName} {user?.lastName}</Typography>
+                            </Stack>
+                        </Stack>
                         <Stack>
-                            <Typography variant='h2'>{user?.displayName}</Typography>
-                            <Typography variant='h5'>{user?.firstName} {user?.lastName}</Typography>
+                            <Typography variant='h3'>Bio</Typography>
+                            <Typography variant='body1'>{user?.bio}</Typography>
                         </Stack>
                     </Stack>
-                    <Stack>
-                        <Typography variant='h3'>Bio</Typography>
-                        <Typography variant='body1'>{user?.bio}</Typography>
+
+                    <Stack gap={3}>
+                        {
+                            friends && friends.length > 0 &&
+                            <ListenerList title="Friends" listeners={friends ?? []} to='/TODO' />
+                        }
+                        {
+                            artists && artists.length > 0 &&
+                            <ArtistList title="Artists" to='/following-artists' artists={artists} />
+                        }
+                        <TrophyList badgeIds={user?.badgeIds ?? []} titleIds={user?.titleIds ?? []} />
                     </Stack>
                 </Stack>
-
-                <Stack gap={3}>
-                    {
-                        friends && friends.length > 0 &&
-                        <ListenerList title="Friends" listeners={friends ?? []} to='/TODO' />
-                    }
-                    {
-                        artists && artists.length > 0 &&
-                        <ArtistList title="Artists" to='/following-artists' artists={artists} />
-                    }
-                    <TrophyList badgeIds={user?.badgeIds ?? []} titleIds={user?.titleIds ?? []} />
-                </Stack>
             </Stack>
-        </Stack>
-        :
-        <AccountSkeleton />
+            :
+            <AccountSkeleton />
     );
 }
 
@@ -186,29 +186,42 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
                 </Stack>
                 <Stack width='100%' alignItems='center' gap={3}>
                     {
-                        titles?.map((title, index) => {
-                            return <Typography key={index}>{title.name}</Typography>
-                        })
+                        titles ?
+                            titles.map((title, index) => {
+                                return <Typography key={index}>{title.name}</Typography>
+                            })
+                            :
+                            new Array(3).fill(0).map((_, index) => <Skeleton key={index} variant='text' width={200} />)
                     }
                 </Stack>
             </Stack>
             <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Badges</Typography>
-                    <Typography component={Link} to="/TODO">See all</Typography>
+                    <Typography component={Link} to="/my-badges">See all</Typography>
                 </Stack>
                 <Stack width='100%' alignItems='center' gap={3}>
                     {
-                        ChunkArray(badges?.slice(0, 4) ?? [], 2).map((badgeGroup, index) => {
-                            return (
-                                <Stack gap={3} direction='row' key={index}>
-                                    {
-                                        badgeGroup?.map(badge =>
-                                            <Avatar key={badge.id} src={FetchImage(badge.imageId)} sx={{ width: 64, height: 64 }} />)
-                                    }
-                                </Stack>
-                            )
-                        })
+                        badges?
+                            ChunkArray(badges?.slice(0, 4) ?? [], 2).map((badgeGroup, index) => {
+                                return (
+                                    <Stack gap={3} direction='row' key={index}>
+                                        {
+                                            badgeGroup.map(badge =>
+                                                <Avatar key={badge.id} src={FetchImage(badge.imageId)} sx={{ width: 64, height: 64 }} />)
+                                        }
+                                    </Stack>
+                                )
+                            })
+                            :
+                            new Array(2).fill(0).map((_, index) => {
+                                return (
+                                    <Stack gap={3} direction='row' key={index}>
+                                        <Skeleton variant='circular' width={64} height={64} />
+                                        <Skeleton variant='circular' width={64} height={64} />
+                                    </Stack>
+                                )
+                            })
                     }
                 </Stack>
             </Stack>

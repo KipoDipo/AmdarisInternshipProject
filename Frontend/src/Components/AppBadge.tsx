@@ -23,6 +23,7 @@ export default function AppBadge({ badgeId, children } : {badgeId: string | unde
           sx={{
             width: '45%',
             height: '45%',
+            boxShadow: 5,
           }}
         />
       }

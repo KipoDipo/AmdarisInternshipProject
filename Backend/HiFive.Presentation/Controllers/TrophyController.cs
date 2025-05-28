@@ -14,11 +14,13 @@ public class TrophyController : ControllerBase
 {
 	private ITrophyService _trophyService;
 	private IImageFileService _imageFileService;
+	private ICurrentUserService _currentUserService;
 
-	public TrophyController(ITrophyService trophyService, IImageFileService imageFileService)
+	public TrophyController(ITrophyService trophyService, IImageFileService imageFileService, ICurrentUserService currentUserService)
 	{
 		_trophyService = trophyService;
 		_imageFileService = imageFileService;
+		_currentUserService = currentUserService;
 	}
 
 	[HttpGet("get-badge/{id}")]
@@ -51,6 +53,11 @@ public class TrophyController : ControllerBase
 		return Ok(await _trophyService.GetConditionByKey(key));
 	}
 
+	[HttpGet("my-badges")]
+	public async Task<IActionResult> GetMyBadges()
+	{
+		return Ok(await _trophyService.GetListenerBadges(_currentUserService.Id));
+	}
 
 	[HttpPost("create-condition")]
 	public async Task<IActionResult> CreateCondition(ConditionCreateDto dto)

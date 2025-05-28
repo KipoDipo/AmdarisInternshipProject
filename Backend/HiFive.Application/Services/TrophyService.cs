@@ -152,4 +152,16 @@ public class TrophyService : ITrophyService
 
 		return TitleDto.FromEntity(title);
 	}
+
+	public async Task<IEnumerable<ListenerBadgeDto>> GetListenerBadges(Guid listenerId)
+	{
+		var listener = await _unitOfWork.Listeners.GetAll()
+			.Include(x => x.Badges)
+			.ThenInclude(x => x.Badge)
+			.FirstOrDefaultAsync(x => x.Id == listenerId);
+
+		_validator.Validate(listener);
+
+		return listener.Badges.Select(ListenerBadgeDto.FromEntity);
+	}
 }
