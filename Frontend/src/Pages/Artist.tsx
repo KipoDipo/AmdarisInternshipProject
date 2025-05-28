@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { ArtistDetails } from "../Models/ArtistDetails";
 import { useEffect, useState } from "react";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { Avatar, Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
@@ -14,6 +14,8 @@ import { Artist } from "../Models/Artist";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import FetchImage from "../Utils/FetchImage";
+import ArtistSkeleton from "../Components/Skeletons/ArtistSkeleton";
 
 
 
@@ -21,8 +23,8 @@ export default function Page() {
     const { id } = useParams();
 
     const [artist, setArtist] = useState<ArtistDetails>();
-    const [albums, setAlbums] = useState<Album[]>();
-    const [songs, setSongs] = useState<Song[]>();
+    const [albums, setAlbums] = useState<Album[] | undefined>();
+    const [songs, setSongs] = useState<Song[] | undefined>();
     const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
 
     const [user, setUser] = useState<ListenerDetails>();
@@ -90,12 +92,12 @@ export default function Page() {
             return;
 
         fetcher.get(`/Album/artist/${artist?.id}`)
-            .then((response) => setAlbums(response.data))
+            .then((response) => setAlbums(response.data ?? []))
             .catch(error => notify({ message: error, severity: 'error' }))
 
 
         fetcher.get(`/Song/artist/${artist?.id}`)
-            .then((response) => setSongs(response.data))
+            .then((response) => setSongs(response.data ?? []))
             .catch(error => notify({ message: error, severity: 'error' }))
 
     }, [artist, notify])
@@ -103,13 +105,14 @@ export default function Page() {
     const setQueue = useSetQueue();
 
     return (
+        artist && albums && songs ?
         <Stack margin={3}>
             <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
                 <Stack gap={3}>
                     <Stack direction='row' alignItems='center' gap={3}>
                         {
                             artist ?
-                                <Avatar src={`${baseURL}Image/${artist?.profilePictureId}`} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                <Avatar src={FetchImage(artist.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
                                 :
                                 <Box sx={{ width: '400px', height: `400px` }}></Box>
                         }
@@ -143,7 +146,7 @@ export default function Page() {
                                                 <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                     <TableCell>
                                                         <Stack direction='row' alignItems='center' gap={3} >
-                                                            <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>
+                                                            <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
                                                             <Typography variant='body2'>
                                                                 {song.title}
                                                             </Typography>
@@ -162,6 +165,8 @@ export default function Page() {
                 </Stack>
             </Stack>
         </Stack>
+        :
+        <ArtistSkeleton />
 
     )
 }

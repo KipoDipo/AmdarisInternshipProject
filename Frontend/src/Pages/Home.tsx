@@ -3,10 +3,12 @@ import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Song } from "../Models/Song";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import SongCategory from "../Components/SongCategory";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Artist } from "../Models/Artist";
+import FetchImage from "../Utils/FetchImage";
+import SongCategorySkeleton from "../Components/Skeletons/SongCategorySkeleton";
 
 function Home() {
     const [history, setHistory] = useState<Song[]>([]);
@@ -56,16 +58,20 @@ function Home() {
     }, [notify])
 
     return (
-        <Stack margin={3}>
+        <Stack margin={3} gap={3}>
             {/* <SongCategory name="Songs in the DB" songs={songs} /> */}
             {
-                history.length > 0 &&
+                history.length > 0 ?
                 <SongCategory name="Listen again" songs={history} />
+                :
+                <SongCategorySkeleton />
             }
             {
+                artists.length > 0 ?
                 artists.map((artist) => {
-                    return <SongCategory name={artist.displayName} imageUrl={`${baseURL}Image/${artist.profilePictureId}`} to={`Artist/${artist.id}`} songs={artist.songs}/>
-                })
+                   return <SongCategory name={artist.displayName} imageUrl={FetchImage(artist.profilePictureId)} to={`Artist/${artist.id}`} songs={artist.songs}/>
+                }) :
+                new Array(3).fill(0).map((_, index) => <SongCategorySkeleton key={index} />)
             }
 
         </Stack>

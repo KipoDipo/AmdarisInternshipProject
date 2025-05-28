@@ -219,6 +219,17 @@ export const theme = createTheme({
           },
         },
       },
+    },
+
+    MuiSkeleton: {
+      defaultProps: {
+        animation: 'wave'
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: colors.gray,
+        },
+      }
     }
   }
 })

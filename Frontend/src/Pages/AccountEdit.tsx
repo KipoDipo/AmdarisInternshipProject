@@ -1,13 +1,14 @@
 import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { OptionalTextField } from "../Components/TextFields";
 import { useEffect, useState } from "react";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { textWidth } from "../Styling/Theme";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Controller, useForm } from "react-hook-form";
 import { Badge } from "../Models/Badge";
 import { Title } from "../Models/Title";
+import FetchImage from "../Utils/FetchImage";
 
 type FormData = {
     displayName: string
@@ -112,7 +113,7 @@ export default function Form() {
                                         badges?.map((b) =>
                                             <MenuItem key={b.id} value={b.id}>
                                                 <Stack direction='row' gap={3} alignItems='center'>
-                                                    <Avatar src={`${baseURL}Image/${b.imageId}`} variant='rounded' />
+                                                    <Avatar src={FetchImage(b.imageId)} variant='rounded' />
                                                     <Typography>{b.name}</Typography>
                                                 </Stack>
                                             </MenuItem>

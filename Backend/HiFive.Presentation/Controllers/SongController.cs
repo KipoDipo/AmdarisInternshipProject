@@ -112,7 +112,6 @@ public class SongController : ControllerBase
 		return Ok(await _songService.GetListenerLikedSongs(listenerId));
 	}
 
-	[Authorize]
 	[HttpGet("my-liked")]
 	public async Task<IActionResult> GetMyLikedSongs()
 	{

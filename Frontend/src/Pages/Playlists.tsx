@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react"
-import { baseURL, fetcher } from "../Fetcher"
+import { fetcher } from "../Fetcher"
 import { Avatar, AvatarProps, Button, Dialog, DialogContent, DialogTitle, Stack, TextField, Typography } from "@mui/material"
 import ClickableBase from "../Components/ClickableBase"
 import { FieldValues, useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { textWidth } from "../Styling/Theme";
 import { Playlist } from "../Models/Playlist";
 import { Link } from "react-router-dom";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import FetchImage from "../Utils/FetchImage";
 
 export default function Page() {
     const [playlists, setPlaylists] = useState<Playlist[]>();
@@ -62,7 +63,7 @@ function PlaylistComponent({ data }: { data: Playlist }) {
         <Tile 
         label={data.title} 
         props={{ 
-            src: `${baseURL}Image/${data.thumbnailId}`,
+            src: FetchImage(data.thumbnailId),
             component: Link,
             to: `/playlist/${data.id}`
         }} />

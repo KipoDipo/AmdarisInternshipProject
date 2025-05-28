@@ -1,9 +1,9 @@
 import { Avatar, Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useQueue } from "../Contexts/Queue/UseQueue"
-import { baseURL } from "../Fetcher";
 import { TimeFormat } from "../Utils/TimeFormat";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { theme } from "../Styling/Theme";
+import FetchImage from "../Utils/FetchImage";
 
 export default function Page() {
     const queue = useQueue();
@@ -36,7 +36,7 @@ export default function Page() {
                                             }}>
                                                 <TableCell align='left'>
                                                     <Stack direction='row' alignItems='center' gap={3} >
-                                                        <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>
+                                                        <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
                                                         <Stack>
                                                             <Typography variant='body1'>{song.title}</Typography>
                                                             <Typography variant='body2'>{song.artistName}</Typography>

@@ -1,7 +1,7 @@
 import { Avatar, AvatarGroup, Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ListenerDetails } from "../Models/ListenerDetails";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { theme } from "../Styling/Theme";
 import { Link } from "react-router-dom";
 import { Artist } from "../Models/Artist";
@@ -11,11 +11,12 @@ import { Title } from "../Models/Title";
 import AppBadge from "../Components/AppBadge";
 import FetchImage from "../Utils/FetchImage";
 import { Listener } from "../Models/Listener";
+import AccountSkeleton from "../Components/Skeletons/AccountSkeleton";
 
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
-    const [artists, setArtists] = useState<Artist[]>([])
-    const [friends, setFriends] = useState<Listener[]>([])
+    const [artists, setArtists] = useState<Artist[] | undefined>(undefined)
+    const [friends, setFriends] = useState<Listener[] | undefined>(undefined)
 
     const notify = useNotification();
 
@@ -34,13 +35,14 @@ export default function Account() {
             const responses = await Promise.all(
                 user.followingArtists.map((a) => fetcher.get(`/Artist/id/${a}`))
             )
-            setArtists(responses.map(res => res.data));
+            setArtists(responses.map(res => res.data) ?? []);
         }
 
         fetchUsers();
     }, [user])
 
     return (
+        user && artists ?
         <Stack margin={3}>
             <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
                 <Stack gap={3}>
@@ -48,7 +50,7 @@ export default function Account() {
                         {
                             user ?
                                 <AppBadge badgeId={user.equippedBadgeId}>
-                                    <Avatar src={`${baseURL}Image/${user.profilePictureId}`} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                    <Avatar src={FetchImage(user.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
                                 </AppBadge>
                                 :
                                 <Box sx={{ width: '400px', height: `400px` }}></Box>
@@ -77,6 +79,8 @@ export default function Account() {
                 </Stack>
             </Stack>
         </Stack>
+        :
+        <AccountSkeleton />
     );
 }
 
@@ -174,7 +178,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
     }, [titleIds, badgeIds])
 
     return (
-        <Stack direction='row' justifyContent='space-between' gap={3}>
+        <Stack direction='row' justifyContent='space-between' gap={3} height={270}>
             <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Titles</Typography>
@@ -200,7 +204,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
                                 <Stack gap={3} direction='row' key={index}>
                                     {
                                         badgeGroup?.map(badge =>
-                                            <Avatar key={badge.id} src={`${baseURL}Image/${badge.imageId}`} sx={{ width: 64, height: 64 }} />)
+                                            <Avatar key={badge.id} src={FetchImage(badge.imageId)} sx={{ width: 64, height: 64 }} />)
                                     }
                                 </Stack>
                             )

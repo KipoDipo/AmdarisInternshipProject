@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Song } from "../Models/Song";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { TimeFormat } from "../Utils/TimeFormat";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -8,6 +8,7 @@ import { ThumbUpRounded } from "@mui/icons-material";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import FetchImage from "../Utils/FetchImage";
 
 export default function Page() {
 
@@ -69,7 +70,7 @@ export default function Page() {
                                                         <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                             <TableCell align='left'>
                                                                 <Stack direction='row' alignItems='center' gap={3} >
-                                                                    <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>
+                                                                    <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
                                                                     <Stack>
                                                                         <Typography variant='body1'>{song.title}</Typography>
                                                                         <Typography variant='body2'>{song.artistName}</Typography>

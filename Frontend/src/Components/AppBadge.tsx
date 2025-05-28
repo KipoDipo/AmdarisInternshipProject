@@ -1,7 +1,8 @@
 import { Avatar, Badge } from "@mui/material";
 import { Badge as BadgeType } from "../Models/Badge"
 import { ReactNode, useEffect, useState } from "react";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
+import FetchImage from "../Utils/FetchImage";
 
 export default function AppBadge({ badgeId, children } : {badgeId: string | undefined, children: ReactNode}) {
   const [badge, setBadge] = useState<BadgeType>();
@@ -18,7 +19,7 @@ export default function AppBadge({ badgeId, children } : {badgeId: string | unde
       badgeContent={
         badge &&
         <Avatar
-          src={`${baseURL}Image/${badge.imageId}`}
+          src={FetchImage(badge.imageId)}
           sx={{
             width: '45%',
             height: '45%',

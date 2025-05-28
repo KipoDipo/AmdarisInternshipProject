@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Song } from "../Models/Song";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { TimeFormat } from "../Utils/TimeFormat";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -9,6 +9,7 @@ import { Album } from "../Models/Album";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import FetchImage from "../Utils/FetchImage";
 
 export default function Page() {
     const { id } = useParams();
@@ -49,7 +50,7 @@ export default function Page() {
             <Stack gap={2} alignItems='center'>
                 {
                     album &&
-                    <Avatar src={`${baseURL}Image/${album?.coverImageId}`} variant='rounded' sx={{ width: 200, height: 200 }} />
+                    <Avatar src={FetchImage(album.coverImageId)} variant='rounded' sx={{ width: 200, height: 200 }} />
                 }
                 <Typography variant='h5'>{album?.title}</Typography>
                 <Typography variant='body1' width='200px' textAlign='center'>{album?.description}</Typography>
@@ -80,7 +81,7 @@ export default function Page() {
                                                 <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                     <TableCell align='left'>
                                                         <Stack direction='row' alignItems='center' gap={3} >
-                                                            <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>
+                                                            <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
                                                             <Stack>
                                                                 <Typography variant='body1'>{song.title}</Typography>
                                                             </Stack>

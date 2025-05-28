@@ -1,15 +1,15 @@
 import { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import { baseURL } from "../Fetcher";
 import ClickableAvatar from "./ClickableAvatar";
 import { Album } from "../Models/Album";
 import { Link } from "react-router-dom";
+import FetchImage from "../Utils/FetchImage";
 
 export default function AlbumComponent({album}: {album: Album}) {
   return (
     <Stack alignItems='center' sx={{ cursor: 'pointer', maxWidth: 200, textAlign: 'center', whiteSpace: 'normal'}}>
       <ClickableAvatar 
-        src={album.coverImageId ? `${baseURL}Image/${album.coverImageId}` : ''}
+        src={album.coverImageId ? FetchImage(album.coverImageId) : ''}
         variant='rounded'
         component={Link}
         to={`/album/${album.id}`}

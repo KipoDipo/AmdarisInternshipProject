@@ -15,12 +15,13 @@ import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 import { Song } from '../Models/Song';
 import { Link } from 'react-router-dom';
 import { textWidth } from '../Styling/Theme';
-import { baseURL, fetcher } from '../Fetcher';
+import { fetcher } from '../Fetcher';
 import { Playlist } from '../Models/Playlist';
 import { useQueue } from '../Contexts/Queue/UseQueue';
 import { useSetQueue } from '../Contexts/Queue/UseSetQueue';
 import { TimeFormat } from '../Utils/TimeFormat';
 import { useNotification } from '../Contexts/Snackbar/UseNotification';
+import FetchImage from '../Utils/FetchImage';
 
 function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { size?: number, onPlayToggle: () => void, isPlaying: boolean, duration: number, currentTime: number }) {
     const theme = useTheme();
@@ -158,7 +159,10 @@ function AddToPlaylistDialog({ open, setIsOpen }: { open: boolean, setIsOpen: (p
         <Dialog open={open} onClose={() => setIsOpen(false)} fullWidth maxWidth="sm">
             <Stack margin={3} gap={3} alignItems='center'>
                 <Stack gap={3} alignItems='center' direction='row'>
-                    <Avatar src={`${baseURL}Image/${queue?.songs[queue.current]?.coverImageId}`} variant='rounded' sx={{ width: 80, height: 80 }} />
+                    <Avatar
+                        src={queue && queue?.songs[queue.current] && queue?.songs[queue.current].coverImageId ? FetchImage(queue.songs[queue.current].coverImageId) : ''}
+                        variant='rounded'
+                        sx={{ width: 80, height: 80 }} />
                     <Stack>
                         <Typography variant='h5'>{queue?.songs[queue.current]?.title}</Typography>
                         <Typography>{queue?.songs[queue.current]?.artistName}</Typography>
@@ -175,7 +179,7 @@ function AddToPlaylistDialog({ open, setIsOpen }: { open: boolean, setIsOpen: (p
                             playlists?.map((p) =>
                                 <MenuItem key={p.id} value={p.id}>
                                     <Stack direction='row' gap={3} alignItems='center'>
-                                        <Avatar src={`${baseURL}Image/${p.thumbnailId}`} variant='rounded' />
+                                        <Avatar src={FetchImage(p.thumbnailId)} variant='rounded' />
                                         <Typography>{p.title}</Typography>
                                     </Stack>
                                 </MenuItem>
@@ -429,7 +433,7 @@ function PlaybackBar() {
         if (!queue || !queue.songs || !queue.songs[queue.current])
             return;
 
-        fetcher.get(`${baseURL}Song/download/${queue.songs[queue.current].id}`, { responseType: 'blob' })
+        fetcher.get(`Song/download/${queue.songs[queue.current].id}`, { responseType: 'blob' })
             .then((response) => {
                 const blob = response.data;
                 const url = URL.createObjectURL(blob);

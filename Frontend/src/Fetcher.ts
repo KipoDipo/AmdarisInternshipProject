@@ -4,7 +4,7 @@ export const baseURL = 'https://localhost:7214/'
 
 export const fetcher = axios.create({
     baseURL: baseURL,
-    timeout: 5000,
+    timeout: 10000,
 })
 
 fetcher.interceptors.request.use(

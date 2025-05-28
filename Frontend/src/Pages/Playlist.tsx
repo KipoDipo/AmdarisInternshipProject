@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Playlist } from "../Models/Playlist";
 import { Song } from "../Models/Song";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { TimeFormat } from "../Utils/TimeFormat";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import FetchImage from "../Utils/FetchImage";
 
 export default function Page() {
     const { id } = useParams();
@@ -37,19 +38,18 @@ export default function Page() {
         if (!songs)
             return;
 
-        notify({message: "Queuing Playlist..."});
+        notify({ message: "Queuing Playlist..." });
         setQueue(CreateQueue(songs));
     }
 
     return (
+        playlist &&
         <Stack gap={3} margin={3} direction='row' justifyContent='space-evenly' alignItems='center' height='80%'>
+
             <Stack gap={2} alignItems='center'>
-                {
-                    playlist &&
-                    <Avatar src={`${baseURL}Image/${playlist?.thumbnailId}`} variant='rounded' sx={{ width: 200, height: 200 }} />
-                }
-                <Typography variant='h5'>{playlist?.title}</Typography>
-                <Typography variant='body1' width='200px' textAlign='center'>{playlist?.description}</Typography>
+                <Avatar src={FetchImage(playlist.thumbnailId)} variant='rounded' sx={{ width: 200, height: 200 }} />
+                <Typography variant='h5'>{playlist.title}</Typography>
+                <Typography variant='body1' width='200px' textAlign='center'>{playlist.description}</Typography>
                 <Fab centerRipple onClick={startPlaylist} disabled={!(songs && songs.length > 0)}>
                     {<PlayArrowRoundedIcon fontSize='large' />}
                 </Fab>
@@ -79,7 +79,7 @@ export default function Page() {
                                                         <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
                                                             <TableCell align='left'>
                                                                 <Stack direction='row' alignItems='center' gap={3} >
-                                                                    <Avatar variant='rounded' src={`${baseURL}Image/${song.coverImageId}`}></Avatar>
+                                                                    <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
                                                                     <Stack>
                                                                         <Typography variant='body1'>{song.title}</Typography>
                                                                         <Typography variant='body2'>{song.artistName}</Typography>

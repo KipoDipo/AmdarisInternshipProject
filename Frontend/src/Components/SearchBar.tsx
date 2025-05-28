@@ -1,12 +1,13 @@
 import { Autocomplete, Avatar, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { baseURL, fetcher } from "../Fetcher";
+import { fetcher } from "../Fetcher";
 import { Song } from "../Models/Song";
 import { textWidth, theme } from "../Styling/Theme";
 import { Artist } from "../Models/Artist";
 import { Link } from "react-router-dom";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
+import FetchImage from "../Utils/FetchImage";
 
 type SongExt = Song & { type: 'song' }
 type ArtistExt = Artist & { type: 'artist' }
@@ -17,7 +18,7 @@ function renderOptionComponent(option: OptionType) {
     if (option.type === 'song')
         return (
             <Stack direction='row' alignItems='center' gap={3}>
-                <Avatar src={`${baseURL}Image/${option.coverImageId}`} variant='rounded' />
+                <Avatar src={FetchImage(option.coverImageId)} variant='rounded' />
                 <Stack>
                     <Typography>{option.title}</Typography>
                     <Typography variant='body2' color={theme.palette.secondary.light}>{option.artistName}</Typography>
@@ -27,7 +28,7 @@ function renderOptionComponent(option: OptionType) {
     if (option.type === 'artist')
         return (
             <Stack direction='row' alignItems='center' gap={3} component={Link} to={`/artist/${option?.id}`} width='100%' sx={{textDecoration:'none'}}>
-                <Avatar src={`${baseURL}Image/${option.profilePictureId}`} variant='circular' />
+                <Avatar src={FetchImage(option.profilePictureId)} variant='circular' />
                 <Typography>{option.displayName}</Typography>
             </Stack>
         )
