@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Artist;
 using HiFive.Domain.Models.Misc;
 using HiFive.Domain.Models.Users;
+using HiFive.Infrastructure.Exceptions;
 using HiFive.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace HiFive.Infrastructure.Repositories;
 public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 {
 	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-	public ArtistRepository(DbContext dbContext, UserManager<ApplicationUser> userManager) : base(dbContext)
+	public ArtistRepository(DbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager) : base(dbContext)
 	{
 		_userManager = userManager;
+		_roleManager = roleManager;
 	}
 
 	public async Task<IEnumerable<Artist>> GetAllByPartialName(string partialName)
@@ -41,7 +44,17 @@ public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
 			PhoneNumber = artistCreateDto.PhoneNumber,
 		};
 
-		await _userManager.CreateAsync(newArtist, artistCreateDto.Password);
+		if (!await _roleManager.RoleExistsAsync("Artist"))
+		{
+			await _roleManager.CreateAsync(new IdentityRole<Guid>("Artist"));
+		}
+
+		var result = await _userManager.CreateAsync(newArtist, artistCreateDto.Password);
+
+		if (!result.Succeeded)
+			throw new IdentityCreationException(result.Errors);
+
+		await _userManager.AddToRoleAsync(newArtist, "Artist");
 
 		var artist = new Artist()
 		{

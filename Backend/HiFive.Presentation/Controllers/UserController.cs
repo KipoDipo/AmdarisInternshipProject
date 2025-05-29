@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using HiFive.Infrastructure.Identity;
-using HiFive.Application.Services;
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.AwardSystem;
 using HiFive.Presentation.Controllers.Requests.Users;
+using HiFive.Presentation.Controllers.Requests.Distributor;
 
 namespace HiFive.Presentation.Controllers;
 
@@ -20,12 +20,12 @@ public class UserController : ControllerBase
 	private readonly JwtService _jwtService;
 	private readonly IListenerService _listenerService;
 	private readonly IArtistService _artistService;
-	//private readonly _distributorService;
-	//private readonly _adminService;
+	private readonly IDistributorService _distributorService;
+	//private readonly IAdminService _adminService;
 	private readonly IImageFileService _imageFileService;
 	private readonly Awarder _awarder;
 
-	public UserController(JwtService jwtService, UserManager<ApplicationUser> userManager, IListenerService listenerService, IImageFileService imageFileService, Awarder awarder, IArtistService artistService)
+	public UserController(JwtService jwtService, UserManager<ApplicationUser> userManager, IListenerService listenerService, IImageFileService imageFileService, Awarder awarder, IArtistService artistService, IDistributorService distributorService)
 	{
 		_jwtService = jwtService;
 		_userManager = userManager;
@@ -33,6 +33,7 @@ public class UserController : ControllerBase
 		_imageFileService = imageFileService;
 		_awarder = awarder;
 		_artistService = artistService;
+		_distributorService = distributorService;
 	}
 
 	[HttpPost("login")]
@@ -43,7 +44,7 @@ public class UserController : ControllerBase
 			return Unauthorized(new { Message = "Invalid Credentials" });
 
 		var token = await _jwtService.GenerateToken(user);
-		return Ok(new { token });
+		return Ok(new { token.token, token.role });
 	}
 
 	[HttpPost("listener")]
@@ -74,5 +75,20 @@ public class UserController : ControllerBase
 
 		var artistDto = artist.ToArtistCreateDto(imageId);
 		return Ok(await _artistService.CreateArtistAsync(artistDto));
+	}
+
+	[HttpPost("distributor")]
+	public async Task<IActionResult> Create(DistributorCreateRequest distributor)
+	{
+		Guid? imageId = null;
+
+		if (distributor.ProfilePicture != null)
+		{
+			var imageDto = await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(distributor.ProfilePicture));
+			imageId = imageDto.Id;
+		}
+
+		var distributorDto = distributor.ToDistributorCreateDto(imageId);
+		return Ok(await _distributorService.CreateDistributorAsync(distributorDto));
 	}
 }

@@ -29,8 +29,8 @@ public class UnitOfWork : IUnitOfWork
 	{
 		_context = dbContext;
 		Listeners = new ListenerRepository(dbContext, userManager, roleManager);
-		Artists = new ArtistRepository(dbContext, userManager);
-		Distributors = new DistributorRepository(dbContext);
+		Artists = new ArtistRepository(dbContext, userManager, roleManager);
+		Distributors = new DistributorRepository(dbContext, userManager, roleManager);
 		Admins = new AdminRepository(dbContext);
 		Playlists = new PlaylistRepository(dbContext);
 		Songs = new SongRepository(dbContext);

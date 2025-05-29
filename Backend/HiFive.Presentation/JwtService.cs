@@ -20,7 +20,7 @@ public class JwtService
 		_userManager = userManager;
 	}
 
-	public async Task<string> GenerateToken(ApplicationUser user)
+	public async Task<(string token, string role)> GenerateToken(ApplicationUser user)
 	{
 		var roles = await _userManager.GetRolesAsync(user);
 
@@ -44,6 +44,6 @@ public class JwtService
 			signingCredentials: creds
 		);
 
-		return new JwtSecurityTokenHandler().WriteToken(token);
+		return new (new JwtSecurityTokenHandler().WriteToken(token), roles.First());
 	}
 }

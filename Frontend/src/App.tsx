@@ -10,7 +10,7 @@ import AddSongPage from "./Pages/AddSong";
 import AddGenrePage from "./Pages/AddGenre";
 import AddAlbumPage from "./Pages/AddAlbum";
 import Register from "./Pages/Register";
-import { useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import Login from "./Pages/Login";
 import LogoAndName from "./Components/LogoAndName";
 import AccountEdit from "./Pages/AccountEdit";
@@ -30,6 +30,38 @@ import Badges from "./Pages/Badges";
 function App() {
     const token = localStorage.getItem('token')
     const [logged, setLogged] = useState(token !== null)
+    const [role, setRole] = useState(localStorage.getItem('role') ?? "")
+    const [component, setComponent] = useState<ReactElement>();
+
+    function login(state: boolean) {
+        setLogged(state);
+        if (state) {
+            setRole(localStorage.getItem('role') ?? "");
+        }
+    }
+
+    useEffect(() => {
+        if (!role)
+            return;
+
+        switch (role) {
+            case 'Listener':
+                setComponent(ListenerRoutes);
+                break;
+
+            case 'Artist':
+                setComponent(ArtistRoutes);
+                break;
+
+            case 'Distributor':
+                setComponent(DistributorRoutes);
+                break;
+
+            case 'Admnin':
+                break;
+
+        }
+    }, [role])
 
     return (
         <ThemeProvider theme={theme}>
@@ -55,42 +87,14 @@ function App() {
                                         <LogoAndName />
                                         <Routes>
                                             <Route path="/register" element={<Register />}></Route>
-                                            <Route path="/login" element={<Login setLogged={setLogged} />}></Route>
+                                            <Route path="/login" element={<Login setLogged={login} />}></Route>
                                             <Route path="*" element={<Navigate to='/login' />}></Route>
                                         </Routes>
                                     </Stack>
                                     :
-                                    <QueueProvider>
-                                        <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-                                            <SideBar />
-                                            <Box
-                                                sx={{
-                                                    flex: 1,
-                                                    overflowY: 'auto',
-                                                    paddingBottom: '100px', // space for the PlaybackBar height
-                                                }}
-                                            >
-                                                <Routes>
-                                                    <Route index element={<><Explore /><Home /></>} />
-                                                    <Route path="/account" element={<><Explore /><Account /></>} />
-                                                    <Route path="/account-edit" element={<AccountEdit />} />
-                                                    <Route path="/add-song/" element={<AddSongPage />} />
-                                                    <Route path="/add-genre/" element={<AddGenrePage />} />
-                                                    <Route path="/add-album/" element={<AddAlbumPage />} />
-                                                    <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
-                                                    <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
-                                                    <Route path="/album/:id" element={<><Explore /><Album /></>} />
-                                                    <Route path="/liked" element={<><Explore /><LikedSongs /></>} />
-                                                    <Route path="/playlists" element={<><Explore /><Playlists /></>} />
-                                                    <Route path="/queue" element={<><Explore /><Queue /></>} />
-                                                    <Route path="/following-artists" element={<><Explore /><FollowingArtists /></>} />
-                                                    <Route path="/my-badges" element={<><Explore /><Badges /></>} />
-                                                    {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
-                                                </Routes>
-                                            </Box>
-                                        </Box>
-                                        <PlaybackBar />
-                                    </QueueProvider>
+                                    <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                                        {component}
+                                    </Box>
                             }
                         </BrowserRouter>
                     </NotificationProvider>
@@ -100,4 +104,55 @@ function App() {
     )
 }
 
-export default App
+function DistributorRoutes() {
+    return (
+        <Stack>
+
+        </Stack>
+    )
+}
+
+function ArtistRoutes() {
+    return (
+        <Stack>
+
+        </Stack>
+    )
+}
+
+function ListenerRoutes() {
+    return (
+        <QueueProvider>
+            <SideBar />
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    paddingBottom: '100px', // space for the PlaybackBar height
+                }}
+            >
+                <Routes>
+                    <Route index element={<><Explore /><Home /></>} />
+                    <Route path="/account" element={<><Explore /><Account /></>} />
+                    <Route path="/account-edit" element={<AccountEdit />} />
+                    <Route path="/add-song/" element={<AddSongPage />} />
+                    <Route path="/add-genre/" element={<AddGenrePage />} />
+                    <Route path="/add-album/" element={<AddAlbumPage />} />
+                    <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
+                    <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
+                    <Route path="/album/:id" element={<><Explore /><Album /></>} />
+                    <Route path="/liked" element={<><Explore /><LikedSongs /></>} />
+                    <Route path="/playlists" element={<><Explore /><Playlists /></>} />
+                    <Route path="/queue" element={<><Explore /><Queue /></>} />
+                    <Route path="/following-artists" element={<><Explore /><FollowingArtists /></>} />
+                    <Route path="/my-badges" element={<><Explore /><Badges /></>} />
+                    {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
+                </Routes>
+            </Box>
+            <PlaybackBar />
+        </QueueProvider >
+
+    )
+}
+
+export default App;

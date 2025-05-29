@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.AwardSystem;
 using HiFive.Application.DTOs.Artist;
+using HiFive.Application.DTOs.Distributor;
 using HiFive.Application.DTOs.Listener;
 using HiFive.Application.UnitOfWork;
 using HiFive.Domain.Models.Join;
@@ -295,6 +296,14 @@ public class DbSeeder
 			await unit.Listeners.Register(jazzlover);
 			await unit.Listeners.Register(classicalfan);
 
+			await unit.CommitTransactionAsync();
+		}
+		if(!unit.Distributors.GetAll().Any())
+		{
+			var distr1 = new DistributorCreateDto() { UserName = "deestreebyutorr", Email = "distri@utor", Password = "DistroBistro123!", DisplayName = "Distributorotery" };
+
+			await unit.BeginTransactionAsync();
+			await unit.Distributors.Register(distr1);
 			await unit.CommitTransactionAsync();
 		}
 	}
