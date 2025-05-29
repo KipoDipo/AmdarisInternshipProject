@@ -33,7 +33,9 @@ public class SongController : ControllerBase
 	{
 		var imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);
 		var imageDto = await _imageFileService.UploadImageAsync(imageCreateDto);
-		var songDto = song.ToSongCreateDto(imageDto.Id);
+		var (duration, songUri) = await _blobService.UploadFileAsync(song.Data);
+		var songDto = song.ToSongCreateDto(imageDto.Id, songUri);
+		songDto.Duration = duration;
 		return Ok(await _songService.CreateSongAsync(songDto));
 	}
 

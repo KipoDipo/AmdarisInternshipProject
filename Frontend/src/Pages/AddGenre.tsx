@@ -1,13 +1,13 @@
 import { Button, Stack, TextField } from "@mui/material";
-import axios from "axios";
 import { useState } from "react";
 import { textWidth } from "../Styling/Theme";
+import { fetcher } from "../Fetcher";
 
 function AddGenrePage() {
     const [inputGenreText, setInputGenreText] = useState("")
 
     const handleUpload = async () => {
-        const response = await axios.post("https://localhost:7214/Genre", {name: inputGenreText})
+        const response = await fetcher.post("Genre", {name: inputGenreText})
         console.log(response)
     }
 

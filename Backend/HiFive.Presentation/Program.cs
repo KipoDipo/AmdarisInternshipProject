@@ -4,6 +4,7 @@ using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
 #endif
 using Azure.Storage.Blobs;
+using FFMpegCore;
 using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Middleware;
@@ -73,6 +74,12 @@ builder.Services.AddCors(options =>
 				.AllowAnyHeader()
 				.AllowAnyMethod();
 		});
+});
+
+GlobalFFOptions.Configure(new FFOptions
+{
+	BinaryFolder = "./ffmpeg",
+	TemporaryFilesFolder = Path.GetTempPath()
 });
 
 var app = builder.Build();

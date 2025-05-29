@@ -12,4 +12,5 @@ public class SongCreateDto
 
 	public required Guid ArtistId { get; set; }
 	public Guid? AlbumId { get; set; }
+	public int? OrderIndex { get; set; }
 }

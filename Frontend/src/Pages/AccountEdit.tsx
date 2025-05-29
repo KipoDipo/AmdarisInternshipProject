@@ -83,7 +83,7 @@ export default function Form() {
         if (data.profilePicture)
             form.append('profilePicture', data.profilePicture[0] as Blob);
         try {
-            await fetcher.put('https://localhost:7214/Listener/update', form);
+            await fetcher.put('Listener/update', form);
             notify({ message: "Updated successfully", severity: 'success' });
         }
         catch (error) {

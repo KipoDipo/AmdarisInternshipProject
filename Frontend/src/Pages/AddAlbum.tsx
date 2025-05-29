@@ -1,9 +1,9 @@
 import { Autocomplete, Button, Dialog, DialogContent, DialogTitle, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
-import axios from "axios";
 import { Song } from "../Models/Song";
 import AddSongPage from "./AddSong";
+import { fetcher } from "../Fetcher";
 
 function AddAlbumPage() {
     const [artists, setArtists] = useState<Artist[]>([]);
@@ -26,7 +26,7 @@ function AddAlbumPage() {
     }
 
     useEffect(() => {
-        axios.get("https://localhost:7214/Artist")
+        fetcher.get("Artist")
             .then((response) => setArtists(response.data));
         }, []);
 
@@ -59,7 +59,7 @@ function AddAlbumPage() {
         });
 
         try {
-            const response = await axios.post("https://localhost:7214/Album", formData);
+            const response = await fetcher.post("Album", formData);
             console.log(response);
         }
         catch(error) {

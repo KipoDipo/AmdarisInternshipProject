@@ -108,7 +108,7 @@ export const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: colors.white,
+              borderColor: colors.lightGray,
             },
             '&:hover fieldset': {
               borderColor: colors.yellow,
@@ -119,6 +119,7 @@ export const theme = createTheme({
             '& input': {
               color: colors.white,
             },
+            background: colors.black
           },
           '& .MuiFormLabel-root': {
             color: colors.white,
@@ -145,7 +146,7 @@ export const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: colors.white,
+              borderColor: colors.lightGray,
             },
             '&:hover fieldset': {
               borderColor: colors.yellow,
@@ -158,7 +159,8 @@ export const theme = createTheme({
             },
             '& textarea': {
               color: colors.white
-            }
+            },
+            background: colors.black
           },
           '& .MuiFormLabel-root': {
             color: colors.white,

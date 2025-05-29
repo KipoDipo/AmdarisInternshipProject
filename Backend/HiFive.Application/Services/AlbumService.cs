@@ -33,6 +33,7 @@ public class AlbumService : IAlbumService
 			Description = albumCreateDto.Description,
 			ReleaseDate = albumCreateDto.ReleaseDate,
 			ArtistId = albumCreateDto.ArtistId,
+			CoverImageId = albumCreateDto.CoverImageId
 		};
 		await _unitOfWork.Albums.AddAsync(album);
 

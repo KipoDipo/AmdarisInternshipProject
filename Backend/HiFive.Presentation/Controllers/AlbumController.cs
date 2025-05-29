@@ -16,27 +16,36 @@ public class AlbumController : ControllerBase
 	private readonly IAlbumService _albumService;
 	private readonly ISongService _songService;
 	private readonly IImageFileService _imageFileService;
+	private readonly BlobService _blobService;
 
-	public AlbumController(IAlbumService albumService, ISongService songService, IImageFileService imageFileService)
+	public AlbumController(IAlbumService albumService, ISongService songService, IImageFileService imageFileService, BlobService blobService)
 	{
 		_albumService = albumService;
 		_songService = songService;
 		_imageFileService = imageFileService;
+		_blobService = blobService;
 	}
 
 	[HttpPost]
 	[Authorize(Roles = "Distributor,Admin")]
 	public async Task<IActionResult> Create([FromForm] AlbumCreateRequest album)
 	{
-		var albumCreateDto = album.ToAlbumCreateDto();
+		Guid? imageId = null;
+		if (album.CoverImage != null)
+			imageId = (await _imageFileService.UploadImageAsync(ImageDtoHelper.CreateDtoFromFormFile(album.CoverImage))).Id;
+		
+		var albumCreateDto = album.ToAlbumCreateDto(imageId);
 		var albumDto = await _albumService.CreateAlbumAsync(albumCreateDto);
-
+		int order = 1;
 		foreach (var song in album.Songs)
 		{
 			var imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);
 			var imageDto = await _imageFileService.UploadImageAsync(imageCreateDto);
-			var songDto = song.ToSongCreateDto(imageDto.Id);
+			var uploadedSong = await _blobService.UploadFileAsync(song.Data);
+			var songDto = song.ToSongCreateDto(imageDto.Id, uploadedSong.Uri);
+			songDto.Duration = uploadedSong.Duration;
 			songDto.AlbumId = albumDto.Id;
+			songDto.OrderIndex = order++;
 			await _songService.CreateSongAsync(songDto);
 		}
 		return Ok(albumDto);

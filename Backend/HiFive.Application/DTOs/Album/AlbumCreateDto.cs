@@ -11,4 +11,6 @@ public class AlbumCreateDto
 	public Guid ArtistId { get; set; }
 
 	public List<Guid> SongIds { get; set; } = [];
+
+	public Guid? CoverImageId { get; set; }
 }

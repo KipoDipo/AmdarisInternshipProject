@@ -1,8 +1,8 @@
 import { Stack, Autocomplete, TextField, Button } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
 import { Genre } from "../Models/Genre";
+import { fetcher } from "../Fetcher";
 
 function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, onUpload?: () => void, setFormData?: (formData: FormData) => void}) {
     const [artists, setArtists] = useState<Artist[]>([]);
@@ -38,17 +38,16 @@ function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, on
         formData.append("duration", "0");
         formData.append("genreIds", inputGenre?.id || "");
         formData.append("coverImage", inputImageFile as Blob);
-        formData.append("data", "AZURE_BLOB_STORAGE_URL");
         formData.append("artistId", inputArtist?.id || "");
         formData.append("albumId", "");
-        //TODO implement azure blob storage upload
+        formData.append("data", inputSongFile as Blob);
         try {
             setFormData?.(formData);
             if (onUpload) {
                 onUpload();
             }
             else {
-                const response = await axios.post("https://localhost:7214/Song", formData)
+                const response = await fetcher.post("Song", formData)
                 console.log(response.data);   
             }
         }
@@ -59,7 +58,7 @@ function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, on
 
 
     useEffect(() => {
-        axios.get("https://localhost:7214/Genre")
+        fetcher.get("Genre")
         .then((response) => {
             setGenres(response.data);
         })
@@ -80,7 +79,7 @@ function AddSongPage({noArtist, onUpload, setFormData} : {noArtist?: boolean, on
             onInputChange={async (_event, newValue) => {
                 setInputArtistText(newValue);
                 try {
-                    const response = await axios.get(`https://localhost:7214/Artist/name/${newValue}`);
+                    const response = await fetcher.get(`Artist/name/${newValue}`);
                     setArtists(response.data);
                 }
                 catch (error) {

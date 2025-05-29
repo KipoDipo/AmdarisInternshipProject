@@ -7,10 +7,10 @@ public class AlbumSong
 	public Guid Id { get; set; }
 
 	public Guid AlbumId { get; set; }
-	public required Album Album { get; set; }
+	public Album Album { get; set; } = null!;
 
 	public Guid SongId { get; set; }
-	public required Song Song { get; set; }
+	public Song Song { get; set; } = null!;
 
 	public required int OrderIndex { get; set; }
 }

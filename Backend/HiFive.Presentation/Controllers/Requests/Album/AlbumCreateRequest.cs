@@ -9,9 +9,10 @@ public class AlbumCreateRequest
 	public required Guid ArtistId { get; set; }
 	public required string Description { get; set; }
 	public required DateTime ReleaseDate { get; set; }
+	public IFormFile? CoverImage { get; set; }
 	public required List<SongCreateRequest> Songs { get; set; }
 
-	public AlbumCreateDto ToAlbumCreateDto()
+	public AlbumCreateDto ToAlbumCreateDto(Guid? coverImageId)
 	{
 		return new AlbumCreateDto
 		{
@@ -19,6 +20,7 @@ public class AlbumCreateRequest
 			Description = Description,
 			ReleaseDate = ReleaseDate,
 			ArtistId = ArtistId,
+			CoverImageId = coverImageId
 		};
 	}
 }

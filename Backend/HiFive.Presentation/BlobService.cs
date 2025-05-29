@@ -1,4 +1,6 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using FFMpegCore;
 
 namespace HiFive.Presentation;
 
@@ -18,12 +20,32 @@ public class BlobService
 		_containerClient.CreateIfNotExists();
 	}
 
-	public async Task<string> UploadFileAsync(IFormFile file)
+	public async Task<(uint Duration, string Uri)> UploadFileAsync(IFormFile file)
 	{
-		var blobClient = _containerClient.GetBlobClient(file.FileName);
-		using var stream = file.OpenReadStream();
-		await blobClient.UploadAsync(stream, overwrite: true);
-		return blobClient.Uri.ToString();
+		var tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+		await using (var tempFile = new FileStream(tempFilePath, FileMode.Create))
+		{
+			await file.CopyToAsync(tempFile);
+		}
+
+		var mediaInfo = await FFProbe.AnalyseAsync(tempFilePath);
+		var duration = (uint)Math.Round(mediaInfo.Duration.TotalSeconds);
+
+		var blobClient = _containerClient.GetBlobClient($"{DateTime.Now:yyyy-MM-dd} - {file.FileName}");
+		var headers = new BlobHttpHeaders { ContentType = file.ContentType };
+
+		await using (var uploadStream = new FileStream(tempFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+		{
+			await blobClient.UploadAsync(uploadStream, new BlobUploadOptions
+			{
+				HttpHeaders = headers
+			});
+		}
+
+		File.Delete(tempFilePath);
+
+		return (duration, blobClient.Name);
 	}
 
 	public async Task<(Stream stream, string ContentType)> DownloadFileAsync(string fileName)

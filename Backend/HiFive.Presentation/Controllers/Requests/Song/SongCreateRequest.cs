@@ -10,12 +10,12 @@ public class SongCreateRequest
 	public List<Guid> GenreIds { get; set; } = null!;
 	public required IFormFile CoverImage { get; set; }
 
-	public string Data { get; set; } = null!;
+	public IFormFile Data { get; set; } = null!;
 
 	public required Guid ArtistId { get; set; }
 	public Guid? AlbumId { get; set; }
 
-	public SongCreateDto ToSongCreateDto(Guid? coverImageId)
+	public SongCreateDto ToSongCreateDto(Guid? coverImageId, string songUri)
 	{
 		return new SongCreateDto
 		{
@@ -24,7 +24,7 @@ public class SongCreateRequest
 			ReleaseDate = ReleaseDate,
 			GenreIds = GenreIds,
 			CoverImageId = coverImageId,
-			Data = Data,
+			Data = songUri,
 			ArtistId = ArtistId,
 			AlbumId = AlbumId
 		};

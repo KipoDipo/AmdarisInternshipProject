@@ -2,6 +2,7 @@
 using HiFive.Application.DTOs.Song;
 using HiFive.Application.Exceptions;
 using HiFive.Application.UnitOfWork;
+using HiFive.Domain.Models.Join;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiFive.Application.Services;
@@ -43,6 +44,19 @@ public class SongService : ISongService
 			ReleaseDate = songCreateDto.ReleaseDate,
 			Data = songCreateDto.Data,
 		};
+
+
+		if (songCreateDto.AlbumId != null)
+		{
+			var albumSong = new AlbumSong()
+			{
+				AlbumId = (Guid)songCreateDto.AlbumId,
+				SongId = song.Id,
+				OrderIndex = (int)songCreateDto.OrderIndex!
+			};
+
+			song.AlbumSong = albumSong;
+		}
 
 		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.Songs.AddAsync(song);

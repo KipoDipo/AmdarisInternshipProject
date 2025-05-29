@@ -93,6 +93,7 @@ function App() {
                                     </Stack>
                                     :
                                     <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                                        <SideBar role={role} />
                                         {component}
                                     </Box>
                             }
@@ -106,9 +107,12 @@ function App() {
 
 function DistributorRoutes() {
     return (
-        <Stack>
-
-        </Stack>
+        <Routes>
+            <Route index element={<Navigate to='/add-song' />} />
+            <Route path="/add-song/" element={<AddSongPage />} />
+            <Route path="/add-genre/" element={<AddGenrePage />} />
+            <Route path="/add-album/" element={<AddAlbumPage />} />
+        </Routes>
     )
 }
 
@@ -123,7 +127,6 @@ function ArtistRoutes() {
 function ListenerRoutes() {
     return (
         <QueueProvider>
-            <SideBar />
             <Box
                 sx={{
                     flex: 1,
@@ -135,9 +138,6 @@ function ListenerRoutes() {
                     <Route index element={<><Explore /><Home /></>} />
                     <Route path="/account" element={<><Explore /><Account /></>} />
                     <Route path="/account-edit" element={<AccountEdit />} />
-                    <Route path="/add-song/" element={<AddSongPage />} />
-                    <Route path="/add-genre/" element={<AddGenrePage />} />
-                    <Route path="/add-album/" element={<AddAlbumPage />} />
                     <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
                     <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
                     <Route path="/album/:id" element={<><Explore /><Album /></>} />
