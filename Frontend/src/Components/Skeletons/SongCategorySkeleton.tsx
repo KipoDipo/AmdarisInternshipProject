@@ -4,7 +4,7 @@ import SongComponentSkeleton from "./SongComponentSkeleton";
 
 export default function Category() {
     return (
-        <Stack alignItems='flex-start' padding={4} gap={2} sx={{ background: theme.palette.secondary.dark, borderRadius: 10 }}>
+        <Stack alignItems='flex-start' padding={4} gap={2} sx={{ background: theme.palette.secondary.dark, borderRadius: theme.shape.borderRadius }}>
             <Stack direction='row' alignItems='center' gap={2}>
                 <Skeleton variant='text' width={200} height={50} />
             </Stack>

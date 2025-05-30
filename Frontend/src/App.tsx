@@ -83,14 +83,16 @@ function App() {
                         <BrowserRouter>
                             {
                                 !logged ?
-                                    <Stack width='100vw' height='100vh' justifyContent='center' alignItems='center' gap={3}>
-                                        <LogoAndName />
-                                        <Routes>
-                                            <Route path="/register" element={<Register />}></Route>
-                                            <Route path="/login" element={<Login setLogged={login} />}></Route>
-                                            <Route path="*" element={<Navigate to='/login' />}></Route>
-                                        </Routes>
-                                    </Stack>
+                                    <Box display='flex' justifyContent='center' alignItems='center' width='100vw' minHeight='100vh' overflow='auto' >
+                                        <Stack alignItems='center' padding={4} borderRadius={theme.shape.borderRadius} gap={2} bgcolor={theme.palette.secondary.dark}>
+                                            <LogoAndName />
+                                            <Routes>
+                                                <Route path="/register" element={<Register />}></Route>
+                                                <Route path="/login" element={<Login setLogged={login} />}></Route>
+                                                <Route path="*" element={<Navigate to='/login' />}></Route>
+                                            </Routes>
+                                        </Stack>
+                                    </Box>
                                     :
                                     <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
                                         <SideBar role={role} />

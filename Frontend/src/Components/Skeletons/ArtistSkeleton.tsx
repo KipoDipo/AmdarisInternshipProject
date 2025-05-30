@@ -27,7 +27,6 @@ export default function ArtistProfileSkeleton() {
                     </Stack>
 
                     <Stack>
-                        <Typography variant='h3'>Bio</Typography>
                         <Skeleton variant="text" width="60%" />
                         <Skeleton variant="text" width="80%" />
                         <Skeleton variant="text" width="40%" />

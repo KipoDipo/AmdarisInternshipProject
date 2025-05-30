@@ -2,13 +2,13 @@ import { useParams } from "react-router-dom"
 import { ArtistDetails } from "../Models/ArtistDetails";
 import { useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
-import { Avatar, Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
 
 import AlbumCategory from "../Components/AlbumCategory";
 import { TimeFormat } from "../Utils/TimeFormat";
-import { textWidth } from "../Styling/Theme";
+import { textWidth, theme } from "../Styling/Theme";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { Artist } from "../Models/Artist";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
@@ -106,67 +106,61 @@ export default function Page() {
 
     return (
         artist && albums && songs ?
-        <Stack margin={3}>
-            <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
-                <Stack gap={3}>
-                    <Stack direction='row' alignItems='center' gap={3}>
-                        {
-                            artist ?
-                                <Avatar src={FetchImage(artist.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
-                                :
-                                <Box sx={{ width: '400px', height: `400px` }}></Box>
-                        }
-                        <Stack gap={3}>
-                            <Typography variant='h2'>{artist?.displayName}</Typography>
-                            <Button variant='contained' onClick={handleFollow} sx={{ width: textWidth }}>{isFollowing == null ? "..." : (isFollowing ? "Unfollow" : "Follow")}</Button>
-                        </Stack>
-                    </Stack>
-                    <Stack>
-                        <Typography variant='h3'>Bio</Typography>
-                        <Typography variant='body1'>{artist?.bio}</Typography>
-                    </Stack>
+            <Stack margin={3} gap={6}>
+                <Stack direction='row' alignItems='center' gap={3}>
+                    {
+                        artist ?
+                            <Avatar src={FetchImage(artist.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
+                            :
+                            <Box sx={{ width: '400px', height: `400px` }}></Box>
+                    }
                     <Stack gap={3}>
-                        <AlbumCategory albums={albums} name="Albums" />
-                    </Stack>
-                    <Stack gap={3}>
-                        <Typography variant='h3'>Discography</Typography>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ width: '80vw' }}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Title</TableCell>
-                                        <TableCell>Album</TableCell>
-                                        <TableCell>Length</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {
-                                        songs?.map((song, index) => {
-                                            return (
-                                                <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
-                                                    <TableCell>
-                                                        <Stack direction='row' alignItems='center' gap={3} >
-                                                            <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
-                                                            <Typography variant='body2'>
-                                                                {song.title}
-                                                            </Typography>
-                                                        </Stack>
-                                                    </TableCell>
-                                                    <TableCell>{song.album}</TableCell>
-                                                    <TableCell>{TimeFormat(+song.duration)}</TableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <Typography variant='h2'>{artist?.displayName}</Typography>
+                        <Button variant='contained' onClick={handleFollow} sx={{ width: textWidth }}>{isFollowing == null ? "..." : (isFollowing ? "Unfollow" : "Follow")}</Button>
                     </Stack>
                 </Stack>
+                <Stack padding={3} gap={3} bgcolor={theme.palette.secondary.dark} sx={{borderRadius: theme.shape.borderRadius}}>
+                    <Typography variant='h3'>Bio</Typography>
+                    <Typography variant='body1'>{artist?.bio}</Typography>
+                </Stack>
+                <AlbumCategory albums={albums} name="Albums" />
+                <Stack gap={3}>
+                    <Typography variant='h3'>Discography</Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align='left'>Title</TableCell>
+                                    <TableCell align='left'>Album</TableCell>
+                                    <TableCell align='right'>Length</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    songs?.map((song, index) => {
+                                        return (
+                                            <TableRow key={index} onClick={() => setQueue(CreateQueue([song]))} sx={{ cursor: 'pointer' }}>
+                                                <TableCell align='left'>
+                                                    <Stack direction='row' alignItems='center' gap={3} >
+                                                        <Avatar variant='rounded' src={FetchImage(song.coverImageId)}></Avatar>
+                                                        <Typography variant='body2'>
+                                                            {song.title}
+                                                        </Typography>
+                                                    </Stack>
+                                                </TableCell>
+                                                <TableCell align='left'>{song.album}</TableCell>
+                                                <TableCell align='right'>{TimeFormat(+song.duration)}</TableCell>
+                                            </TableRow>
+                                        )
+                                    })
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Stack>
             </Stack>
-        </Stack>
-        :
-        <ArtistSkeleton />
+            :
+            <ArtistSkeleton />
 
     )
 }

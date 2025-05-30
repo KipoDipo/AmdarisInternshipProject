@@ -1,11 +1,11 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Divider, Stack, Typography } from "@mui/material";
 import RegisterPartOne from "./RegisterPartOne";
 // import RegisterPartTwo from "./RegisterPartTwo";
 import { useEffect, useState } from "react";
 import { RegisterListenerRequest } from "../Models/RegisterListener";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { textWidth } from "../Styling/Theme";
+import { textWidth, theme } from "../Styling/Theme";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 function Page() {
@@ -42,11 +42,12 @@ function Page() {
     }, [hasFilledRequiredInfo, form, navigate, notify])
 
     return (
-        <Stack direction='row' gap={10} >
+        <Stack gap={7} >
             <Stack alignItems='center' gap={3}>
                 <Typography variant='h4'>Sign up</Typography>
                 <RegisterPartOne setForm={setForm} onSubmit={() => setHasFilledRequiredInfo(true)} />
             </Stack>
+            <Divider sx={{background: theme.palette.secondary.main}}/>
             <Stack alignItems='center' gap={3}>
                 <Typography variant='h4'>Already have an account?</Typography>
                 <Button component={Link} to="/login" variant='contained' sx={{ width: textWidth }}>Login</Button>

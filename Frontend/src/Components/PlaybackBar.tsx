@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Slider, Stack, Typography, Fab, TypographyOwnProps, IconButton, useTheme, Box, Avatar, Dialog, MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material'
+import { Slider, Stack, Typography, Fab, TypographyOwnProps, IconButton, Box, Avatar, Dialog, MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
@@ -14,7 +14,7 @@ import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 
 import { Song } from '../Models/Song';
 import { Link } from 'react-router-dom';
-import { textWidth } from '../Styling/Theme';
+import { textWidth, theme } from '../Styling/Theme';
 import { fetcher } from '../Fetcher';
 import { Playlist } from '../Models/Playlist';
 import { useQueue } from '../Contexts/Queue/UseQueue';
@@ -24,7 +24,6 @@ import { useNotification } from '../Contexts/Snackbar/UseNotification';
 import FetchImage from '../Utils/FetchImage';
 
 function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { size?: number, onPlayToggle: () => void, isPlaying: boolean, duration: number, currentTime: number }) {
-    const theme = useTheme();
     const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
     const [hasLikedSong, setHasLikedSong] = useState(false);
 
@@ -214,8 +213,6 @@ function Info({ song }: { song?: Song }) {
 
 // horrible nightmare
 function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatState, setRepeatState, size }: { volume: number, onVolumeChange: (newVolume: number) => void, size?: number, isShuffling: boolean, setIsShuffling: (newVal: boolean) => void, repeatState: number, setRepeatState: (newVal: number) => void }) {
-    const theme = useTheme();
-
     if (!size)
         size = 32;
 
@@ -286,7 +283,6 @@ type PlayBarProps = {
 };
 
 function PlayBar({ volume, onVolumeChange, duration, currentTime, onPlayToggle, isPlaying, isShuffling, setIsShuffling, repeatState, setRepeatState }: PlayBarProps) {
-    const theme = useTheme();
     const queue = useQueue();
 
     const controlsSize = 32;

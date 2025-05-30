@@ -44,7 +44,7 @@ export default function Account() {
     return (
         user && artists ?
             <Stack margin={3}>
-                <Stack direction='row' justifyContent='space-between' width='80vw' gap={3}>
+                <Stack direction='row' justifyContent='space-between' gap={3}>
                     <Stack gap={3}>
                         <Stack direction='row' alignItems='center' gap={3}>
                             {
@@ -60,7 +60,7 @@ export default function Account() {
                                 <Typography variant='h5'>{user?.firstName} {user?.lastName}</Typography>
                             </Stack>
                         </Stack>
-                        <Stack>
+                        <Stack width={'40vw'} gap={3} padding={3} bgcolor={theme.palette.secondary.dark} borderRadius={theme.shape.borderRadius}>
                             <Typography variant='h3'>Bio</Typography>
                             <Typography variant='body1'>{user?.bio}</Typography>
                         </Stack>
@@ -102,7 +102,7 @@ function ChunkArray<T>(arr: T[], size: number) {
 
 function ArtistList({ title, artists, to }: { title: string, artists: Artist[], to: string }) {
     return (
-        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} alignItems='flex-start'>
+        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} alignItems='flex-start'>
             <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Typography variant='h4'>{title}</Typography>
                 <Typography component={Link} to={to}>See all</Typography>
@@ -128,7 +128,7 @@ function ArtistList({ title, artists, to }: { title: string, artists: Artist[], 
 
 function ListenerList({ title, listeners, to }: { title: string, listeners: Listener[], to: string }) {
     return (
-        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} alignItems='flex-start'>
+        <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} alignItems='flex-start'>
             <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Typography variant='h4'>{title}</Typography>
                 <Typography component={Link} to={to}>See all</Typography>
@@ -179,7 +179,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
 
     return (
         <Stack direction='row' justifyContent='space-between' gap={3} height={270}>
-            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} flexGrow={1}>
+            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Titles</Typography>
                     <Typography component={Link} to="/TODO">See all</Typography>
@@ -195,7 +195,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
                     }
                 </Stack>
             </Stack>
-            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={10} flexGrow={1}>
+            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Badges</Typography>
                     <Typography component={Link} to="/my-badges">See all</Typography>

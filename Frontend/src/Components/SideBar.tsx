@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import { Tabs, Tab, Box, Typography, Divider, useTheme } from "@mui/material";
+import { Tabs, Tab, Box, Typography, Divider } from "@mui/material";
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -13,10 +13,10 @@ import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 import SubscriptionsRoundedIcon from '@mui/icons-material/SubscriptionsRounded';
+import { theme } from "../Styling/Theme";
 
 function TabGroup({ children }: { children: ReactNode }) {
     const [value, setValue] = useState(0)
-    const theme = useTheme();
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -47,8 +47,6 @@ function TabGroup({ children }: { children: ReactNode }) {
 }
 
 function SideBar({ role }: { role: string }) {
-    const theme = useTheme();
-
     let component;
     switch (role) {
         case 'Listener':
