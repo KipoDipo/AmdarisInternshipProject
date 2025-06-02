@@ -1,4 +1,5 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Artist;
 using HiFive.Presentation.Controllers.Requests.Users;
 using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +44,21 @@ public class ArtistController : ControllerBase
 	public async Task<IActionResult> GetDetailsById(Guid id)
 	{
 		return Ok(await _artistService.GetArtistDetailsByIdAsync(id));
+	}
+
+	[HttpGet("curated-artists")]
+	public async Task<IActionResult> GetCuratedArtists()
+	{
+		var dua		= (await _artistService.GetArtistsByPartialNameAsync("Dua Lipa")).First();
+		var pink	= (await _artistService.GetArtistsByPartialNameAsync("Pink Floyd")).First();
+		var mac		= (await _artistService.GetArtistsByPartialNameAsync("Fleetwood Mac")).First();
+
+		List<ArtistDto> artists = [];
+		artists.Add(dua);
+		artists.Add(pink);
+		artists.Add(mac);
+
+		return Ok(artists);
 	}
 
 	[HttpPut]

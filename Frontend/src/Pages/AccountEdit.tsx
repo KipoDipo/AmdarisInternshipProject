@@ -1,9 +1,9 @@
-import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { OptionalTextField } from "../Components/TextFields";
 import { useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
 import { ListenerDetails } from "../Models/ListenerDetails";
-import { textWidth } from "../Styling/Theme";
+import { textWidth, theme } from "../Styling/Theme";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Controller, useForm } from "react-hook-form";
 import { Badge } from "../Models/Badge";
@@ -93,10 +93,10 @@ export default function Form() {
     }
 
     return (
-        <>
+        <Box width='100%' display='flex' justifyContent='center'>
             {
                 user &&
-                <Stack gap={3} margin={3} width={textWidth}>
+                <Stack gap={3} padding={5} margin={3} width={textWidth} bgcolor={theme.palette.secondary.dark} borderRadius={theme.shape.borderRadius}>
                     <FormControl fullWidth>
                         <InputLabel>Select Displayed Badge</InputLabel>
                         <Controller
@@ -184,7 +184,7 @@ export default function Form() {
                     </Stack>
                 </Stack>
             }
-        </>
+        </Box>
     )
 }
 

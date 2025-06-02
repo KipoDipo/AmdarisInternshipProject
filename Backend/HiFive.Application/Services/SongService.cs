@@ -118,6 +118,7 @@ public class SongService : ISongService
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Include(s => s.Artist)
+			.Include(s => s.Genres)
 			.Include(s => s.AlbumSong)
 			.ThenInclude(a => a.Album)
 			.Where(s => s.ArtistId == artistId)

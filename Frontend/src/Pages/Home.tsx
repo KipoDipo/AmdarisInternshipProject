@@ -9,10 +9,35 @@ import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Artist } from "../Models/Artist";
 import FetchImage from "../Utils/FetchImage";
 import SongCategorySkeleton from "../Components/Skeletons/SongCategorySkeleton";
+import Shuffle from "../Utils/Shuffle";
+
+type ArtistWithSongs = Artist & {
+    songs: Song[]
+}
+
+async function createArtistsWithSongs(artists: Artist[]): Promise<ArtistWithSongs[]> {
+    const artistResponses = await Promise.all(
+        artists.map(artist => fetcher.get(`Artist/id/${artist.id}`))
+    );
+    const fullArtists = artistResponses.map(res => res.data);
+
+    const songsResponses = await Promise.all(
+        fullArtists.map(artist => fetcher.get(`Song/artist/${artist.id}`))
+    );
+
+    const result: ArtistWithSongs[] = fullArtists.map((artist, index) => ({
+        ...artist,
+        songs: songsResponses[index].data
+    }));
+
+    return result;
+}
 
 function Home() {
     const [history, setHistory] = useState<Song[]>([]);
-    const [artists, setArtists] = useState<(Artist & {songs: Song[]})[]>([]);
+    const [curatedSongs, setCuratedSongs] = useState<Song[]>([]);
+    const [curatedArtists, setCuratedArtists] = useState<ArtistWithSongs[]>([]);
+    const [artists, setArtists] = useState<ArtistWithSongs[]>([]);
 
     const notify = useNotification();
 
@@ -37,7 +62,7 @@ function Home() {
                         delete artistCount[artist];
                     }
                 }
-                
+
                 const requests = Object.keys(artistCount).map(id => fetcher.get(`Artist/id/${id}`));
                 Promise.all(requests)
                     .then(responses => {
@@ -53,24 +78,49 @@ function Home() {
                                 setArtists(artistsWithSongs);
                             });
                     })
-                })
+            })
             .catch(error => notify({ message: error, severity: 'error' }))
+
+        fetcher.get(`Song/curated-songs`)
+            .then(response => {
+                const result: Song[] = response.data;
+                Shuffle(result);
+                setCuratedSongs(result);
+            })
+            .catch(error => notify({ message: error, severity: 'error' }))
+
+        fetcher.get(`Artist/curated-artists`)
+            .then(response => {
+                const result: Artist[] = response.data;
+                Shuffle(result);
+                createArtistsWithSongs(result)
+                    .then(artists => setCuratedArtists(artists))
+            })
     }, [notify])
 
     return (
         <Stack margin={3} gap={3}>
             {
-                history.length > 0 ?
-                <SongCategory name="Listen again" songs={history} />
-                :
-                <SongCategorySkeleton />
+                history.length >= 5 ?
+                    <SongCategory name="Listen again" songs={history} />
+                    :
+                    curatedSongs.length != 0 ?
+                        <SongCategory name="Curated picks" songs={curatedSongs} />
+                        :
+                        <SongCategorySkeleton />
             }
             {
-                artists.length > 0 ?
-                artists.map((artist) => {
-                   return <SongCategory name={artist.displayName} imageUrl={FetchImage(artist.profilePictureId)} to={`Artist/${artist.id}`} songs={artist.songs}/>
-                }) :
-                new Array(3).fill(0).map((_, index) => <SongCategorySkeleton key={index} />)
+                artists.length >= 2 ?
+                    artists.map((artist) => {
+                        return <SongCategory name={artist.displayName} imageUrl={FetchImage(artist.profilePictureId)} to={`Artist/${artist.id}`} songs={artist.songs} />
+                    }) :
+                    curatedArtists.length != 0 ?
+                        curatedArtists.map((artist) => {
+                            return <SongCategory name={artist.displayName} imageUrl={FetchImage(artist.profilePictureId)} to={`Artist/${artist.id}`} songs={artist.songs} />
+                        })
+                        :
+                        new Array(3).fill(0).map((_, index) => <SongCategorySkeleton key={index} />)
+
             }
 
         </Stack>

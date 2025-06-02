@@ -16,7 +16,7 @@ import AccountSkeleton from "../Components/Skeletons/AccountSkeleton";
 export default function Account() {
     const [user, setUser] = useState<ListenerDetails>()
     const [artists, setArtists] = useState<Artist[] | undefined>(undefined)
-    const [friends, setFriends] = useState<Listener[] | undefined>(undefined)
+    const [following, setFollowing] = useState<Listener[] | undefined>(undefined)
 
     const notify = useNotification();
 
@@ -68,8 +68,8 @@ export default function Account() {
 
                     <Stack gap={3}>
                         {
-                            friends && friends.length > 0 &&
-                            <ListenerList title="Friends" listeners={friends ?? []} to='/TODO' />
+                            following && following.length > 0 &&
+                            <ListenerList title="Following" listeners={following ?? []} to='/TODO' />
                         }
                         {
                             artists && artists.length > 0 &&
@@ -179,7 +179,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
 
     return (
         <Stack direction='row' justifyContent='space-between' gap={3} height={270}>
-            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
+            <Stack sx={{ background: theme.palette.secondary.dark }} minWidth={200} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Titles</Typography>
                     <Typography component={Link} to="/TODO">See all</Typography>
@@ -195,7 +195,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
                     }
                 </Stack>
             </Stack>
-            <Stack sx={{ background: theme.palette.secondary.dark }} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
+            <Stack sx={{ background: theme.palette.secondary.dark }} minWidth={200} gap={3} padding={3} borderRadius={theme.shape.borderRadius} flexGrow={1}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Badges</Typography>
                     <Typography component={Link} to="/my-badges">See all</Typography>

@@ -14,6 +14,7 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
 	{
 		return await _dbContext.Set<Song>()
 			.Include(s => s.Artist)
+			.Include(s => s.Genres)
 			.Include(s => s.AlbumSong)
 			.ThenInclude(a => a.Album)
 			.FirstOrDefaultAsync(s => s.Id == id);

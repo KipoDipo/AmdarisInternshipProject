@@ -1,4 +1,5 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
+using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Presentation.Controllers.Requests.Music;
 using HiFive.Presentation.Extentions;
@@ -13,18 +14,20 @@ namespace HiFive.Presentation.Controllers;
 public class SongController : ControllerBase
 {
 	private ISongService _songService;
+	private IArtistService _artistService;
 	private IImageFileService _imageFileService;
 	private ICurrentUserService _currentUserService;
 	private IListenerDataService _listenerDataService;
 	private BlobService _blobService;
 
-	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService, IListenerDataService listenerDataService)
+	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService, IListenerDataService listenerDataService, IArtistService artistService)
 	{
 		_songService = songService;
 		_imageFileService = imageFileService;
 		_currentUserService = currentUserService;
 		_blobService = blobService;
 		_listenerDataService = listenerDataService;
+		_artistService = artistService;
 	}
 
 	[HttpPost]
@@ -98,6 +101,25 @@ public class SongController : ControllerBase
 	public async Task<IActionResult> GetSongsFromHistory(int count = 8, int lastNMonths = 1)
 	{
 		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, count, lastNMonths);
+		return Ok(songs);
+	}
+
+	[HttpGet("curated-songs")]
+	public async Task<IActionResult> GetCuratedSongs()
+	{
+		var lynyrd	= (await _artistService.GetArtistsByPartialNameAsync("Lynyrd Skynyrd")).First();
+		var reol	= (await _artistService.GetArtistsByPartialNameAsync("Reol")).First();
+		var lotus	= (await _artistService.GetArtistsByPartialNameAsync("Lotus Juice")).First();
+
+		var songs1 = (await _songService.GetSongsByArtistIdAsync(lynyrd.Id)).Take(5);
+		var songs2 = (await _songService.GetSongsByArtistIdAsync(reol.Id)).Take(5);
+		var songs3 = (await _songService.GetSongsByArtistIdAsync(lotus.Id)).Take(5);
+
+		List<SongDto> songs = [];
+		songs.AddRange(songs1);
+		songs.AddRange(songs2);
+		songs.AddRange(songs3);
+
 		return Ok(songs);
 	}
 

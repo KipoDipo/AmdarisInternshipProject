@@ -12,6 +12,7 @@ public class SongDto
 	public Guid? AlbumId { get; set; }
 	public uint Duration { get; set; }
 	public Guid? CoverImageId { get; set; }
+	public List<Guid> GenreIds { get; set; } = [];
 
 	public static SongDto FromEntity(Domain.Models.Music.Song song)
 	{
@@ -25,7 +26,8 @@ public class SongDto
 			Duration = song.Duration,
 			Album = song.AlbumSong?.Album?.Title ?? "",
 			AlbumId = song.AlbumId,
-			CoverImageId = song.CoverImageId
+			CoverImageId = song.CoverImageId,
+			GenreIds = song.Genres.Select(x => x.Id).ToList()
 		};
 	}
 }

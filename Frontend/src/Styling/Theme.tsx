@@ -59,6 +59,7 @@ export const theme = createTheme({
                 }
             }
         },
+
         MuiFormLabel: {
             styleOverrides: {
                 root: {
@@ -66,6 +67,7 @@ export const theme = createTheme({
                 }
             }
         },
+
         MuiFormControl: {
             styleOverrides: {
                 root: {
@@ -80,6 +82,7 @@ export const theme = createTheme({
                 }
             }
         },
+
         MuiSelect: {
             styleOverrides: {
                 root: {
@@ -95,6 +98,7 @@ export const theme = createTheme({
                         color: colors.white,
                     },
                     background: colors.black,
+                    borderRadius: 60
                 },
             },
         },
@@ -156,7 +160,8 @@ export const theme = createTheme({
                         '& textarea': {
                             color: colors.white
                         },
-                        background: colors.black
+                        background: colors.black,
+                        borderRadius: 30
                     },
                     '& .MuiFormLabel-root': {
                         color: colors.white,

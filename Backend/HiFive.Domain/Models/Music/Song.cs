@@ -12,7 +12,7 @@ public class Song : IDeletable
 	public required string Title { get; set; }
 	public uint Duration { get; set; }
 	public DateTime? ReleaseDate { get; set; }
-	public ICollection<Genre> Genres { get; set; } = null!;
+	public List<Genre> Genres { get; set; } = [];
 	public string Data { get; set; } = null!; // Azure Blob Storage
 
 	public Guid? CoverImageId { get; set; }
