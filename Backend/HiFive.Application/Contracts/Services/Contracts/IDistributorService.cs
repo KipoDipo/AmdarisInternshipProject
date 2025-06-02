@@ -6,7 +6,6 @@ public interface IDistributorService
 {
 	Task<DistributorDto> CreateDistributorAsync(DistributorCreateDto distributorCreateDto);
 
-	Task<IEnumerable<DistributorDto>> GetAllDistributorsAsync();
 	Task<DistributorDto> GetDistributorByIdAsync(Guid distributorId);
 	Task<IEnumerable<DistributorDto>> GetDistributorsByPartialNameAsync(string partialName);
 	Task<DistributorDetailsDto> GetDistributorDetailsByIdAsync(Guid distributorId);
@@ -14,5 +13,6 @@ public interface IDistributorService
 	Task UpdateDistributorAsync(DistributorUpdateDto distributorUpdateDto);
 
 	Task DeleteDistributorAsync(Guid distributorId);
+	Task AddArtistToDistributor(Guid distributorId, Guid artistId);
 }
 

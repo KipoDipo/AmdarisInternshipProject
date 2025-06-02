@@ -195,7 +195,8 @@ export const theme = createTheme({
                         color: colors.lightGray,
                         backgroundColor: colors.black,
                         boxShadow: `0 0 10px ${colors.gray}`
-                    }
+                    },
+                    borderRadius: 30
                 }
             }
         },

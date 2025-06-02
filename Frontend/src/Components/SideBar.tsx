@@ -68,11 +68,10 @@ function SideBar({ role }: { role: string }) {
         case 'Distributor':
             component = (
                 <TabGroup>
-                    <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
-                    <Typography variant='h4' sx={{ margin: '10px' }}>Dev</Typography>
                     <Tab label='Add Song' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-song' />
-                    <Tab label='Add Genre' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-genre' />
                     <Tab label='Add Album' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-album' />
+                    <Tab label='Add Genre' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-genre' />
+                    <Tab label='Add Artist' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-artist' />
                 </TabGroup>
             )
             break;

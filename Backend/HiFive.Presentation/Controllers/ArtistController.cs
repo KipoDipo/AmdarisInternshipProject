@@ -14,11 +14,15 @@ public class ArtistController : ControllerBase
 {
 	private readonly IArtistService _artistService;
 	private readonly IImageFileService _imageFileService;
+	private readonly IDistributorService _distributorService;
+	private readonly ICurrentUserService _currentUserService;
 
-	public ArtistController(IArtistService artistService, IImageFileService imageFileService)
+	public ArtistController(IArtistService artistService, IImageFileService imageFileService, IDistributorService distributorService, ICurrentUserService currentUserService)
 	{
 		_artistService = artistService;
 		_imageFileService = imageFileService;
+		_distributorService = distributorService;
+		_currentUserService = currentUserService;
 	}
 
 	[HttpGet("id/{id}")]
@@ -60,6 +64,26 @@ public class ArtistController : ControllerBase
 
 		return Ok(artists);
 	}
+
+	[HttpGet("get-artists-from-distributor/{id}")]
+	public async Task<IActionResult> GetArtistsFromDistributor(Guid distributorId)
+	{
+		var distributor = await _distributorService.GetDistributorDetailsByIdAsync(distributorId);
+
+		List<ArtistDto> artists = [];
+		foreach (var id in distributor.ArtistIds)
+			artists.Add(await _artistService.GetArtistByIdAsync(id));
+
+		return Ok(artists);
+	}
+
+	[HttpGet("get-artists-from-distributor-me")]
+	[Authorize(Roles = "Distributor,Admin")]
+	public async Task<IActionResult> GetArtistsFromDistributorMe()
+	{
+		return await GetArtistsFromDistributor(_currentUserService.Id);
+	}
+
 
 	[HttpPut]
 	[Authorize(Roles = "Artist,Distributor,Admin")]

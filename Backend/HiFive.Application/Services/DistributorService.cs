@@ -20,32 +20,48 @@ public class DistributorService : IDistributorService
 		return DistributorDto.FromEntity(distributor);
 	}
 
-	public Task DeleteDistributorAsync(Guid artistId)
+	public async Task AddArtistToDistributor(Guid distributorId, Guid artistId)
+	{
+		var distributor = await _unitOfWork.Distributors.GetWithDetailsByIdAsync(distributorId);
+		_validator.Validate(distributor);
+
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		_validator.Validate(artist);
+
+		await _unitOfWork.BeginTransactionAsync();
+		distributor.Artists.Add(artist);
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task<DistributorDto> GetDistributorByIdAsync(Guid distributorId)
+	{
+		var distributor = await _unitOfWork.Distributors.GetByIdAsync(distributorId);
+		_validator.Validate(distributor);
+
+		return DistributorDto.FromEntity(distributor);
+	}
+
+	public async Task<DistributorDetailsDto> GetDistributorDetailsByIdAsync(Guid distributorId)
+	{
+		var distributor = await _unitOfWork.Distributors.GetWithDetailsByIdAsync(distributorId);
+		_validator.Validate(distributor);
+
+		return DistributorDetailsDto.FromEntity(distributor);
+	}
+
+	public async Task<IEnumerable<DistributorDto>> GetDistributorsByPartialNameAsync(string partialName)
+	{
+		var distributors = await _unitOfWork.Distributors.GetAllByPartialName(partialName);
+
+		return distributors.Select(DistributorDto.FromEntity);
+	}
+
+	public async Task UpdateDistributorAsync(DistributorUpdateDto artistUpdateDto)
 	{
 		throw new NotImplementedException();
 	}
 
-	public Task<IEnumerable<DistributorDto>> GetAllDistributorsAsync()
-	{
-		throw new NotImplementedException();
-	}
-
-	public Task<DistributorDto> GetDistributorByIdAsync(Guid artistId)
-	{
-		throw new NotImplementedException();
-	}
-
-	public Task<DistributorDetailsDto> GetDistributorDetailsByIdAsync(Guid artistId)
-	{
-		throw new NotImplementedException();
-	}
-
-	public Task<IEnumerable<DistributorDto>> GetDistributorsByPartialNameAsync(string partialName)
-	{
-		throw new NotImplementedException();
-	}
-
-	public Task UpdateDistributorAsync(DistributorUpdateDto artistUpdateDto)
+	public async Task DeleteDistributorAsync(Guid distributorId)
 	{
 		throw new NotImplementedException();
 	}

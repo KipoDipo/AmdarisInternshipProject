@@ -25,6 +25,7 @@ import Queue from "./Pages/Queue";
 import { NotificationProvider } from "./Contexts/Snackbar/NotificationProvider";
 import FollowingArtists from "./Pages/FollowingArtists";
 import Badges from "./Pages/Badges";
+import AddArtistToDistributor from "./Pages/AddArtistToDistributor";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -114,6 +115,7 @@ function DistributorRoutes() {
             <Route path="/add-song/" element={<AddSongPage />} />
             <Route path="/add-genre/" element={<AddGenrePage />} />
             <Route path="/add-album/" element={<AddAlbumPage />} />
+            <Route path="/add-artist/" element={<AddArtistToDistributor />} />
         </Routes>
     )
 }

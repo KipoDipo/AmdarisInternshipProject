@@ -19,6 +19,13 @@ public class DistributorRepository : BaseRepository<Distributor>, IDistributorRe
 		_roleManager = roleManager;
 	}
 
+	public async Task<IEnumerable<Distributor>> GetAllByPartialName(string partialName)
+	{
+		return await _dbContext.Set<Distributor>()
+			.Where(a => a.DisplayName.Contains(partialName))
+			.ToListAsync();
+	}
+
 	public async Task<Distributor?> GetWithDetailsByIdAsync(Guid id)
 	{
 		return await _dbContext.Set<Distributor>()
