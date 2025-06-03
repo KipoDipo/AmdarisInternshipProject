@@ -24,7 +24,7 @@ export default function Badges() {
                 setBadges(response.data);
             })
             .catch(error => notify({ message: error, severity: 'error' }));
-    })
+    }, [notify])
 
     return (
         <>

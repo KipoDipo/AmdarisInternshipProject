@@ -300,10 +300,10 @@ public class DbSeeder
 		}
 		if(!unit.Distributors.GetAll().Any())
 		{
-			var distr1 = new DistributorCreateDto() { UserName = "deestreebyutorr", Email = "distri@utor", Password = "DistroBistro123!", DisplayName = "Distributorotery" };
-
+			var dto = new DistributorCreateDto() { UserName = "deestreebyutorr", Email = "distri@utor", Password = "DistroBistro123!", DisplayName = "Distributorotery" };
 			await unit.BeginTransactionAsync();
-			await unit.Distributors.Register(distr1);
+			var distributor = await unit.Distributors.Register(dto);
+			distributor.Artists.AddRange([Reol, LotusJuice, DuaLipa, LynyrdSkynyrd, FleetwoodMac, PinkFloyd, Sabaton]);
 			await unit.CommitTransactionAsync();
 		}
 	}
