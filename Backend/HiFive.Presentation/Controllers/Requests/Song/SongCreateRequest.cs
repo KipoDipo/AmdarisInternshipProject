@@ -5,7 +5,6 @@ namespace HiFive.Presentation.Controllers.Requests.Music;
 public class SongCreateRequest
 {
 	public required string Title { get; set; }
-	public uint Duration { get; set; }
 	public DateTime ReleaseDate { get; set; }
 	public List<Guid> GenreIds { get; set; } = null!;
 	public required IFormFile CoverImage { get; set; }
@@ -20,7 +19,6 @@ public class SongCreateRequest
 		return new SongCreateDto
 		{
 			Title = Title,
-			Duration = Duration,
 			ReleaseDate = ReleaseDate,
 			GenreIds = GenreIds,
 			CoverImageId = coverImageId,

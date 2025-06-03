@@ -38,7 +38,7 @@ public class SongService : ISongService
 			Title = songCreateDto.Title,
 			ArtistId = songCreateDto.ArtistId,
 			AlbumId = songCreateDto.AlbumId,
-			Duration = songCreateDto.Duration,
+			Duration = (uint)songCreateDto.Duration!,
 			CoverImageId = songCreateDto.CoverImageId,
 			Genres = genres,
 			ReleaseDate = songCreateDto.ReleaseDate,

@@ -1,23 +1,29 @@
-import { Stack, Autocomplete, TextField, Button, Box } from "@mui/material";
+import { Stack, Autocomplete, TextField, Button, Box, Dialog, Divider, Typography, DialogTitle, DialogContent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
 import { Genre } from "../Models/Genre";
 import { fetcher } from "../Fetcher";
 import { theme } from "../Styling/Theme";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
+import AddGenrePage from "./AddGenre";
 
-function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, onUpload?: () => void, setFormData?: (formData: FormData) => void }) {
+type GenreSelect = Genre & {
+    selected: boolean
+}
+
+function AddSongPage({ noArtist, noBackground, onUpload, setFormData }: { noArtist?: boolean, noBackground?: boolean, onUpload?: () => void, setFormData?: (formData: FormData) => void }) {
     const [artists, setArtists] = useState<Artist[]>([]);
     const [inputArtistText, setInputArtistText] = useState<string>();
     const [inputArtist, setInputArtist] = useState<Artist | null>(null);
 
     const [inputSongTitle, setInputSongTitle] = useState("");
 
-    const [genres, setGenres] = useState<Genre[]>([]);
-    const [inputGenreText, setInputGenreText] = useState<string>();
-    const [inputGenre, setInputGenre] = useState<Genre | null>(null);
+    const [genres, setGenres] = useState<GenreSelect[]>([]);
 
     const [inputImageFile, setInputImageFile] = useState<File | null>(null);
     const [inputSongFile, setInputSongFile] = useState<File | null>(null);
+
+    const notify = useNotification();
 
     const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -34,13 +40,19 @@ function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, 
     };
 
     const handleUpload = async () => {
+        if (!inputArtist) {
+            notify({ message: "An artist is required", severity: 'error' });
+            return;
+        }
+
         const formData = new FormData();
         formData.append("title", inputSongTitle);
-        formData.append("duration", "0");
-        formData.append("genreIds", inputGenre?.id || "");
+        genres.forEach(g => {
+            if (g.selected)
+                formData.append("genreIds", g.id);
+        })
         formData.append("coverImage", inputImageFile as Blob);
-        formData.append("artistId", inputArtist?.id || "");
-        formData.append("albumId", "");
+        formData.append("artistId", inputArtist.id);
         formData.append("data", inputSongFile as Blob);
         try {
             setFormData?.(formData);
@@ -48,20 +60,17 @@ function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, 
                 onUpload();
             }
             else {
-                const response = await fetcher.post("Song", formData)
-                console.log(response.data);
+                await fetcher.post("Song", formData)
+                notify({ message: 'Song uploaded successfully', severity: 'success' })
             }
         }
         catch (error) {
-            console.error("There was an error uploading the data!", error);
+            notify({ message: error, severity: 'error' })
         }
     }
 
 
-    useEffect(() => {
-        fetcher.get("Artist/get-artists-from-distributor-me")
-            .then(response => setArtists(response.data));
-
+    function loadGenres() {
         fetcher.get("Genre")
             .then((response) => {
                 setGenres(response.data);
@@ -69,11 +78,29 @@ function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, 
             .catch((error) => {
                 console.error("There was an error fetching the data!", error);
             });
+    }
+
+    useEffect(() => {
+        fetcher.get("Artist/get-artists-from-distributor-me")
+            .then(response => setArtists(response.data));
+
+        loadGenres();
     }, []);
+
+    const [isSelectingGenres, setIsSelectingGenres] = useState(false)
+    const [isAddingNewGenre, setIsAddingNewGenre] = useState(false)
+
+    const toggleGenre = (id: string) => {
+        setGenres(prev =>
+            prev.map(g =>
+                g.id === id ? { ...g, selected: !g.selected } : g
+            )
+        );
+    };
 
     return (
         <Box width='100%' display='flex' justifyContent='center' alignItems='center'>
-            <Stack margin={3} gap={3} padding={5} bgcolor={theme.palette.secondary.dark} borderRadius={theme.shape.borderRadius} width={300}>
+            <Stack margin={3} gap={3} padding={5} bgcolor={noBackground ? 'transparent' : theme.palette.secondary.dark} borderRadius={theme.shape.borderRadius} width={300}>
                 {
                     !noArtist &&
                     <Autocomplete
@@ -96,20 +123,22 @@ function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, 
                     value={inputSongTitle}
                     onChange={(event) => setInputSongTitle(event.target.value)}
                 />
-                <Autocomplete
-                    disablePortal
-                    options={genres || []}
-                    getOptionLabel={(option) => option.name || ""}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    renderInput={(params) => <TextField {...params} label="Enter genre" />}
-                    inputValue={inputGenreText}
-                    onInputChange={(_event, newValue) => {
-                        setInputGenreText(newValue);
-                    }}
-                    onChange={(_event, newValue) => {
-                        setInputGenre(newValue);
-                    }}
-                />
+                <Button variant='outlined' color='primary' onClick={() => setIsSelectingGenres(true)} sx={{
+                    height: '55px',
+                    borderColor: '#777',
+                    color: theme.palette.secondary.light,
+                    backgroundColor: theme.palette.secondary.dark,
+                    '&:hover': {
+                        backgroundColor: theme.palette.secondary.main,
+                    },
+                }}>Select Genres</Button>
+                {
+                    (() => {
+                        const selectedGenres = genres.filter(g => g.selected).map(g => g.name)
+
+                        return <Typography>{"Genres: " + (selectedGenres.length > 0 ? selectedGenres : "none")}</Typography>
+                    })()
+                }
                 <TextField
                     label="Upload image"
                     variant="outlined"
@@ -131,6 +160,34 @@ function AddSongPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, 
                     Upload
                 </Button>
             </Stack>
+            <Dialog open={isSelectingGenres} fullWidth onClose={() => setIsSelectingGenres(false)}>
+                <DialogTitle>Select genres</DialogTitle>
+                <DialogContent>
+
+                    <Stack alignItems='center' gap={3} padding={3}>
+                        <Stack alignItems='center' direction='row' flexWrap='wrap' gap={3} padding={5}>
+                            {
+                                genres.map(g => {
+                                    return <Button variant={g.selected ? 'contained' : 'outlined'} onClick={() => toggleGenre(g.id)}>{g.name}</Button>
+                                })
+                            }
+                        </Stack>
+                        <Divider sx={{ bgcolor: theme.palette.secondary.dark, width: '75%' }} />
+                        <Button variant='outlined' onClick={() => setIsAddingNewGenre(true)}>Add new Genre</Button>
+                        <Button variant='contained' onClick={() => setIsSelectingGenres(false)} fullWidth>Done</Button>
+                    </Stack>
+                </DialogContent>
+
+            </Dialog>
+            <Dialog open={isAddingNewGenre} fullWidth onClose={() => setIsAddingNewGenre(false)}>
+                <DialogTitle>Add a new genre</DialogTitle>
+                <DialogContent>
+                    <AddGenrePage noBackground onAdd={() => {
+                        loadGenres();
+                        setIsAddingNewGenre(false)
+                    }} />
+                </DialogContent>
+            </Dialog>
         </Box>
 
     )

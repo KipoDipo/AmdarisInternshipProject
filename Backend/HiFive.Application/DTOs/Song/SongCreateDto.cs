@@ -3,7 +3,7 @@
 public class SongCreateDto
 {
 	public required string Title { get; set; }
-	public required uint Duration { get; set; }
+	public uint? Duration { get; set; }
 	public DateTime? ReleaseDate { get; set; }
 	public required List<Guid> GenreIds { get; set; }
 	public Guid? CoverImageId { get; set; }

@@ -156,7 +156,7 @@ function AddAlbumPage() {
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                     <DialogTitle>Upload new song</DialogTitle>
                     <DialogContent>
-                        <AddSongPage noArtist onUpload={handleClose} setFormData={addFormData} />
+                        <AddSongPage noArtist noBackground onUpload={handleClose} setFormData={addFormData} />
                     </DialogContent>
                 </Dialog>
             </Stack>
