@@ -128,16 +128,6 @@ export const theme = createTheme({
                         color: colors.white,
                     },
                 },
-
-                option: {
-                    '&.Mui-focused': {
-                        transition: 'background-color 0.1s ease',
-                        backgroundColor: colors.lightGray,
-                    },
-                    '&[aria-selected="true"]': {
-                        backgroundColor: colors.lightGray,
-                    },
-                }
             },
         },
 
@@ -173,7 +163,7 @@ export const theme = createTheme({
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    backgroundColor: colors.black,
+                    backgroundColor: colors.gray,
                     color: colors.white,
                 }
             }
