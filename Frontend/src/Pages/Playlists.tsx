@@ -28,19 +28,22 @@ export default function Page() {
     }
 
     return (
-        <Stack margin={3} direction='row' flexWrap='wrap' gap={3}>
-            <Tile label="Create New" props={{ onClick: () => setOpenDialog(true) }}>
-                <Typography variant="h1">+</Typography>
-            </Tile>
-            {
-                playlists?.map(p => <PlaylistComponent data={p} />)
-            }
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
-                <DialogTitle>Create a new Playlist</DialogTitle>
-                <DialogContent>
-                    <AddPlaylist onSubmit={handleSubmit} />
-                </DialogContent>
-            </Dialog>
+        <Stack margin={3} gap={6}>
+            <Typography variant='h2'>Playlists</Typography>
+            <Stack direction='row' flexWrap='wrap' gap={3}>
+                <Tile label="Create New" props={{ onClick: () => setOpenDialog(true) }}>
+                    <Typography variant="h1">+</Typography>
+                </Tile>
+                {
+                    playlists?.map(p => <PlaylistComponent data={p} />)
+                }
+                <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
+                    <DialogTitle>Create a new Playlist</DialogTitle>
+                    <DialogContent>
+                        <AddPlaylist onSubmit={handleSubmit} />
+                    </DialogContent>
+                </Dialog>
+            </Stack>
         </Stack>
     )
 }
@@ -60,13 +63,13 @@ function Tile({ label, props, children }: { label: string, props?: AvatarProps &
 
 function PlaylistComponent({ data }: { data: Playlist }) {
     return (
-        <Tile 
-        label={data.title} 
-        props={{ 
-            src: FetchImage(data.thumbnailId),
-            component: Link,
-            to: `/playlist/${data.id}`
-        }} />
+        <Tile
+            label={data.title}
+            props={{
+                src: FetchImage(data.thumbnailId),
+                component: Link,
+                to: `/playlist/${data.id}`
+            }} />
     )
 }
 
@@ -83,7 +86,7 @@ function AddPlaylist({ onSubmit }: { onSubmit: () => void }) {
 
         try {
             await fetcher.post('/Playlist/create-my-playlist', form);
-            notify({message: "Playlist Created!", severity: 'success'});
+            notify({ message: "Playlist Created!", severity: 'success' });
             onSubmit();
         }
         catch (error) {
@@ -117,5 +120,6 @@ function AddPlaylist({ onSubmit }: { onSubmit: () => void }) {
                 Create
             </Button>
         </Stack>
+
     )
 }

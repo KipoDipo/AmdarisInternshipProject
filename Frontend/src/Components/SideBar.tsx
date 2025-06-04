@@ -9,6 +9,8 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
+import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
+import Diversity1RoundedIcon from '@mui/icons-material/Diversity1Rounded';
 
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
@@ -31,6 +33,7 @@ function TabGroup({ children }: { children: ReactNode }) {
             onChange={handleChange}
             sx={{
                 '& .MuiTab-root': {
+                    minHeight: '54px',
                     justifyContent: 'flex-start',
                 },
                 '& .Mui-selected': {
@@ -62,9 +65,9 @@ function SideBar({ role }: { role: string }) {
         case 'Listener':
             component = (
                 <TabGroup>
+                    <Typography variant='h4' sx={{ margin: '10px' }}>Hub</Typography>
                     <Tab label='Home' icon={<HomeRoundedIcon />} iconPosition='start' component={Link} to='/' />
                     <Tab label='Explore' icon={<SearchRoundedIcon />} iconPosition='start' component={Link} to='/explore' />
-                    <Tab label='Account' icon={<PersonRoundedIcon />} iconPosition='start' component={Link} to='/account' />
                     <Tab label='Settings' icon={<SettingsRoundedIcon />} iconPosition='start' component={Link} to='/account-edit' />
                     {
                         (!listener || !listener.isSubscribed) &&
@@ -75,6 +78,11 @@ function SideBar({ role }: { role: string }) {
                     <Tab label='Liked' icon={<ThumbUpRoundedIcon />} iconPosition='start' component={Link} to='/liked' />
                     <Tab label='Queue' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/queue' />
                     <Tab label='Playlists' icon={<SubscriptionsRoundedIcon />} component={Link} to='/playlists' iconPosition='start' />
+                    <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
+                    <Typography variant='h4' sx={{ margin: '10px' }}>Social</Typography>
+                    <Tab label='Account' icon={<PersonRoundedIcon />} iconPosition='start' component={Link} to='/account' />
+                    <Tab label='Following' icon={<PeopleAltRoundedIcon />} iconPosition='start' component={Link} to='/TODO' />
+                    <Tab label='Artists' icon={<Diversity1RoundedIcon />} iconPosition='start' component={Link} to='/following-artists' />
                 </TabGroup>
             )
             break;

@@ -17,9 +17,9 @@ export default function Page() {
     }, [notify]);
 
     return (
-        <Stack width='100%' display='flex' justifyContent='center'>
-            <Typography variant='h2' alignSelf='flex-start' textAlign='center' margin={3}>Following Artists</Typography>
-            <Box margin={3} gap={8} display='flex' flexWrap='wrap' justifyContent='center'>
+        <Stack margin={3} display='flex' justifyContent='center' gap={3}>
+            <Typography variant='h2' alignSelf='flex-start' textAlign='center'>Following Artists</Typography>
+            <Box gap={8} display='flex' flexWrap='wrap' justifyContent='center'>
                 {
                     artists.map(artist => {
                         return <ArtistComponent key={artist.id} artist={artist} />
