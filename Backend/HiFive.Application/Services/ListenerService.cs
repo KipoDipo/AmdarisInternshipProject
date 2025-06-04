@@ -87,6 +87,29 @@ public class ListenerService : IListenerService
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
+	public async Task SubscribeListener(Guid listenerId)
+	{
+		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);
+		_validator.Validate(listener);
+
+		await _unitOfWork.BeginTransactionAsync();
+		listener.IsSubscribed = true;
+		listener.SubscriptionEndDate = DateTime.Now.AddMonths(1);
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task UnsubscribeListener(Guid listenerId)
+	{
+		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);
+		_validator.Validate(listener);
+
+		await _unitOfWork.BeginTransactionAsync();
+		listener.IsSubscribed = false;
+		listener.SubscriptionEndDate = null;
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+
 	public async Task<ListenerDto> GetListenerByIdAsync(Guid listenerId)
 	{
 		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);

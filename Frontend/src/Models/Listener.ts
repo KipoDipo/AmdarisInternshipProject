@@ -7,4 +7,6 @@ export type Listener = {
 
 	badgeId?: string
 	titleId?: string
+
+	isSubscribed: boolean
 }

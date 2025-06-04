@@ -30,7 +30,7 @@ export default function Form() {
     const notify = useNotification();
 
     useEffect(() => {
-        fetcher.get("/Listener")
+        fetcher.get("/Listener/details")
             .then((response) => setUser(response.data))
             .catch(error => notify({ message: error, severity: 'error' }))
     }, [notify])

@@ -5,6 +5,7 @@ using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
 using HiFive.Infrastructure.Identity;
+using HiFive.Presentation.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

@@ -11,6 +11,8 @@ public class ListenerDto
 	public Guid? BadgeId { get; set; }
 	public Guid? TitleId { get; set; }
 
+	public bool IsSubscribed { get; set; }
+
 	public static ListenerDto FromEntity(Domain.Models.Users.Listener listener)
 	{
 		return new ListenerDto
@@ -19,7 +21,8 @@ public class ListenerDto
 			DisplayName = listener.DisplayName,
 			ProfilePictureId = listener.ProfilePictureId,
 			BadgeId = listener.EquippedBadgeId,
-			TitleId = listener.EquippedTitleId
+			TitleId = listener.EquippedTitleId,
+			IsSubscribed = listener.IsSubscribed,
 		};
 	}
 }

@@ -8,9 +8,12 @@ using FFMpegCore;
 using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Middleware;
+using HiFive.Presentation.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Stripe;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -75,6 +78,10 @@ builder.Services.AddCors(options =>
 				.AllowAnyMethod();
 		});
 });
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
 GlobalFFOptions.Configure(new FFOptions
 {

@@ -22,6 +22,7 @@ public class ListenerDetailsDto
 	public List<Guid> FollowingArtists { get; set; } = [];
 	public List<Guid> FollowingListeners { get; set; } = [];
 
+	public bool IsSubscribed { get; set; }
 
 	public static ListenerDetailsDto FromEntity(Domain.Models.Users.Listener listener)
 	{
@@ -39,7 +40,8 @@ public class ListenerDetailsDto
 			EquippedTitleId = listener.EquippedTitleId,
 			TitleIds = listener.Titles.Select(t => t.TitleId).ToList(),
 			FollowingArtists = listener.FollowingArtists.Select(l => l.Id).ToList(),
-			FollowingListeners = listener.FollowingListeners.Select(l => l.FollowedId).ToList()
+			FollowingListeners = listener.FollowingListeners.Select(l => l.FollowedId).ToList(),
+			IsSubscribed = listener.IsSubscribed,
 		};
 	}
 }

@@ -18,4 +18,6 @@ export type ListenerDetails = {
 
 	followingArtists: string[]
 	followingListeners: string[]
+
+	isSubscribed: boolean
 }

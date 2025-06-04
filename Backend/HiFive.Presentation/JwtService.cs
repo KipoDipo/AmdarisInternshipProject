@@ -1,4 +1,5 @@
 ﻿using HiFive.Infrastructure.Identity;
+using HiFive.Presentation.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -14,6 +14,8 @@ import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 import SubscriptionsRoundedIcon from '@mui/icons-material/SubscriptionsRounded';
 import { theme } from "../Styling/Theme";
+import { Listener } from "../Models/Listener";
+import { fetcher } from "../Fetcher";
 
 function TabGroup({ children }: { children: ReactNode }) {
     const [value, setValue] = useState(0)
@@ -47,6 +49,14 @@ function TabGroup({ children }: { children: ReactNode }) {
 }
 
 function SideBar({ role }: { role: string }) {
+    const [listener, setListener] = useState<Listener | undefined>()
+
+    useEffect(() => {
+        if (role === 'Listener' && !listener)
+            fetcher.get('Listener')
+                .then(response => setListener(response.data))
+    }, [role, listener]);
+
     let component;
     switch (role) {
         case 'Listener':
@@ -56,7 +66,10 @@ function SideBar({ role }: { role: string }) {
                     <Tab label='Explore' icon={<SearchRoundedIcon />} iconPosition='start' component={Link} to='/explore' />
                     <Tab label='Account' icon={<PersonRoundedIcon />} iconPosition='start' component={Link} to='/account' />
                     <Tab label='Settings' icon={<SettingsRoundedIcon />} iconPosition='start' component={Link} to='/account-edit' />
-                    <Tab label='Go Premium' icon={<ElectricBoltRoundedIcon />} iconPosition='start' />
+                    {
+                        (!listener || !listener.isSubscribed) &&
+                        <Tab label='Go Premium' icon={<ElectricBoltRoundedIcon />} iconPosition='start' component={Link} to='/subscribe' />
+                    }
                     <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
                     <Typography variant='h4' sx={{ margin: '10px' }}>Library</Typography>
                     <Tab label='Liked' icon={<ThumbUpRoundedIcon />} iconPosition='start' component={Link} to='/liked' />

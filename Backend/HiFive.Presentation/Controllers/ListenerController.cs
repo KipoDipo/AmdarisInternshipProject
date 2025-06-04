@@ -73,6 +73,12 @@ public class ListenerController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetMe()
 	{
+		return await GetById(_currentUserService.Id);
+	}
+
+	[HttpGet("details")]
+	public async Task<IActionResult> GetMeWithDetail()
+	{
 		return await GetDetailsById(_currentUserService.Id);
 	}
 

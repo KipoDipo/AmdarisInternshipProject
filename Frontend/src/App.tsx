@@ -26,6 +26,9 @@ import { NotificationProvider } from "./Contexts/Snackbar/NotificationProvider";
 import FollowingArtists from "./Pages/FollowingArtists";
 import Badges from "./Pages/Badges";
 import AddArtistToDistributor from "./Pages/AddArtistToDistributor";
+import Subscribe from "./Pages/Subscribe";
+import SubscribeFail from "./Pages/SubscribeFail";
+import SubscribeSuccess from "./Pages/SubscribeSuccess";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -80,7 +83,6 @@ function App() {
             <Box sx={{ position: 'relative', zIndex: 1 }} width="100vw" minHeight="100vh">
                 <Stack direction="row">
                     <NotificationProvider>
-
                         <BrowserRouter>
                             {
                                 !logged ?
@@ -150,7 +152,9 @@ function ListenerRoutes() {
                     <Route path="/queue" element={<><Explore /><Queue /></>} />
                     <Route path="/following-artists" element={<><Explore /><FollowingArtists /></>} />
                     <Route path="/my-badges" element={<><Explore /><Badges /></>} />
-                    {/* <Route path="/add-playlist/" element={<AddPlaylistPage />} /> */}
+                    <Route path="/subscribe" element={<><Explore /><Subscribe /></>} />
+                    <Route path="/subscribed-success" element={<><Explore /><SubscribeSuccess /></>} />
+                    <Route path="/subscribed-fail" element={<><Explore /><SubscribeFail /></>} />
                 </Routes>
             </Box>
             <PlaybackBar />

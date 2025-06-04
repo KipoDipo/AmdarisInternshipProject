@@ -211,6 +211,7 @@ export const theme = createTheme({
                     "&:hover": {
                         background: colors.black
                     },
+                    '&:last-child td': { border: 0 },
                 },
             },
         },

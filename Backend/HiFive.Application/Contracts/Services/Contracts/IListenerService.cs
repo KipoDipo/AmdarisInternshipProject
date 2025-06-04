@@ -18,4 +18,6 @@ public interface IListenerService
 	Task<ListenerDetailsDto> GetListenerDetailsByIdAsync(Guid listenerId);
 
 	Task UpdateListenerAsync(ListenerUpdateDto listenerUpdateDto);
+	Task SubscribeListener(Guid listenerId);
+	Task UnsubscribeListener(Guid listenerId);
 }

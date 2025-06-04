@@ -1,4 +1,6 @@
-﻿public class Jwt
+﻿namespace HiFive.Presentation.Models;
+
+public class Jwt
 {
 	public string Issuer { get; set; }
 	public string Audience { get; set; }
