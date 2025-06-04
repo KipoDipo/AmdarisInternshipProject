@@ -1,12 +1,16 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Storage;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using FFMpegCore;
+using HiFive.Domain.Models.Music;
 
 namespace HiFive.Presentation;
 
 public class BlobService
 {
 	private readonly BlobContainerClient _containerClient;
+	private readonly StorageSharedKeyCredential _storageCredential;
 
 	public BlobService(IConfiguration config)
 	{
@@ -18,6 +22,43 @@ public class BlobService
 		var blobServiceClient = new BlobServiceClient(connectionString);
 		_containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 		_containerClient.CreateIfNotExists();
+
+		var connStringParts = connectionString.Split(';');
+		string accountName = "";
+		string accountKey = "";
+
+		foreach (var part in connStringParts)
+		{
+			if (part.StartsWith("AccountName=", StringComparison.InvariantCultureIgnoreCase))
+				accountName = part.Substring("AccountName=".Length);
+			else if (part.StartsWith("AccountKey=", StringComparison.InvariantCultureIgnoreCase))
+				accountKey = part.Substring("AccountKey=".Length);
+		}
+
+		if (accountName == "" || accountKey == "")
+			throw new InvalidOperationException("Connection string must contain AccountName and AccountKey.");
+
+		_storageCredential = new StorageSharedKeyCredential(accountName, accountKey);
+	}
+
+	public string GetSasUrl(string blobName, TimeSpan expiryDuration)
+	{
+		var blobClient = _containerClient.GetBlobClient(blobName);
+
+		var sasBuilder = new BlobSasBuilder
+		{
+			BlobContainerName = _containerClient.Name,
+			BlobName = blobName,
+			Resource = "b", // b for blob
+			ExpiresOn = DateTimeOffset.Now.Add(expiryDuration)
+		};
+
+		sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+		var sasToken = sasBuilder.ToSasQueryParameters(_storageCredential).ToString();
+		var uriBuilder = new UriBuilder(blobClient.Uri) { Query = sasToken };
+
+		return uriBuilder.ToString();
 	}
 
 	public async Task<(uint Duration, string Uri)> UploadFileAsync(IFormFile file)

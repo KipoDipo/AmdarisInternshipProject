@@ -1,4 +1,6 @@
-﻿using HiFive.Application.Contracts.Services.Contracts;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
+using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Presentation.Controllers.Requests.Music;
@@ -47,12 +49,11 @@ public class SongController : ControllerBase
 	{
 		var song = await _songService.GetSongByIdAsync(songId);
 
-		var (stream, contentType) = await _blobService.DownloadFileAsync(song.Data);
-
-		if (stream == null)
-			return NotFound();
 		await _listenerDataService.AddListenedSong(_currentUserService.Id, songId);
-		return File(stream, contentType);
+		
+		var sasUrl = _blobService.GetSasUrl(song.Data, TimeSpan.FromHours(0.5));
+		
+		return Ok(new {url = sasUrl});
 	}
 
 	[HttpGet("id/{id}")]

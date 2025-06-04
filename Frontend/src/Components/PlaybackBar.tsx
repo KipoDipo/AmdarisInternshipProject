@@ -429,10 +429,9 @@ function PlaybackBar() {
         if (!queue || !queue.songs || !queue.songs[queue.current])
             return;
 
-        fetcher.get(`Song/download/${queue.songs[queue.current].id}`, { responseType: 'blob' })
+        fetcher.get(`Song/download/${queue.songs[queue.current].id}`)
             .then((response) => {
-                const blob = response.data;
-                const url = URL.createObjectURL(blob);
+                const url = response.data.url;
 
                 setAudioUrl(url);
             })
