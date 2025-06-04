@@ -100,7 +100,7 @@ function SideBar({ role }: { role: string }) {
     }
 
     return (
-        <Box sx={{ height: '100vh', width: '250px', }}>
+        <Box sx={{ height: 'calc(100% - 115px)', width: '250px', paddingBottom: '100px' }}>
             <Box
                 sx={{
                     background: theme.palette.secondary.dark,
@@ -109,6 +109,7 @@ function SideBar({ role }: { role: string }) {
                     height: 'inherit',
                     width: 'inherit',
                     position: 'fixed',
+                    overflow: 'auto',
                 }}
             >
                 {component}
