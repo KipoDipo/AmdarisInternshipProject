@@ -40,7 +40,7 @@ function AddSongPage({ noArtist, noBackground, onUpload, setFormData }: { noArti
     };
 
     const handleUpload = async () => {
-        if (!inputArtist) {
+        if (!inputArtist && !noArtist) {
             notify({ message: "An artist is required", severity: 'error' });
             return;
         }
@@ -52,7 +52,8 @@ function AddSongPage({ noArtist, noBackground, onUpload, setFormData }: { noArti
                 formData.append("genreIds", g.id);
         })
         formData.append("coverImage", inputImageFile as Blob);
-        formData.append("artistId", inputArtist.id);
+        if (inputArtist)
+            formData.append("artistId", inputArtist.id);
         formData.append("data", inputSongFile as Blob);
         try {
             setFormData?.(formData);

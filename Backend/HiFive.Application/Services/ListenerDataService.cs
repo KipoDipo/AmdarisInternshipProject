@@ -37,7 +37,7 @@ public class ListenerDataService : IListenerDataService
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
-	public async Task<IEnumerable<SongDto>> GetUniqueSongsListenedById(Guid listenerId, int count = 8, int forTheLastNMonths = 1)
+	public async Task<IEnumerable<SongDto>> GetUniqueSongsListenedById(Guid listenerId, int pageNumber, int pageSize, int forTheLastNMonths = 1)
 	{
 		var listener = await _unitOfWork.Listeners.GetByIdAsync(listenerId);
 		_validator.Validate(listener);
@@ -54,7 +54,8 @@ public class ListenerDataService : IListenerDataService
 			.Select(ld => ld.Song)
 			.AsEnumerable()
 			.DistinctBy(x => x.Id)
-			.Take(count);
+			.Skip((pageNumber - 1) * pageSize)
+			.Take(pageSize);
 
 		return songs.Select(SongDto.FromEntity);
 	} 

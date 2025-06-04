@@ -3,7 +3,7 @@ import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Song } from "../Models/Song";
-import { fetcher } from "../Fetcher";
+import { fetcher, fetchPaged } from "../Fetcher";
 import SongCategory from "../Components/SongCategory";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Artist } from "../Models/Artist";
@@ -42,9 +42,9 @@ function Home() {
     const notify = useNotification();
 
     useEffect(() => {
-        fetcher.get(`Song/my-history/?count=${24}`)
+        fetchPaged(`Song/my-history`, 1, 12)
             .then((response) => {
-                const songs: Song[] = response.data;
+                const songs: Song[] = response;
                 setHistory(songs.slice(0, 8));
 
                 const artists = songs.map(song => song.artistId);

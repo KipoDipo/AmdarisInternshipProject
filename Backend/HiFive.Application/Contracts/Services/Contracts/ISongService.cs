@@ -17,5 +17,5 @@ public interface ISongService
 
 
 	Task<IEnumerable<SongDto>> GetListenerLikedSongs(Guid listenerId);
-	Task<IEnumerable<SongDto>> GetSongsByArtistIdAsync(Guid artistId);
+	Task<IEnumerable<SongDto>> GetSongsByArtistIdAsync(Guid listenerId, int pageNumber, int pageSize);
 }

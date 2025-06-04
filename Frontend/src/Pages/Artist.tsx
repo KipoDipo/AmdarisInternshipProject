@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { ArtistDetails } from "../Models/ArtistDetails";
 import { useEffect, useState } from "react";
-import { fetcher } from "../Fetcher";
+import { fetcher, fetchPaged } from "../Fetcher";
 import { Avatar, Box, Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
@@ -24,10 +24,13 @@ export default function Page() {
 
     const [artist, setArtist] = useState<ArtistDetails>();
     const [albums, setAlbums] = useState<Album[] | undefined>();
-    const [songs, setSongs] = useState<Song[] | undefined>();
+    const [songs, setSongs] = useState<Song[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
 
     const [user, setUser] = useState<ListenerDetails>();
+
+    const [page, setPage] = useState(1)
+    const [hasMore, setHasMore] = useState(true)
 
     async function handleFollow() {
         if (isFollowing)
@@ -94,13 +97,20 @@ export default function Page() {
         fetcher.get(`/Album/artist/${artist?.id}`)
             .then((response) => setAlbums(response.data ?? []))
             .catch(error => notify({ message: error, severity: 'error' }))
-
-
-        fetcher.get(`/Song/artist/${artist?.id}`)
-            .then((response) => setSongs(response.data ?? []))
-            .catch(error => notify({ message: error, severity: 'error' }))
-
     }, [artist, notify])
+
+    useEffect(() => {
+        if (!artist)
+            return;
+
+        fetchPaged(`/Song/artist/${artist?.id}`, page, 5)
+            .then((response) => {
+                fetchPaged(`/Song/artist/${artist?.id}`, page + 1, 5)
+                    .then(response => setHasMore(response.length != 0))
+                setSongs(last => [...last, ...response])
+            })
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }, [artist, notify, page])
 
     const setQueue = useSetQueue();
 
@@ -119,7 +129,7 @@ export default function Page() {
                         <Button variant='contained' onClick={handleFollow} sx={{ width: textWidth }}>{isFollowing == null ? "..." : (isFollowing ? "Unfollow" : "Follow")}</Button>
                     </Stack>
                 </Stack>
-                <Stack padding={3} gap={3} bgcolor={theme.palette.secondary.dark} sx={{borderRadius: theme.shape.borderRadius}}>
+                <Stack padding={3} gap={3} bgcolor={theme.palette.secondary.dark} sx={{ borderRadius: theme.shape.borderRadius }}>
                     <Typography variant='h3'>Bio</Typography>
                     <Typography variant='body1'>{artist?.bio}</Typography>
                 </Stack>
@@ -158,6 +168,10 @@ export default function Page() {
                         </Table>
                     </TableContainer>
                 </Stack>
+                {
+                    hasMore &&
+                    <Button variant='contained' onClick={() => setPage(last => last + 1)}>Load more</Button>
+                }
             </Stack>
             :
             <ArtistSkeleton />

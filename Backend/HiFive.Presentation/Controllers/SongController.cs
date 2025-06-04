@@ -5,6 +5,7 @@ using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Song;
 using HiFive.Presentation.Controllers.Requests.Music;
 using HiFive.Presentation.Extentions;
+using HiFive.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -98,10 +99,10 @@ public class SongController : ControllerBase
 		return Ok(await _songService.GetAllSongsByAlbumIdAsync(id));
 	}
 
-	[HttpGet("my-history/")]
-	public async Task<IActionResult> GetSongsFromHistory(int count = 8, int lastNMonths = 1)
+	[HttpGet("my-history")]
+	public async Task<IActionResult> GetSongsFromHistory([FromQuery] PagingParameters pagingParameters, int lastNMonths = 1)
 	{
-		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, count, lastNMonths);
+		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, pagingParameters.PageNumber, pagingParameters.PageSize, lastNMonths);
 		return Ok(songs);
 	}
 
@@ -112,9 +113,9 @@ public class SongController : ControllerBase
 		var reol	= (await _artistService.GetArtistsByPartialNameAsync("Reol")).First();
 		var lotus	= (await _artistService.GetArtistsByPartialNameAsync("Lotus Juice")).First();
 
-		var songs1 = (await _songService.GetSongsByArtistIdAsync(lynyrd.Id)).Take(5);
-		var songs2 = (await _songService.GetSongsByArtistIdAsync(reol.Id)).Take(5);
-		var songs3 = (await _songService.GetSongsByArtistIdAsync(lotus.Id)).Take(5);
+		var songs1 = (await _songService.GetSongsByArtistIdAsync(lynyrd.Id, 1, 5));
+		var songs2 = (await _songService.GetSongsByArtistIdAsync(reol.Id, 1, 5));
+		var songs3 = (await _songService.GetSongsByArtistIdAsync(lotus.Id, 1, 5));
 
 		List<SongDto> songs = [];
 		songs.AddRange(songs1);
@@ -144,8 +145,8 @@ public class SongController : ControllerBase
 	}
 
 	[HttpGet("artist/{artistId}")]
-	public async Task<IActionResult> GetByArtistId(Guid artistId)
+	public async Task<IActionResult> GetByArtistId(Guid artistId, [FromQuery] PagingParameters pagingParameters)
 	{
-		return Ok(await _songService.GetSongsByArtistIdAsync(artistId));
+		return Ok(await _songService.GetSongsByArtistIdAsync(artistId, pagingParameters.PageNumber, pagingParameters.PageSize));
 	}
 }
