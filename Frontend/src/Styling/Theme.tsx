@@ -48,6 +48,10 @@ export const theme = createTheme({
                         color: colors.black,
                         backgroundColor: colors.yellow,
                     },
+                    '&.active': {
+                        color: colors.black,
+                        backgroundColor: colors.yellow,
+                    }
                 }
             }
         },

@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
-import { Tabs, Tab, Box, Typography, Divider } from "@mui/material";
+import { Tabs, Tab, Box, Typography, Divider, TabProps } from "@mui/material";
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -19,33 +19,29 @@ import { theme } from "../Styling/Theme";
 import { Listener } from "../Models/Listener";
 import { fetcher } from "../Fetcher";
 
-function TabGroup({ children }: { children: ReactNode }) {
-    const [value, setValue] = useState(0)
+type AppTabProps = {
+    label: string;
+    icon: ReactElement;
+    to: string;
+    value?: string;
+} & TabProps;
 
-    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+function AppTab({ label, icon, to, value, ...rest }: AppTabProps) {
+    return <Tab label={label} icon={icon} iconPosition='start' component={NavLink} to={to} value={value ?? to} {...rest} sx={{
+        minHeight: '54px',
+        justifyContent: 'flex-start',
+        borderRadius: '0 999px 999px 0px',
+        marginRight: '24px',
+        color: theme.palette.secondary.light,
+    }} />
+}
+
+function TabGroup({ children }: { children: ReactNode }) {
+    const location = useLocation();
+    const tokens = location.pathname.split('/');
 
     return (
-        <Tabs
-            orientation='vertical'
-            value={value}
-            onChange={handleChange}
-            sx={{
-                '& .MuiTab-root': {
-                    minHeight: '54px',
-                    justifyContent: 'flex-start',
-                },
-                '& .Mui-selected': {
-                    borderRadius: '0 999px 999px 0px',
-                },
-                '& .MuiTouchRipple-root': {
-                    borderRadius: '0 999px 999px 0px',
-                },
-                color: theme.palette.secondary.light,
-                padding: '16px 16px 0 0',
-            }}
-        >
+        <Tabs orientation='vertical' value={`/${tokens[1]}`}>
             {children}
         </Tabs>
     )
@@ -66,32 +62,32 @@ function SideBar({ role }: { role: string }) {
             component = (
                 <TabGroup>
                     <Typography variant='h4' sx={{ margin: '10px' }}>Hub</Typography>
-                    <Tab label='Home' icon={<HomeRoundedIcon />} iconPosition='start' component={Link} to='/' />
-                    <Tab label='Explore' icon={<SearchRoundedIcon />} iconPosition='start' component={Link} to='/explore' />
-                    <Tab label='Settings' icon={<SettingsRoundedIcon />} iconPosition='start' component={Link} to='/account-edit' />
+                    <AppTab label='Home' icon={<HomeRoundedIcon />} to='/' />
+                    <AppTab label='Explore' icon={<SearchRoundedIcon />} to='/explore' />
+                    <AppTab label='Settings' icon={<SettingsRoundedIcon />} to='/account-edit' />
                     {
                         (!listener || !listener.isSubscribed) &&
-                        <Tab label='Go Premium' icon={<ElectricBoltRoundedIcon />} iconPosition='start' component={Link} to='/subscribe' />
+                        <AppTab label='Go Premium' icon={<ElectricBoltRoundedIcon />} to='/subscribe' />
                     }
                     <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
                     <Typography variant='h4' sx={{ margin: '10px' }}>Library</Typography>
-                    <Tab label='Liked' icon={<ThumbUpRoundedIcon />} iconPosition='start' component={Link} to='/liked' />
-                    <Tab label='Playlists' icon={<SubscriptionsRoundedIcon />} component={Link} to='/playlists' iconPosition='start' />
+                    <AppTab label='Liked' icon={<ThumbUpRoundedIcon />} to='/liked' />
+                    <AppTab label='Playlists' icon={<SubscriptionsRoundedIcon />} to='/playlists' />
                     <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
                     <Typography variant='h4' sx={{ margin: '10px' }}>Social</Typography>
-                    <Tab label='Account' icon={<PersonRoundedIcon />} iconPosition='start' component={Link} to='/account' />
-                    <Tab label='Following' icon={<PeopleAltRoundedIcon />} iconPosition='start' component={Link} to='/TODO' />
-                    <Tab label='Artists' icon={<Diversity1RoundedIcon />} iconPosition='start' component={Link} to='/following-artists' />
+                    <AppTab label='Account' icon={<PersonRoundedIcon />} to='/account' />
+                    <AppTab label='Following' icon={<PeopleAltRoundedIcon />} to='/TODO' />
+                    <AppTab label='Artists' icon={<Diversity1RoundedIcon />} to='/following-artists' />
                 </TabGroup>
             )
             break;
         case 'Distributor':
             component = (
                 <TabGroup>
-                    <Tab label='Add Song' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-song' />
-                    <Tab label='Add Album' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-album' />
-                    <Tab label='Add Genre' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-genre' />
-                    <Tab label='Add Artist' icon={<QueueMusicRoundedIcon />} iconPosition='start' component={Link} to='/add-artist' />
+                    <AppTab label='Add Song' icon={<QueueMusicRoundedIcon />} to='/add-song' />
+                    <AppTab label='Add Album' icon={<QueueMusicRoundedIcon />} to='/add-album' />
+                    <AppTab label='Add Genre' icon={<QueueMusicRoundedIcon />} to='/add-genre' />
+                    <AppTab label='Add Artist' icon={<QueueMusicRoundedIcon />} to='/add-artist' />
                 </TabGroup>
             )
             break;
@@ -104,9 +100,9 @@ function SideBar({ role }: { role: string }) {
             minWidth: '250px',
             width: '250px',
             paddingBottom: '115px',
-                    background: theme.palette.secondary.dark,
-                    borderRadius: '0 32px 0 0px',
-                    borderRight: `2px solid ${theme.palette.secondary.main}`,
+            background: theme.palette.secondary.dark,
+            borderRadius: '0 32px 0 0px',
+            borderRight: `2px solid ${theme.palette.secondary.main}`,
         }}>
             <Box
                 sx={{
