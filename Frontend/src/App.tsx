@@ -97,7 +97,7 @@ function App() {
                                         </Stack>
                                     </Box>
                                     :
-                                    <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                                    <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden', height: '100vh' }}>
                                         <SideBar role={role} />
                                         {component}
                                     </Box>

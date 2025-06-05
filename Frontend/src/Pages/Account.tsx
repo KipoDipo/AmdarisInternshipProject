@@ -50,10 +50,10 @@ export default function Account() {
                             {
                                 user ?
                                     <AppBadge badgeId={user.equippedBadgeId}>
-                                        <Avatar src={FetchImage(user.profilePictureId)} sx={{ width: '400px', height: `400px` }}></Avatar>
+                                        <Avatar src={FetchImage(user.profilePictureId)} sx={{ width: '300px', height: `300px` }}></Avatar>
                                     </AppBadge>
                                     :
-                                    <Box sx={{ width: '400px', height: `400px` }}></Box>
+                                    <Box sx={{ width: '300px', height: `300px` }}></Box>
                             }
                             <Stack>
                                 <Typography variant='h2'>{user?.displayName}</Typography>

@@ -11,6 +11,7 @@ import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded';
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 
 import { Song } from '../Models/Song';
 import { Link } from 'react-router-dom';
@@ -113,7 +114,7 @@ function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { si
                     <SkipNextRoundedIcon sx={smallFontSx} />
                 </Fab>
                 <Fab sx={smallFabSxAlt} onClick={() => setIsAddingToPlaylist(true)} centerRipple>
-                    <QueueMusicRoundedIcon />
+                    <PlaylistAddRoundedIcon />
                 </Fab>
             </Stack>
 
@@ -252,6 +253,10 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
                 onChange={(_e, val) => onVolumeChange(Array.isArray(val) ? val[0] : val)}
                 sx={{ width: 100, marginRight: 2 }}
             />
+            <IconButton component={Link} to='/queue'>
+                <QueueMusicRoundedIcon sx={{...fontSx, color: theme.palette.secondary.light}} />
+            </IconButton>
+
             <IconButton sx={buttonSx} onClick={handleRepeat}>
                 {repeatState == 0 && <RepeatRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light }} />}
                 {repeatState == 1 && <RepeatRoundedIcon sx={{ ...fontSx, color: theme.palette.primary.main }} />}
@@ -265,6 +270,8 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
             <IconButton>
                 <LinkRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light }} />
             </IconButton>
+
+
         </Stack>
     )
 }
