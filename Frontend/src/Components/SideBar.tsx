@@ -99,12 +99,17 @@ function SideBar({ role }: { role: string }) {
     }
 
     return (
-        <Box sx={{ height: 'calc(100% - 115px)', width: '250px', paddingBottom: '100px' }}>
-            <Box
-                sx={{
+        <Box sx={{
+            height: 'calc(100% - 115px)',
+            minWidth: '250px',
+            width: '250px',
+            paddingBottom: '115px',
                     background: theme.palette.secondary.dark,
                     borderRadius: '0 32px 0 0px',
                     borderRight: `2px solid ${theme.palette.secondary.main}`,
+        }}>
+            <Box
+                sx={{
                     height: 'inherit',
                     width: 'inherit',
                     position: 'fixed',
