@@ -1,0 +1,9 @@
+{
+  "name": "Hi-Five",
+  "short_name": "Hi-Five",
+  "description": "The Internship Hi-Fi Application",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "start_url": "/"
+}

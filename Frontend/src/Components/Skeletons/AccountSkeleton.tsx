@@ -6,7 +6,7 @@ export default function UserProfileSkeleton() {
             <Stack direction="row" justifyContent="space-between" width="80vw" gap={3}>
                 <Stack gap={3}>
                     <Stack direction="row" alignItems="center" gap={3}>
-                        <Skeleton variant="circular" width={400} height={400} />
+                        <Skeleton variant="circular" width={300} height={300} />
 
                         <Stack>
                             <Skeleton variant="text" width={300} height={60} />

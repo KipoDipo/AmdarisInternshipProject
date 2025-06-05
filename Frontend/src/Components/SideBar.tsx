@@ -26,8 +26,8 @@ type AppTabProps = {
     value?: string;
 } & TabProps;
 
-function AppTab({ label, icon, to, value, ...rest }: AppTabProps) {
-    return <Tab label={label} icon={icon} iconPosition='start' component={NavLink} to={to} value={value ?? to} {...rest} sx={{
+function AppTab({ label, icon, to, ...rest }: AppTabProps) {
+    return <Tab label={label} icon={icon} iconPosition='start' component={NavLink} to={to} value={to} {...rest} sx={{
         minHeight: '54px',
         justifyContent: 'flex-start',
         borderRadius: '0 999px 999px 0px',
@@ -38,10 +38,9 @@ function AppTab({ label, icon, to, value, ...rest }: AppTabProps) {
 
 function TabGroup({ children }: { children: ReactNode }) {
     const location = useLocation();
-    const tokens = location.pathname.split('/');
 
     return (
-        <Tabs orientation='vertical' value={`/${tokens[1]}`}>
+        <Tabs orientation='vertical' value={location.pathname} >
             {children}
         </Tabs>
     )
