@@ -1,8 +1,9 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { RequiredTextField } from "../Components/TextFields";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { RegisterUserRequest } from "../Models/RegisterUser";
 import { useForm } from "react-hook-form";
+import { theme } from "../Styling/Theme";
 
 type FormFields = {
     email: string
@@ -12,25 +13,50 @@ type FormFields = {
     repeat: string
 }
 
-function RegisterPage({ setForm, onSubmit }: { setForm: Dispatch<SetStateAction<RegisterUserRequest | undefined>>, onSubmit: () => void }) {
+type AccountType = "Listener" | "Artist" | "Distributor";
+
+function RegisterPage({ onSubmit }: {onSubmit: (type: AccountType, form: RegisterUserRequest) => void }) {
     const { register, handleSubmit, watch, formState: { isValid } } = useForm<FormFields>({ mode: 'onChange' })
+
+    const [type, setType] = useState(0)
+
+    const handleChange = (_event: React.SyntheticEvent, newType: number) => {
+        setType(newType);
+    };
 
     const password = watch('password')
 
     const onClick = (data: FormFields) => {
-        setForm(
+        const form = 
             {
                 email: data.email,
                 username: data.username,
                 displayName: data.displayName,
                 password: data.password,
             }
-        )
-        onSubmit();
+        switch (type) {
+            case 0:
+                onSubmit("Listener", form);
+                break;
+            case 1:
+                onSubmit("Artist", form);
+                break;
+            case 2:
+                onSubmit("Distributor", form);
+                break;
+        }
     }
 
     return (
         <Stack gap={3} alignItems='center'>
+            <Stack alignItems='center' gap={1}>
+                <Typography>Type of account</Typography>
+                <Tabs value={type} onChange={handleChange} sx={{ border: 1, borderColor: '#777', borderRadius: theme.shape.borderRadius }}>
+                    <Tab label='Listener' />
+                    <Tab label='Artist' />
+                    <Tab label='Distributor' />
+                </Tabs>
+            </Stack>
             <RequiredTextField
                 label="Email"
                 {...register('email', { required: true })}
