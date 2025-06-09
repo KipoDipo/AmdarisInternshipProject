@@ -1,8 +1,8 @@
 import { Button, Divider, Stack, Typography } from "@mui/material";
-import RegisterPartOne from "./RegisterPartOne";
+import RegisterPartOne from "./RegisterForm";
 // import RegisterPartTwo from "./RegisterPartTwo";
 import { useEffect, useState } from "react";
-import { RegisterListenerRequest } from "../Models/RegisterListener";
+import { RegisterUserRequest } from "../Models/RegisterUser";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { textWidth, theme } from "../Styling/Theme";
@@ -12,7 +12,7 @@ function Page() {
     const [hasFilledRequiredInfo, setHasFilledRequiredInfo] = useState(false);
     // const [hasFilledOptionalInfo, setHasFilledOptionalInfo] = useState(false);
 
-    const [form, setForm] = useState<RegisterListenerRequest>()
+    const [form, setForm] = useState<RegisterUserRequest>()
 
     const navigate = useNavigate();
 
@@ -21,12 +21,12 @@ function Page() {
     useEffect(() => {
         // if (hasFilledRequiredInfo && hasFilledOptionalInfo) {
         if (hasFilledRequiredInfo) {
-            if (form == undefined)
+            if (form === undefined)
                 return;
 
             const formData = new FormData();
 
-            let key: keyof RegisterListenerRequest;
+            let key: keyof RegisterUserRequest;
             for (key in form) {
                 const value = form[key];
                 if (value !== undefined)

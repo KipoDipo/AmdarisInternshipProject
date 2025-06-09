@@ -1,4 +1,4 @@
-export type RegisterListenerRequest = {
+export type RegisterUserRequest = {
     username: string 
 	displayName: string 
 	email: string 
