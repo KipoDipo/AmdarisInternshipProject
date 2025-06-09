@@ -15,7 +15,7 @@ import Login from "./Pages/Login";
 import LogoAndName from "./Components/LogoAndName";
 import AccountEdit from "./Pages/AccountEdit";
 import Artist from "./Pages/Artist";
-import Explore from "./Components/SearchBar";
+import TopBar from "./Components/SearchBar";
 import Playlists from "./Pages/Playlists";
 import Playlist from "./Pages/Playlist";
 import Album from "./Pages/Album";
@@ -29,6 +29,9 @@ import AddArtistToDistributor from "./Pages/AddArtistToDistributor";
 import Subscribe from "./Pages/Subscribe";
 import SubscribeFail from "./Pages/SubscribeFail";
 import SubscribeSuccess from "./Pages/SubscribeSuccess";
+import { ListenerProvider } from "./Contexts/Listener/ListenerProvider"
+import { ListenerDetails } from "./Models/ListenerDetails";
+import { fetcher } from "./Fetcher";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -44,21 +47,23 @@ function App() {
         }
     }
 
+
     useEffect(() => {
         if (!role)
             return;
 
         switch (role) {
             case 'Listener':
-                setComponent(ListenerRoutes);
+                fetcher.get("/Listener/details")
+                    .then((response) => setComponent(<ListenerRoutes listener={response.data}/>))
                 break;
 
             case 'Artist':
-                setComponent(ArtistRoutes);
+                setComponent(<ArtistRoutes />);
                 break;
 
             case 'Distributor':
-                setComponent(DistributorRoutes);
+                setComponent(<DistributorRoutes />);
                 break;
 
             case 'Admnin':
@@ -130,35 +135,38 @@ function ArtistRoutes() {
     )
 }
 
-function ListenerRoutes() {
+function ListenerRoutes({listener}: {listener: ListenerDetails}) {
     return (
-        <QueueProvider>
-            <Box
-                sx={{
-                    flex: 1,
-                    overflowY: 'auto',
-                    paddingBottom: '100px', // space for the PlaybackBar height
-                }}
-            >
-                <Routes>
-                    <Route index element={<><Explore /><Home /></>} />
-                    <Route path="/account" element={<><Explore /><Account /></>} />
-                    <Route path="/account-edit" element={<AccountEdit />} />
-                    <Route path="/artist/:id" element={<><Explore /><Artist /></>} />
-                    <Route path="/playlist/:id" element={<><Explore /><Playlist /></>} />
-                    <Route path="/album/:id" element={<><Explore /><Album /></>} />
-                    <Route path="/liked" element={<><Explore /><LikedSongs /></>} />
-                    <Route path="/playlists" element={<><Explore /><Playlists /></>} />
-                    <Route path="/queue" element={<><Explore /><Queue /></>} />
-                    <Route path="/following-artists" element={<><Explore /><FollowingArtists /></>} />
-                    <Route path="/my-badges" element={<><Explore /><Badges /></>} />
-                    <Route path="/subscribe" element={<><Explore /><Subscribe /></>} />
-                    <Route path="/subscribed-success" element={<><Explore /><SubscribeSuccess /></>} />
-                    <Route path="/subscribed-fail" element={<><Explore /><SubscribeFail /></>} />
-                </Routes>
-            </Box>
-            <PlaybackBar />
-        </QueueProvider >
+        <ListenerProvider initialData={listener}>
+            <QueueProvider>
+                <Box
+                    sx={{
+                        flex: 1,
+                        overflowY: 'auto',
+                        paddingBottom: '100px', // space for the PlaybackBar height
+                    }}
+                >
+                    <TopBar />
+                    <Routes>
+                        <Route index element={<Home />} />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="/account-edit" element={<AccountEdit />} />
+                        <Route path="/artist/:id" element={<Artist />} />
+                        <Route path="/playlist/:id" element={<Playlist />} />
+                        <Route path="/album/:id" element={<Album />} />
+                        <Route path="/liked" element={<LikedSongs />} />
+                        <Route path="/playlists" element={<Playlists />} />
+                        <Route path="/queue" element={<Queue />} />
+                        <Route path="/following-artists" element={<FollowingArtists />} />
+                        <Route path="/my-badges" element={<Badges />} />
+                        <Route path="/subscribe" element={<Subscribe />} />
+                        <Route path="/subscribed-success" element={<SubscribeSuccess />} />
+                        <Route path="/subscribed-fail" element={<SubscribeFail />} />
+                    </Routes>
+                </Box>
+                <PlaybackBar />
+            </QueueProvider >
+        </ListenerProvider>
 
     )
 }

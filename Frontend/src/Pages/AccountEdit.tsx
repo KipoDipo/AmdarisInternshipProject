@@ -2,13 +2,14 @@ import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, 
 import { OptionalTextField } from "../Components/TextFields";
 import { useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
-import { ListenerDetails } from "../Models/ListenerDetails";
 import { textWidth, theme } from "../Styling/Theme";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Controller, useForm } from "react-hook-form";
 import { Badge } from "../Models/Badge";
 import { Title } from "../Models/Title";
 import FetchImage from "../Utils/FetchImage";
+import { useListener } from "../Contexts/Listener/UseListener";
+import { useSetListener } from "../Contexts/Listener/UseSetListener";
 
 type FormData = {
     displayName: string
@@ -23,17 +24,13 @@ type FormData = {
 export default function Form() {
     const { control, register, handleSubmit, reset } = useForm<FormData>();
 
-    const [user, setUser] = useState<ListenerDetails>()
+    const user = useListener();
+    const setUser = useSetListener();
+
     const [badges, setBadges] = useState<Badge[]>();
     const [titles, setTitles] = useState<Title[]>();
 
     const notify = useNotification();
-
-    useEffect(() => {
-        fetcher.get("/Listener/details")
-            .then((response) => setUser(response.data))
-            .catch(error => notify({ message: error, severity: 'error' }))
-    }, [notify])
 
     useEffect(() => {
         if (!user)
@@ -84,6 +81,10 @@ export default function Form() {
             form.append('profilePicture', data.profilePicture[0] as Blob);
         try {
             await fetcher.put('Listener/update', form);
+            await fetcher.get("/Listener/details")
+                .then((response) => setUser!(response.data))
+                .catch(error => notify({ message: error, severity: 'error' }))
+
             notify({ message: "Updated successfully", severity: 'success' });
         }
         catch (error) {

@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import FetchImage from "../Utils/FetchImage";
+import { useListener } from "../Contexts/Listener/UseListener";
+import AppBadge from "./AppBadge";
 
 type SongExt = Song & { type: 'song' }
 type ArtistExt = Artist & { type: 'artist' }
@@ -27,7 +29,7 @@ function renderOptionComponent(option: OptionType) {
         )
     if (option.type === 'artist')
         return (
-            <Stack direction='row' alignItems='center' gap={3} component={Link} to={`/artist/${option?.id}`} width='100%' sx={{textDecoration:'none'}}>
+            <Stack direction='row' alignItems='center' gap={3} component={Link} to={`/artist/${option?.id}`} width='100%' sx={{ textDecoration: 'none' }}>
                 <Avatar src={FetchImage(option.profilePictureId)} variant='circular' />
                 <Typography>{option.displayName}</Typography>
             </Stack>
@@ -40,8 +42,28 @@ function renderOptionComponent(option: OptionType) {
     )
 }
 
+export default function Bar() {
+    return (
+        <Stack direction='row' margin={3} alignItems='center' justifyContent='space-between'>
+            <SearchBar />
+            <AccountHub />
+        </Stack>
+    )
+}
 
-export default function SearchBar() {
+function AccountHub() {
+    const listener = useListener();
+
+    return (
+        <Stack direction='row' alignItems='center' >
+            <AppBadge badgeId={listener?.equippedBadgeId}>
+                <Avatar src={FetchImage(listener?.profilePictureId)} sx={{ width: 80, height: 80 }} />
+            </AppBadge>
+        </Stack>
+    )
+}
+
+function SearchBar() {
     const [options, setOptions] = useState<OptionType[]>([]);
     const [input, setInput] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
@@ -75,8 +97,8 @@ export default function SearchBar() {
 
         const songs = await fetcher.get(`/Song/name/${query}`);
         const artists = await fetcher.get(`/Artist/name/${query}`);
-        const songsType = songs.data.map((s:Song) => ({ ...s, type: 'song' }))
-        const artistsType = artists.data.map((a:Artist) => ({ ...a, type: 'artist' }))
+        const songsType = songs.data.map((s: Song) => ({ ...s, type: 'song' }))
+        const artistsType = artists.data.map((a: Artist) => ({ ...a, type: 'artist' }))
 
         const result = [...songsType, ...artistsType];
         setOptions(result);
@@ -84,7 +106,7 @@ export default function SearchBar() {
 
 
     return (
-        <Stack margin={3} width={textWidth * 2}>
+        <Stack width={textWidth * 2}>
             <Autocomplete
                 freeSolo
                 disableCloseOnSelect
