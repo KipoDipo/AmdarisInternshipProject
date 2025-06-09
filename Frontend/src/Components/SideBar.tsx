@@ -7,7 +7,6 @@ import { Tabs, Tab, Box, Typography, Divider, TabProps } from "@mui/material";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import Diversity1RoundedIcon from '@mui/icons-material/Diversity1Rounded';
@@ -28,7 +27,7 @@ type AppTabProps = {
 
 function AppTab({ label, icon, to, ...rest }: AppTabProps) {
     return <Tab label={label} icon={icon} iconPosition='start' component={NavLink} to={to} value={to} {...rest} sx={{
-        minHeight: '54px',
+        minHeight: '72px',
         justifyContent: 'flex-start',
         borderRadius: '0 999px 999px 0px',
         marginRight: '24px',
@@ -63,7 +62,6 @@ function SideBar({ role }: { role: string }) {
                     <Typography variant='h4' sx={{ margin: '10px' }}>Hub</Typography>
                     <AppTab label='Home' icon={<HomeRoundedIcon />} to='/' />
                     <AppTab label='Explore' icon={<SearchRoundedIcon />} to='/explore' />
-                    <AppTab label='Settings' icon={<SettingsRoundedIcon />} to='/account-edit' />
                     {
                         (!listener || !listener.isSubscribed) &&
                         <AppTab label='Go Premium' icon={<ElectricBoltRoundedIcon />} to='/subscribe' />

@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Avatar, ButtonBase, Divider, Menu, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { fetcher } from "../Fetcher";
 import { Song } from "../Models/Song";
@@ -10,6 +10,10 @@ import { CreateQueue } from "../Utils/QueueUtils";
 import FetchImage from "../Utils/FetchImage";
 import { useListener } from "../Contexts/Listener/UseListener";
 import AppBadge from "./AppBadge";
+
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 
 type SongExt = Song & { type: 'song' }
 type ArtistExt = Artist & { type: 'artist' }
@@ -52,13 +56,53 @@ export default function Bar() {
 }
 
 function AccountHub() {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleExit = () => {
+        delete localStorage['token'];
+        delete localStorage['role']
+        location.reload();
+    }
+
     const listener = useListener();
 
     return (
         <Stack direction='row' alignItems='center' >
             <AppBadge badgeId={listener?.equippedBadgeId}>
-                <Avatar src={FetchImage(listener?.profilePictureId)} sx={{ width: 80, height: 80 }} />
+                <ButtonBase onClick={handleClick} sx={{ borderRadius: '50%', overflow: 'hidden', boxShadow: 10 }}>
+                    <Avatar src={FetchImage(listener?.profilePictureId)} sx={{ width: 80, height: 80 }} />
+                </ButtonBase>
             </AppBadge>
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem component={Link} to='/account' onClick={handleClose}>
+                    <Stack direction='row' gap={1}>
+                        <PersonRoundedIcon />
+                        <Typography>Account</Typography>
+                    </Stack>
+                </MenuItem>
+                <MenuItem component={Link} to='/account-edit' onClick={handleClose}>
+                    <Stack direction='row' gap={1}>
+                        <SettingsRoundedIcon />
+                        <Typography>Settings</Typography>
+                    </Stack>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={() => {handleClose(); handleExit();}}>
+                    <Stack direction='row' gap={1}>
+                        <ExitToAppRoundedIcon />
+                        <Typography>Log out</Typography>
+                    </Stack>
+                </MenuItem>
+            </Menu>
         </Stack>
     )
 }
