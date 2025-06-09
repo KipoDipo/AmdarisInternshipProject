@@ -13,17 +13,20 @@ public class DistributorDetailsDto
 
 	public List<Guid> ArtistIds { get; set; } = [];
 
-	public static DistributorDetailsDto FromEntity(Domain.Models.Users.Distributor Distributor)
+	public bool IsApproved { get; set; }
+
+	public static DistributorDetailsDto FromEntity(Domain.Models.Users.Distributor distributor)
 	{
 		return new DistributorDetailsDto
 		{
-			Id = Distributor.Id,
-			DisplayName = Distributor.DisplayName,
-			Bio = Distributor.Bio,
-			FirstName = Distributor.FirstName,
-			LastName = Distributor.LastName,
-			ProfilePictureId = Distributor.ProfilePictureId,
-			ArtistIds = Distributor.Artists.Select(x => x.Id).ToList()
+			Id = distributor.Id,
+			DisplayName = distributor.DisplayName,
+			Bio = distributor.Bio,
+			FirstName = distributor.FirstName,
+			LastName = distributor.LastName,
+			ProfilePictureId = distributor.ProfilePictureId,
+			ArtistIds = distributor.Artists.Select(x => x.Id).ToList(),
+			IsApproved = distributor.IsApproved
 		};
 	}
 }

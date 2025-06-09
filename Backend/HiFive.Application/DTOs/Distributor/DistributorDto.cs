@@ -8,13 +8,16 @@ public class DistributorDto
 
 	public Guid? ProfilePictureId { get; set; }
 
+	public bool IsApproved { get; set; }
+
 	public static DistributorDto FromEntity(Domain.Models.Users.Distributor distributor)
 	{
 		return new DistributorDto
 		{
 			Id = distributor.Id,
 			DisplayName = distributor.DisplayName,
-			ProfilePictureId = distributor.ProfilePictureId
+			ProfilePictureId = distributor.ProfilePictureId,
+			IsApproved = distributor.IsApproved
 		};
 	}
 }

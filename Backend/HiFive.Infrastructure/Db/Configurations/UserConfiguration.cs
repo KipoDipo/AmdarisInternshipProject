@@ -20,6 +20,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 			.HasColumnType("nvarchar(32)");
 
 		builder.Property(b => b.Bio)
-			.HasColumnType("nvarchar(256)");
+			.HasColumnType("nvarchar(max)");
 	}
 }

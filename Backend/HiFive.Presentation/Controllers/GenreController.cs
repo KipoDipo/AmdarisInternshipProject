@@ -1,5 +1,6 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Genre;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiFive.Presentation.Controllers;
@@ -16,6 +17,7 @@ public class GenreController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
 	public async Task<IActionResult> CreateGenre(GenreCreateDto genre)
 	{
 		return Ok(await _genreService.CreateGenreAsync(genre));
@@ -46,6 +48,7 @@ public class GenreController : ControllerBase
 	}
 
 	[HttpPut("id/{id}")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> UpdateGenre(GenreDto genre)
 	{
 		await _genreService.UpdateGenreAsync(genre);
@@ -53,6 +56,7 @@ public class GenreController : ControllerBase
 	}
 
 	[HttpDelete("id/{id}")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> DeleteGenre(Guid id)
 	{
 		await _genreService.DeleteGenreAsync(id);

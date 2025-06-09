@@ -6,7 +6,9 @@ using HiFive.Infrastructure;
 using HiFive.Infrastructure.Db;
 using HiFive.Infrastructure.Identity;
 using HiFive.Presentation.Models;
+using HiFive.Presentation.Policies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -31,10 +33,12 @@ public static class ServiceCollectionExtentions
 		services.AddScoped<ICurrentUserService, CurrentUserService>();
 		services.AddScoped<ITrophyService, TrophyService>();
 		services.AddScoped<IListenerDataService, ListenerDataService>();
-		services.AddScoped<IDistributorService, DistributorService>();
 		services.AddScoped<Awarder>();
 		services.AddScoped<BlobService>();
 		services.AddScoped<JwtService>();
+		services.AddScoped<IAuthorizationHandler, VerifiedDistributorHandler>();
+		services.AddScoped<IDistributorService, DistributorService>();
+
 
 		return services;
 	}
@@ -56,7 +60,8 @@ public static class ServiceCollectionExtentions
 			.AddPolicy("ListenerOnly", policy => policy.RequireRole("Listener"))
 			.AddPolicy("ArtistOnly", policy => policy.RequireRole("Artist"))
 			.AddPolicy("DistributorOnly", policy => policy.RequireRole("Distributor"))
-			.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+			.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"))
+			.AddPolicy("VerifiedDistributorOnly", policy => policy.Requirements.Add(new VerifiedDistributorRequirement()));
 
 		services.AddAuthentication(options =>
 		{

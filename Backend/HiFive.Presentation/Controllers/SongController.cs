@@ -34,7 +34,7 @@ public class SongController : ControllerBase
 	}
 
 	[HttpPost]
-	[Authorize(Roles = "Distributor,Admin")]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
 	public async Task<IActionResult> Create([FromForm] SongCreateRequest song)
 	{
 		var imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);

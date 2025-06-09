@@ -27,7 +27,7 @@ public class AlbumController : ControllerBase
 	}
 
 	[HttpPost]
-	[Authorize(Roles = "Distributor,Admin")]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
 	public async Task<IActionResult> Create([FromForm] AlbumCreateRequest album)
 	{
 		Guid? imageId = null;
@@ -76,7 +76,7 @@ public class AlbumController : ControllerBase
 	}
 
 	[HttpPut]
-	[Authorize(Roles = "Distributor,Admin")]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
 	public async Task<IActionResult> Update(AlbumUpdateDto album)
 	{
 		await _albumService.UpdateAlbumAsync(album);

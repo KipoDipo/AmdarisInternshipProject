@@ -303,8 +303,13 @@ public class DbSeeder
 			var dto = new DistributorCreateDto() { UserName = "deestreebyutorr", Email = "distri@utor", Password = "DistroBistro123!", DisplayName = "Distributorotery" };
 			await unit.BeginTransactionAsync();
 			var distributor = await unit.Distributors.Register(dto);
+			distributor.IsApproved = true;
 			distributor.Artists.AddRange([Reol, LotusJuice, DuaLipa, LynyrdSkynyrd, FleetwoodMac, PinkFloyd, Sabaton]);
 			await unit.CommitTransactionAsync();
+		}
+		if (!unit.Admins.GetAll().Any())
+		{
+			//TODO: Seed an admin
 		}
 	}
 }
