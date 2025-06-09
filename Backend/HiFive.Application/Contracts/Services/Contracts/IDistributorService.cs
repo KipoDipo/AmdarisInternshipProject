@@ -14,5 +14,6 @@ public interface IDistributorService
 
 	Task DeleteDistributorAsync(Guid distributorId);
 	Task AddArtistToDistributor(Guid distributorId, Guid artistId);
+	Task RemoveArtistFromDistributor(Guid distributorId, Guid artistId);
 }
 

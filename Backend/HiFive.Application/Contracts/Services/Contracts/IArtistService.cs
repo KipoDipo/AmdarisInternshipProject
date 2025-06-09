@@ -11,6 +11,8 @@ public interface IArtistService
 	Task<IEnumerable<ArtistDto>> GetArtistsByPartialNameAsync(string partialName);
 	Task<ArtistDetailsDto> GetArtistDetailsByIdAsync(Guid artistId);
 
+	Task<IEnumerable<ArtistDto>> GetArtistsByDistributorId(Guid distributorId);
+
 	Task UpdateArtistAsync(ArtistUpdateDto artistUpdateDto);
 
 	Task DeleteArtistAsync(Guid artistId);

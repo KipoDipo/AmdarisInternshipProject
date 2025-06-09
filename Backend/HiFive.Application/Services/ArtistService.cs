@@ -87,4 +87,12 @@ public class ArtistService : IArtistService
 		await _unitOfWork.Artists.DeleteAsync(artistId);
 		await _unitOfWork.CommitTransactionAsync();
 	}
+
+	public async Task<IEnumerable<ArtistDto>> GetArtistsByDistributorId(Guid distributorId)
+	{
+		var distributor = await _unitOfWork.Distributors.GetWithDetailsByIdAsync(distributorId);
+		_validator.Validate(distributor);
+
+		return distributor.Artists.Select(ArtistDto.FromEntity);
+	}
 }

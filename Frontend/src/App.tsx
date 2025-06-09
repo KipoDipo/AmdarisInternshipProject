@@ -32,6 +32,7 @@ import SubscribeSuccess from "./Pages/SubscribeSuccess";
 import { ListenerProvider } from "./Contexts/Listener/ListenerProvider"
 import { ListenerDetails } from "./Models/ListenerDetails";
 import { fetcher } from "./Fetcher";
+import ManageArtistsPage from "./Pages/ManageArtistsPage";
 // import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
@@ -123,6 +124,7 @@ function DistributorRoutes() {
             <Route path="/add-genre/" element={<AddGenrePage />} />
             <Route path="/add-album/" element={<AddAlbumPage />} />
             <Route path="/add-artist/" element={<AddArtistToDistributor />} />
+            <Route path="/manage-artists/" element={<ManageArtistsPage />} />
         </Routes>
     )
 }

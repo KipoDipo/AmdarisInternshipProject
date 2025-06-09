@@ -33,6 +33,19 @@ public class DistributorService : IDistributorService
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
+	public async Task RemoveArtistFromDistributor(Guid distributorId, Guid artistId)
+	{
+		var distributor = await _unitOfWork.Distributors.GetWithDetailsByIdAsync(distributorId);
+		_validator.Validate(distributor);
+
+		var artist = await _unitOfWork.Artists.GetByIdAsync(artistId);
+		_validator.Validate(artist);
+
+		await _unitOfWork.BeginTransactionAsync();
+		distributor.Artists.Remove(artist);
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
 	public async Task<DistributorDto> GetDistributorByIdAsync(Guid distributorId)
 	{
 		var distributor = await _unitOfWork.Distributors.GetByIdAsync(distributorId);

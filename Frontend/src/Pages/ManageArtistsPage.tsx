@@ -1,0 +1,191 @@
+import { Avatar, Button, Dialog, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Artist } from "../Models/Artist";
+import { fetcher } from "../Fetcher";
+import { theme } from "../Styling/Theme";
+import FetchImage from "../Utils/FetchImage";
+import { AddArtistToDistributor } from "./AddArtistToDistributor";
+import { Song } from "../Models/Song";
+import { Album } from "../Models/Album";
+
+export default function Page() {
+    const [artists, setArtists] = useState<Artist[]>();
+    const [isAddingArtist, setIsAddingArtist] = useState(false);
+    const [managedArtist, setManagedArtist] = useState<Artist | null>(null)
+
+    useEffect(() => {
+        fetcher.get('Distributor/get-artists')
+            .then(response => setArtists(response.data))
+    }, [isAddingArtist])
+
+    function handleRemove(id: string) {
+        fetcher.post(`Distributor/remove-artist/${id}`)
+            .then(() => setArtists(artists!.filter(artist => artist.id !== id)))
+    }
+
+    return (
+        <Stack>
+            <Paper sx={{ borderRadius: theme.shape.borderRadius / 2, overflow: 'hidden' }}>
+                <Table>
+                    <TableHead>
+                        <TableCell width="400px">Artist</TableCell>
+                        <TableCell align='right'>Actions</TableCell>
+                    </TableHead>
+
+                    <TableBody>
+                        {
+                            artists?.map(artist => {
+                                return (
+                                    <TableRow>
+                                        <TableCell>
+                                            <Stack alignItems='center' gap={2} direction='row'>
+                                                <Avatar src={FetchImage(artist.profilePictureId)} />
+                                                <Typography>{artist.displayName}</Typography>
+                                            </Stack>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Stack direction='row' gap={2} justifyContent='flex-end'>
+                                                <Button variant='contained' onClick={() => setManagedArtist(artist)}>Manage</Button>
+                                                <Button variant='outlined' onClick={() => handleRemove(artist.id)}>Remove</Button>
+                                            </Stack>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })
+                        }
+                        <TableRow>
+                            <TableCell width='100%'>
+                                <Button variant='contained' onClick={() => setIsAddingArtist(true)}>Add an artist</Button>
+                            </TableCell>
+                            <TableCell />
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Paper>
+            <Dialog open={isAddingArtist} onClose={() => setIsAddingArtist(false)} fullWidth>
+                <Stack padding={5} gap={3}>
+                    <AddArtistToDistributor />
+                </Stack>
+            </Dialog>
+            <Dialog open={managedArtist !== null} onClose={() => setManagedArtist(null)} fullWidth>
+                <ManageArtist artist={managedArtist} />
+            </Dialog>
+
+        </Stack>
+    )
+}
+
+function ManageArtist({ artist }: { artist: Artist | null }) {
+    const [isManagingSongs, setIsManagingSongs] = useState(false);
+    const [isManagingAlbums, setIsManagingAlbums] = useState(false);
+
+    const [songs, setSongs] = useState<Song[]>()
+    const [albums, setAlbums] = useState<Album[]>()
+
+    useEffect(() => {
+        if (!artist)
+            return;
+
+        fetcher.get(`Song/artist/${artist.id}`)
+            .then(response => setSongs(response.data));
+
+        fetcher.get(`Album/artist/${artist.id}`)
+            .then(response => setAlbums(response.data));
+    }, [artist])
+
+    if (!artist)
+        return;
+
+
+
+    return (
+        <Stack gap={3} padding={5}>
+            <Stack alignItems='center' gap={2}>
+                <Avatar src={FetchImage(artist.profilePictureId)} sx={{ width: 100, height: 100 }} />
+                <Typography variant='h4'>{artist.displayName}</Typography>
+            </Stack>
+
+            <Stack direction='row' justifyContent='center' gap={3}>
+                <Button onClick={() => setIsManagingSongs(true)} variant='outlined' fullWidth>Songs</Button>
+                <Button onClick={() => setIsManagingAlbums(true)} variant='outlined' fullWidth>Albums</Button>
+            </Stack>
+
+            <Dialog open={isManagingSongs} onClose={() => setIsManagingSongs(false)} fullWidth>
+                <ManageSongs songs={songs} />
+            </Dialog>
+            <Dialog open={isManagingAlbums} onClose={() => setIsManagingAlbums(false)} fullWidth>
+                <ManageAlbums albums={albums} />
+            </Dialog>
+        </Stack>
+    )
+}
+
+function ManageAlbums({ albums }: { albums: Album[] | undefined }) {
+    return (
+        <Table>
+            <TableHead>
+                <TableCell>Title</TableCell>
+                <TableCell>Action</TableCell>
+            </TableHead>
+
+            <TableBody>
+                {
+                    albums?.map((album) => {
+                        return (
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction='row' alignItems='center' gap={2}>
+                                        <Avatar variant='rounded' src={FetchImage(album.coverImageId)} />
+                                        <Typography>{album.title}</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction='row' alignItems='center' gap={2}>
+                                        <Button variant='contained'>Edit</Button>
+                                        <Button variant='outlined'>Remove</Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })
+                }
+            </TableBody>
+        </Table>
+    )
+}
+
+function ManageSongs({ songs }: { songs: Song[] | undefined }) {
+    return (
+        <Table>
+            <TableHead>
+                <TableCell>Title</TableCell>
+                <TableCell>Album</TableCell>
+                <TableCell>Action</TableCell>
+            </TableHead>
+
+            <TableBody>
+                {
+                    songs?.map((song) => {
+                        return (
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction='row' alignItems='center' gap={2}>
+                                        <Avatar variant='rounded' src={FetchImage(song.coverImageId)} />
+                                        <Typography>{song.title}</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>{song.album}</TableCell>
+                                <TableCell>
+                                    <Stack direction='row' alignItems='center' gap={2}>
+                                        <Button variant='contained'>Edit</Button>
+                                        <Button variant='outlined'>Remove</Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })
+                }
+            </TableBody>
+        </Table>
+    )
+}

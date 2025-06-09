@@ -40,6 +40,7 @@ fetcher.interceptors.response.use(
     error => {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
             localStorage.removeItem("token");
+            localStorage.removeItem("role");
             window.location.href = "/";
         }
         return Promise.reject(error);

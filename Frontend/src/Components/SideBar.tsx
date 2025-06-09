@@ -85,6 +85,7 @@ function SideBar({ role }: { role: string }) {
                     <AppTab label='Add Album' icon={<QueueMusicRoundedIcon />} to='/add-album' />
                     <AppTab label='Add Genre' icon={<QueueMusicRoundedIcon />} to='/add-genre' />
                     <AppTab label='Add Artist' icon={<QueueMusicRoundedIcon />} to='/add-artist' />
+                    <AppTab label='Manage Artists' icon={<QueueMusicRoundedIcon />} to='/manage-artists' />
                 </TabGroup>
             )
             break;
