@@ -2,8 +2,10 @@
 using Azure.Storage.Sas;
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
+using HiFive.Application.DTOs.Misc;
 using HiFive.Application.DTOs.Song;
 using HiFive.Presentation.Controllers.Requests.Music;
+using HiFive.Presentation.Controllers.Requests.Song;
 using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +45,52 @@ public class SongController : ControllerBase
 		var songDto = song.ToSongCreateDto(imageDto.Id, songUri);
 		songDto.Duration = duration;
 		return Ok(await _songService.CreateSongAsync(songDto));
+	}
+
+	[HttpPut]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
+	public async Task<IActionResult> Update([FromForm] SongUpdateRequest song)
+	{
+		var songDto = await _songService.GetSongByIdAsync(song.Id);
+
+		ImageCreateDto? imageCreateDto = null;
+		SongUpdateDto updateDto = new SongUpdateDto();
+
+		updateDto.Id = songDto.Id;
+
+		if (song.CoverImage != null)
+		{
+			imageCreateDto = ImageDtoHelper.CreateDtoFromFormFile(song.CoverImage);
+			if (songDto.CoverImageId == null)
+			{
+				var imageDto = await _imageFileService.UploadImageAsync(imageCreateDto);
+				updateDto.CoverImageId = imageDto.Id;
+			}
+			else
+			{
+				ImageUpdateDto imageUpdateDto = new ImageUpdateDto()
+				{
+					Id = (Guid)songDto.CoverImageId,
+					Data = imageCreateDto.Data,
+					ContentType = imageCreateDto.ContentType
+				};
+				await _imageFileService.UpdateImageAsync(imageUpdateDto);
+			}
+		}
+
+		if (song.Data != null)
+		{
+			var file = await _blobService.UploadFileAsync(song.Data);
+			// TODO: Delete old file
+			updateDto.Data = file.Uri;
+			updateDto.Duration = file.Duration;
+		}
+
+		updateDto.AlbumId = song.AlbumId;
+		updateDto.Title = song.Title;
+
+		await _songService.UpdateSongAsync(updateDto);
+		return NoContent();
 	}
 
 	[HttpGet("download/{songId}")]
@@ -125,13 +173,6 @@ public class SongController : ControllerBase
 		return Ok(songs);
 	}
 
-	[HttpPut]
-	public async Task<IActionResult> Update(SongUpdateDto song)
-	{
-		await _songService.UpdateSongAsync(song);
-		return NoContent();
-	}
-
 	[HttpGet("liked/{listenerId}")]
 	public async Task<IActionResult> GetListenerLikedSongs(Guid listenerId)
 	{
@@ -148,5 +189,13 @@ public class SongController : ControllerBase
 	public async Task<IActionResult> GetByArtistId(Guid artistId, [FromQuery] PagingParameters pagingParameters)
 	{
 		return Ok(await _songService.GetSongsByArtistIdAsync(artistId, pagingParameters.PageNumber, pagingParameters.PageSize));
+	}
+
+	[HttpDelete("{id}")]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
+	public async Task<IActionResult> Remove(Guid id)
+	{
+		await _songService.DeleteSongById(id);
+		return NoContent();
 	}
 }

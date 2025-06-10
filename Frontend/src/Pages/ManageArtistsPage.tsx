@@ -1,4 +1,4 @@
-import { Avatar, Button, Dialog, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, Button, Dialog, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
 import { fetcher } from "../Fetcher";
@@ -7,6 +7,9 @@ import FetchImage from "../Utils/FetchImage";
 import { AddArtistToDistributor } from "./AddArtistToDistributor";
 import { Song } from "../Models/Song";
 import { Album } from "../Models/Album";
+import { useForm } from "react-hook-form";
+import { OptionalTextField } from "../Components/TextFields";
+import { useNotification } from "../Contexts/Snackbar/UseNotification";
 
 export default function Page() {
     const [artists, setArtists] = useState<Artist[]>();
@@ -91,12 +94,10 @@ function ManageArtist({ artist }: { artist: Artist | null }) {
 
         fetcher.get(`Album/artist/${artist.id}`)
             .then(response => setAlbums(response.data));
-    }, [artist])
+    }, [artist, isManagingAlbums, isManagingSongs])
 
     if (!artist)
         return;
-
-
 
     return (
         <Stack gap={3} padding={5}>
@@ -111,7 +112,7 @@ function ManageArtist({ artist }: { artist: Artist | null }) {
             </Stack>
 
             <Dialog open={isManagingSongs} onClose={() => setIsManagingSongs(false)} fullWidth>
-                <ManageSongs songs={songs} />
+                <ManageSongs songs={songs!} />
             </Dialog>
             <Dialog open={isManagingAlbums} onClose={() => setIsManagingAlbums(false)} fullWidth>
                 <ManageAlbums albums={albums} />
@@ -154,38 +155,103 @@ function ManageAlbums({ albums }: { albums: Album[] | undefined }) {
     )
 }
 
-function ManageSongs({ songs }: { songs: Song[] | undefined }) {
-    return (
-        <Table>
-            <TableHead>
-                <TableCell>Title</TableCell>
-                <TableCell>Album</TableCell>
-                <TableCell>Action</TableCell>
-            </TableHead>
+function ManageSongs({ songs }: { songs: Song[] }) {
+    const [editingSong, setEditingSong] = useState<Song>()
+    const [songsLocal, setSongsLocal] = useState<Song[]>(songs);
+    const notify = useNotification();
 
-            <TableBody>
-                {
-                    songs?.map((song) => {
-                        return (
-                            <TableRow>
-                                <TableCell>
-                                    <Stack direction='row' alignItems='center' gap={2}>
-                                        <Avatar variant='rounded' src={FetchImage(song.coverImageId)} />
-                                        <Typography>{song.title}</Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell>{song.album}</TableCell>
-                                <TableCell>
-                                    <Stack direction='row' alignItems='center' gap={2}>
-                                        <Button variant='contained'>Edit</Button>
-                                        <Button variant='outlined'>Remove</Button>
-                                    </Stack>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })
-                }
-            </TableBody>
-        </Table>
+    async function handleDelete(song: Song) {
+        try {
+            await fetcher.delete(`Song/${song.id}`)
+            setSongsLocal(songsLocal?.filter(s => s.id !== song.id));
+            notify({ message: 'Song deleted', severity: 'success' })
+        }
+        catch (error) {
+            notify({ message: error, severity: 'error' })
+        }
+    }
+
+    return (
+        <Box padding={5}>
+            {
+                !editingSong ?
+                    <Table>
+                        <TableHead>
+                            <TableCell>Title</TableCell>
+                            <TableCell>Album</TableCell>
+                            <TableCell>Action</TableCell>
+                        </TableHead>
+
+                        <TableBody>
+                            {
+                                songsLocal?.map((song) => {
+                                    return (
+                                        <TableRow>
+                                            <TableCell>
+                                                <Stack direction='row' alignItems='center' gap={2}>
+                                                    <Avatar variant='rounded' src={FetchImage(song.coverImageId)} />
+                                                    <Typography>{song.title}</Typography>
+                                                </Stack>
+                                            </TableCell>
+                                            <TableCell>{song.album}</TableCell>
+                                            <TableCell>
+                                                <Stack direction='row' alignItems='center' gap={2}>
+                                                    <Button variant='contained' onClick={() => setEditingSong(song)}>Edit</Button>
+                                                    <Button variant='outlined' onClick={() => handleDelete(song)}>Remove</Button>
+                                                </Stack>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })
+                            }
+                        </TableBody>
+                    </Table>
+                    :
+                    <Stack>
+                        <UpdateSongForm song={editingSong} onClose={() => setEditingSong(undefined)} />
+                    </Stack>
+            }
+        </Box>
     )
+}
+
+type UpdateSong = {
+    id: string,
+    title: string,
+    albumId: string,
+    data: File,
+    coverImage: File,
+}
+
+function UpdateSongForm({ song, onClose }: { song: Song, onClose: () => void }) {
+    const { register, handleSubmit } = useForm<UpdateSong>({
+        defaultValues: {
+            title: song.title,
+        }
+    });
+
+    const notify = useNotification();
+
+    function handleUpdate(update: UpdateSong) {
+        const formData = new FormData();
+        formData.append('id', song.id);
+        formData.append('title', update.title);
+
+        fetcher.put('Song', formData)
+            .then(() => onClose())
+            .catch(error => notify({ message: error, severity: 'error' }))
+    }
+
+    return (
+        <Stack gap={3} alignItems={'flex-start'}>
+            <OptionalTextField label='Title' {...register('title')} />
+
+            <Stack gap={3} direction='row'>
+
+                <Button variant='contained' onClick={handleSubmit(handleUpdate)}>Update</Button>
+                <Button variant='outlined' onClick={onClose}>Cancel</Button>
+            </Stack>
+        </Stack>
+    )
+
 }

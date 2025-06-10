@@ -15,5 +15,7 @@ public class SongConfiguration : IEntityTypeConfiguration<Song>
 			.HasOne(s => s.Artist)
 			.WithMany(a => a.Singles)
 			.OnDelete(DeleteBehavior.NoAction);
+
+		builder.HasQueryFilter(s => !s.IsDeleted);
 	}
 }

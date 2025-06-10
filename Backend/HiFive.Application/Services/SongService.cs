@@ -140,8 +140,11 @@ public class SongService : ISongService
 		await _unitOfWork.BeginTransactionAsync();
 		await _unitOfWork.Songs.UpdateAsync(song);
 
-		song.Title = songUpdateDto.Title;
-		song.ReleaseDate = songUpdateDto.ReleaseDate;
+		song.Title = songUpdateDto.Title ?? song.Title;
+		song.AlbumId = songUpdateDto.AlbumId ?? song.AlbumId;
+		song.Data = songUpdateDto.Data ?? song.Data;
+		song.CoverImageId = songUpdateDto.CoverImageId ?? song.CoverImageId;
+		song.Duration = songUpdateDto.Duration ?? song.Duration;
 
 		await _unitOfWork.CommitTransactionAsync();
 	}
@@ -178,6 +181,16 @@ public class SongService : ISongService
 		return album.Songs
 			.OrderBy(s => s.OrderIndex)
 			.Select(a => SongDto.FromEntity(a.Song));
+	}
+
+	public async Task DeleteSongById(Guid id)
+	{
+		var song = await _unitOfWork.Songs.GetByIdAsync(id);
+		_validator.Validate(song);
+
+		await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.Songs.DeleteAsync(id);
+		await _unitOfWork.CommitTransactionAsync();
 	}
 
 }
