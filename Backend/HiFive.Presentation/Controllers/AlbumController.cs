@@ -45,6 +45,7 @@ public class AlbumController : ControllerBase
 			var songDto = song.ToSongCreateDto(imageDto.Id, uploadedSong.Uri);
 			songDto.Duration = uploadedSong.Duration;
 			songDto.AlbumId = albumDto.Id;
+			songDto.ArtistId = albumDto.ArtistId;
 			songDto.OrderIndex = order++;
 			await _songService.CreateSongAsync(songDto);
 		}
@@ -82,4 +83,13 @@ public class AlbumController : ControllerBase
 		await _albumService.UpdateAlbumAsync(album);
 		return NoContent();
 	}
+
+	[HttpDelete("{id}")]
+	[Authorize(Policy = "VerifiedDistributorOnly")]
+	public async Task<IActionResult> DeleteById(Guid id)
+	{
+		await _albumService.DeleteAlbumAsync(id);
+		return NoContent();
+	}
+
 }

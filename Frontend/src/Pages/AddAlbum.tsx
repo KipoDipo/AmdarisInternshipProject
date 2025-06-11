@@ -6,7 +6,7 @@ import AddSongPage from "./AddSong";
 import { fetcher } from "../Fetcher";
 import { theme } from "../Styling/Theme";
 
-function AddAlbumPage() {
+function AddAlbumPage({ noArtist, onUpload, setFormData }: { noArtist?: boolean, onUpload?: () => void, setFormData?: (formData: FormData) => void }) {
     const [artists, setArtists] = useState<Artist[]>([]);
     const [inputArtistText, setInputArtistText] = useState<string>();
     const [inputArtist, setInputArtist] = useState<Artist | null>(null);
@@ -40,7 +40,7 @@ function AddAlbumPage() {
 
 
     const upload = async () => {
-        if (!inputArtist || !inputAlbumTitle || !inputReleaseDate) {
+        if ((!noArtist && !inputArtist) || !inputAlbumTitle || !inputReleaseDate) {
             alert("Please fill all fields");
             return;
         }
@@ -48,7 +48,8 @@ function AddAlbumPage() {
         const formData = new FormData();
         formData.append("title", inputAlbumTitle);
         formData.append("releaseDate", inputReleaseDate);
-        formData.append("artistId", inputArtist.id);
+        if (!noArtist && inputArtist)
+            formData.append("artistId", inputArtist.id);
         formData.append("coverImage", inputImageFile as Blob);
         formData.append("description", inputDescriptionText)
         formDatas.forEach((fd, index) => {
@@ -56,15 +57,23 @@ function AddAlbumPage() {
             formData.append(`songs[${index}].genreIds`, fd.get('genreIds') ?? "ERROR");
             formData.append(`songs[${index}].coverImage`, fd.get('coverImage') ?? "ERROR");
             formData.append(`songs[${index}].data`, fd.get('data') ?? "ERROR");
-            formData.append(`songs[${index}].artistId`, inputArtist.id);
+            // formData.append(`songs[${index}].artistId`, inputArtist.id);
         });
 
-        try {
-            const response = await fetcher.post("Album", formData);
-            console.log(response);
+        if (setFormData)
+            setFormData(formData)
+
+        if (onUpload) {
+            onUpload()
         }
-        catch (error) {
-            console.log(error);
+        else {
+            try {
+                const response = await fetcher.post("Album", formData);
+                console.log(response);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -88,20 +97,23 @@ function AddAlbumPage() {
         <Box width='100%' display='flex' justifyContent='center' alignItems='center'>
             <Stack direction='row' gap={6} padding={5} bgcolor={theme.palette.secondary.dark} borderRadius={theme.shape.borderRadius} sx={{ overflowX: 'auto', whiteSpace: 'nowrap' }} >
                 <Stack gap={3}>
-                    <Autocomplete
-                        disablePortal
-                        options={artists || []}
-                        getOptionLabel={(option) => option.displayName || "ERROR"}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        inputValue={inputArtistText}
-                        renderInput={(params) => <TextField {...params} label="Enter artist" />}
-                        onInputChange={async (_event, newValue) => {
-                            setInputArtistText(newValue);
-                        }}
-                        onChange={(_event, newValue) => {
-                            setInputArtist(newValue);
-                        }}
-                    />
+                    {
+                        !noArtist &&
+                        <Autocomplete
+                            disablePortal
+                            options={artists || []}
+                            getOptionLabel={(option) => option.displayName || "ERROR"}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            inputValue={inputArtistText}
+                            renderInput={(params) => <TextField {...params} label="Enter artist" />}
+                            onInputChange={async (_event, newValue) => {
+                                setInputArtistText(newValue);
+                            }}
+                            onChange={(_event, newValue) => {
+                                setInputArtist(newValue);
+                            }}
+                        />
+                    }
                     <TextField
                         label="Album title"
                         value={inputAlbumTitle}
@@ -139,7 +151,7 @@ function AddAlbumPage() {
                 <Stack gap={3} width={600}>
                     <Typography variant="h5">Songs for the album</Typography>
                     {formDatas.map((fd, index) => {
-                        const song = Object.fromEntries(fd.entries()) as unknown as Song & {coverImage: File};
+                        const song = Object.fromEntries(fd.entries()) as unknown as Song & { coverImage: File };
                         const url = URL.createObjectURL(song.coverImage);
                         return (
                             <Stack key={song?.id} direction='row' bgcolor={theme.palette.secondary.main} borderRadius={theme.shape.borderRadius} padding={3} gap={3} justifyContent={'space-between'} alignItems='center'>
@@ -156,7 +168,7 @@ function AddAlbumPage() {
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                     <DialogTitle>Upload new song</DialogTitle>
                     <DialogContent>
-                        <AddSongPage noArtist noBackground onUpload={handleClose} setFormData={addFormData} />
+                        <AddSongPage noArtist onUpload={handleClose} setFormData={addFormData} />
                     </DialogContent>
                 </Dialog>
             </Stack>

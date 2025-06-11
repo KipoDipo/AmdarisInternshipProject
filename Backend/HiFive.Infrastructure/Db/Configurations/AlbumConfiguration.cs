@@ -11,5 +11,8 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
 		builder
 			.Property(a => a.Title)
 			.HasMaxLength(64);
+
+		builder
+			.HasQueryFilter(a => !a.IsDeleted);
 	}
 }
