@@ -29,15 +29,21 @@ export default function Page() {
     }
 
     return (
-        <Stack>
-            <Paper sx={{ borderRadius: theme.shape.borderRadius / 2, overflow: 'hidden' }}>
+        <Box width='100%' display='flex' justifyContent='center' alignItems='center'>
+            <Paper sx={{ width: '50%', borderRadius: theme.shape.borderRadius / 2, overflow: 'hidden' }}>
                 <Table>
                     <TableHead>
-                        <TableCell width="400px">Artist</TableCell>
+                        <TableCell>Artist</TableCell>
                         <TableCell align='right'>Actions</TableCell>
                     </TableHead>
 
                     <TableBody>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell align='right' width='100%'>
+                                <Button variant='contained' onClick={() => setIsAddingArtist(true)}>Add an artist</Button>
+                            </TableCell>
+                        </TableRow>
                         {
                             artists?.map(artist => {
                                 return (
@@ -58,12 +64,6 @@ export default function Page() {
                                 )
                             })
                         }
-                        <TableRow>
-                            <TableCell width='100%'>
-                                <Button variant='contained' onClick={() => setIsAddingArtist(true)}>Add an artist</Button>
-                            </TableCell>
-                            <TableCell />
-                        </TableRow>
                     </TableBody>
                 </Table>
             </Paper>
@@ -75,8 +75,7 @@ export default function Page() {
             <Dialog open={managedArtist !== null} onClose={() => setManagedArtist(null)} fullWidth>
                 <ManageArtist artist={managedArtist} />
             </Dialog>
-
-        </Stack>
+        </Box>
     )
 }
 
@@ -116,7 +115,7 @@ function ManageArtist({ artist }: { artist: Artist | null }) {
             <Dialog open={isManagingSongs} onClose={() => setIsManagingSongs(false)} fullWidth maxWidth='lg'>
                 <ManageSongs songs={songs!} artist={artist} />
             </Dialog>
-            <Dialog open={isManagingAlbums} onClose={() => setIsManagingAlbums(false)} fullWidth maxWidth='lg'>
+            <Dialog open={isManagingAlbums} onClose={() => setIsManagingAlbums(false)} fullWidth maxWidth='md'>
                 <ManageAlbums albums={albums!} artist={artist} />
             </Dialog>
         </Stack>
@@ -167,13 +166,13 @@ function ManageAlbums({ albums, artist }: { albums: Album[], artist: Artist }) {
                         <Table>
                             <TableHead>
                                 <TableCell>Title</TableCell>
-                                <TableCell>Action</TableCell>
+                                <TableCell align="right">Action</TableCell>
                             </TableHead>
 
                             <TableBody>
                                 <TableRow>
                                     <TableCell />
-                                    <TableCell>
+                                    <TableCell align='right'>
                                         <Button variant='contained' onClick={() => setIsAddingNewAlbum(true)}>Add a new album</Button>
                                     </TableCell>
                                 </TableRow>
@@ -187,8 +186,8 @@ function ManageAlbums({ albums, artist }: { albums: Album[], artist: Artist }) {
                                                         <Typography>{album.title}</Typography>
                                                     </Stack>
                                                 </TableCell>
-                                                <TableCell>
-                                                    <Stack direction='row' alignItems='center' gap={2}>
+                                                <TableCell align='right'>
+                                                    <Stack direction='row' justifyContent='flex-end' gap={2}>
                                                         <Button variant='contained' disabled>Edit</Button>
                                                         <Button variant='outlined' onClick={() => handleDelete(album)}>Remove</Button>
                                                     </Stack>
@@ -201,7 +200,10 @@ function ManageAlbums({ albums, artist }: { albums: Album[], artist: Artist }) {
                         </Table>
                     </Paper>
                     :
-                    <AddAlbumPage noArtist onUpload={handleUpload} setFormData={setFormData} />
+                    <Stack gap={3} alignItems='center'>
+                        <AddAlbumPage noArtist onUpload={handleUpload} setFormData={setFormData} />
+                        <Button variant='outlined' onClick={() => setIsAddingNewAlbum(false)}>Cancel</Button>
+                    </Stack>
             }
         </Box>
     )
@@ -253,14 +255,14 @@ function ManageSongs({ songs, artist }: { songs: Song[], artist: Artist }) {
                                 <TableHead>
                                     <TableCell>Title</TableCell>
                                     <TableCell>Album</TableCell>
-                                    <TableCell>Action</TableCell>
+                                    <TableCell align='right'>Action</TableCell>
                                 </TableHead>
 
                                 <TableBody>
                                     <TableRow>
                                         <TableCell />
                                         <TableCell />
-                                        <TableCell>
+                                        <TableCell align='right'>
                                             <Button variant='contained' onClick={() => setIsAddingSong(true)}>Add a new song</Button>
                                         </TableCell>
                                     </TableRow>
@@ -275,8 +277,8 @@ function ManageSongs({ songs, artist }: { songs: Song[], artist: Artist }) {
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell>{song.album}</TableCell>
-                                                    <TableCell>
-                                                        <Stack direction='row' alignItems='center' gap={2}>
+                                                    <TableCell align='right'>
+                                                        <Stack direction='row' justifyContent='flex-end' gap={2}>
                                                             <Button variant='contained' onClick={() => setEditingSong(song)}>Edit</Button>
                                                             <Button variant='outlined' onClick={() => handleDelete(song)}>Remove</Button>
                                                         </Stack>

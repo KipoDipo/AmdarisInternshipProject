@@ -10,10 +10,10 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import Diversity1RoundedIcon from '@mui/icons-material/Diversity1Rounded';
-
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
-import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded';
 import SubscriptionsRoundedIcon from '@mui/icons-material/SubscriptionsRounded';
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
+
 import { theme } from "../Styling/Theme";
 import { Listener } from "../Models/Listener";
 import { fetcher } from "../Fetcher";
@@ -81,11 +81,11 @@ function SideBar({ role }: { role: string }) {
         case 'Distributor':
             component = (
                 <TabGroup>
-                    <AppTab label='Add Song' icon={<QueueMusicRoundedIcon />} to='/add-song' />
-                    <AppTab label='Add Album' icon={<QueueMusicRoundedIcon />} to='/add-album' />
-                    <AppTab label='Add Genre' icon={<QueueMusicRoundedIcon />} to='/add-genre' />
-                    <AppTab label='Add Artist' icon={<QueueMusicRoundedIcon />} to='/add-artist' />
-                    <AppTab label='Manage Artists' icon={<QueueMusicRoundedIcon />} to='/manage-artists' />
+                    <AppTab label='Manage Artists' icon={<Diversity1RoundedIcon />} to='/manage-artists' />
+                    <AppTab label='Add Song' icon={<PlaylistAddRoundedIcon />} to='/add-song' />
+                    <AppTab label='Add Album' icon={<PlaylistAddRoundedIcon />} to='/add-album' />
+                    <AppTab label='Add Genre' icon={<PlaylistAddRoundedIcon />} to='/add-genre' />
+                    <AppTab label='Add Artist' icon={<PeopleAltRoundedIcon />} to='/add-artist' />
                 </TabGroup>
             )
             break;

@@ -47,7 +47,7 @@ export function AddArtistToDistributor() {
                         onChange={(_, newValue) => field.onChange(newValue)}
                         getOptionLabel={(option) => option.displayName}
                         renderInput={(params) => (
-                            <TextField {...params} label="Select Artist" />
+                            <TextField {...params} label="Search for an artist" />
                         )}
                     />
                 )}
