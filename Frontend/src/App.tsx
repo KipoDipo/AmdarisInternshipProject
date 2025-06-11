@@ -33,7 +33,6 @@ import { ListenerProvider } from "./Contexts/Listener/ListenerProvider"
 import { ListenerDetails } from "./Models/ListenerDetails";
 import { fetcher } from "./Fetcher";
 import ManageArtistsPage from "./Pages/ManageArtistsPage";
-// import AddPlaylistPage from "./Pages/AddPlaylist";
 
 function App() {
     const token = localStorage.getItem('token')

@@ -9,10 +9,14 @@ import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import FetchImage from "../Utils/FetchImage";
+import { useListener } from "../Contexts/Listener/UseListener";
+import { Shuffled } from "../Utils/Shuffle";
 
 export default function Page() {
 
     const [songs, setSongs] = useState<Song[]>()
+
+    const listener = useListener();
 
     const setQueue = useSetQueue();
 
@@ -30,7 +34,7 @@ export default function Page() {
 
         notify({message: "Queuing Liked Songs..."});
 
-        setQueue(CreateQueue(songs));
+        setQueue(CreateQueue(listener?.isSubscribed ? songs : Shuffled(songs)));
     }
 
     return (

@@ -9,7 +9,7 @@ import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import { Artist } from "../Models/Artist";
 import FetchImage from "../Utils/FetchImage";
 import SongCategorySkeleton from "../Components/Skeletons/SongCategorySkeleton";
-import Shuffle from "../Utils/Shuffle";
+import { Shuffle } from "../Utils/Shuffle";
 
 type ArtistWithSongs = Artist & {
     songs: Song[]

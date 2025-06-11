@@ -10,12 +10,16 @@ import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import FetchImage from "../Utils/FetchImage";
+import { Shuffled } from "../Utils/Shuffle";
+import { useListener } from "../Contexts/Listener/UseListener";
 
 export default function Page() {
     const { id } = useParams();
 
     const [album, setAlbum] = useState<Album>()
     const [songs, setSongs] = useState<Song[]>()
+
+    const listener = useListener();
 
     const setQueue = useSetQueue();
 
@@ -42,7 +46,7 @@ export default function Page() {
             return;
 
         notify({message: "Queuing Album..."});
-        setQueue({ songs: songs, current: 0 });
+        setQueue(CreateQueue(listener?.isSubscribed ? songs : Shuffled(songs)));
     }
 
     return (
