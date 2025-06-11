@@ -23,6 +23,9 @@ import { useSetQueue } from '../Contexts/Queue/UseSetQueue';
 import { TimeFormat } from '../Utils/TimeFormat';
 import { useNotification } from '../Contexts/Snackbar/UseNotification';
 import FetchImage from '../Utils/FetchImage';
+import { useListener } from '../Contexts/Listener/UseListener';
+import { Shuffled } from '../Utils/Shuffle';
+import { CreateQueue } from '../Utils/QueueUtils';
 
 function Controls({ size, onPlayToggle, isPlaying, duration, currentTime }: { size?: number, onPlayToggle: () => void, isPlaying: boolean, duration: number, currentTime: number }) {
     const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
@@ -213,7 +216,7 @@ function Info({ song }: { song?: Song }) {
 }
 
 // horrible nightmare
-function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatState, setRepeatState, size }: { volume: number, onVolumeChange: (newVolume: number) => void, size?: number, isShuffling: boolean, setIsShuffling: (newVal: boolean) => void, repeatState: number, setRepeatState: (newVal: number) => void }) {
+function Actions({ volume, onVolumeChange, repeatState, setRepeatState, size }: { volume: number, onVolumeChange: (newVolume: number) => void, size?: number, isShuffling: boolean, setIsShuffling: (newVal: boolean) => void, repeatState: number, setRepeatState: (newVal: number) => void }) {
     if (!size)
         size = 32;
 
@@ -222,6 +225,7 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
     const fontSx = { fontSize: iconSize }
 
     const notify = useNotification();
+    const setQueue = useSetQueue();
 
     function handleRepeat() {
         const newState = (repeatState + 1) % 3;
@@ -240,7 +244,8 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
     }
 
     function handleShuffle() {
-        setIsShuffling(!isShuffling);
+        setQueue(last => CreateQueue(Shuffled(last.songs)))
+        notify({message: 'Shuffling...'})
     }
 
     return (
@@ -264,7 +269,7 @@ function Actions({ volume, onVolumeChange, isShuffling, setIsShuffling, repeatSt
             </IconButton>
 
             <IconButton sx={buttonSx} onClick={handleShuffle}>
-                <ShuffleRoundedIcon sx={{ ...fontSx, color: isShuffling ? theme.palette.primary.main : theme.palette.secondary.light }} />
+                <ShuffleRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light}} />
             </IconButton>
 
             <IconButton>

@@ -25,20 +25,21 @@ export default function Page() {
     useEffect(() => {
         fetcher.get(`/Song/my-liked`)
             .then((response) => setSongs(response.data))
-            .catch((error) => notify({message: error, severity: 'error', duration: 10000}))
+            .catch((error) => notify({ message: error, severity: 'error', duration: 10000 }))
     }, [notify])
 
     function startPlaylist() {
         if (!songs)
             return;
 
-        notify({message: "Queuing Liked Songs..."});
+        notify({ message: "Queuing Liked Songs..." });
 
         setQueue(CreateQueue(listener?.isSubscribed ? songs : Shuffled(songs)));
     }
 
     return (
-        <Stack gap={3} margin={3} direction='row' justifyContent='space-evenly' alignItems='center' height='80%'>
+        songs &&
+        <Stack gap={3} margin={3} direction='row' justifyContent='space-evenly' alignItems='center' height='80%' >
             <Stack gap={2} alignItems='center'>
                 <Avatar variant='rounded' sx={{ width: 200, height: 200 }}>
                     <ThumbUpRounded sx={{ fontSize: 80 }} />
