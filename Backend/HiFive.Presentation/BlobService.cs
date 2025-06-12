@@ -73,7 +73,7 @@ public class BlobService
 		var mediaInfo = await FFProbe.AnalyseAsync(tempFilePath);
 		var duration = (uint)Math.Round(mediaInfo.Duration.TotalSeconds);
 
-		var blobClient = _containerClient.GetBlobClient($"{DateTime.Now:yyyy-MM-dd} - {file.FileName}");
+		var blobClient = _containerClient.GetBlobClient($"{DateTime.Now:yyyy-MM-dd} - {file.FileName} - {Guid.NewGuid()}");
 		var headers = new BlobHttpHeaders { ContentType = file.ContentType };
 
 		await using (var uploadStream = new FileStream(tempFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
