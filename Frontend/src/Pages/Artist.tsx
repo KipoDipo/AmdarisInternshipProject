@@ -32,6 +32,10 @@ export default function Page() {
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
 
+    useEffect(() => {
+        setSongs([]);
+    }, [id])
+
     async function handleFollow() {
         if (isFollowing)
             unfollow();

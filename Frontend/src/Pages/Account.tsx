@@ -10,12 +10,23 @@ import AppBadge from "../Components/AppBadge";
 import FetchImage from "../Utils/FetchImage";
 import { Listener } from "../Models/Listener";
 import { useListener } from "../Contexts/Listener/UseListener";
+import { useSetListener } from "../Contexts/Listener/UseSetListener";
 
 export default function Account() {
     const [artists, setArtists] = useState<Artist[] | undefined>(undefined)
     const [following, setFollowing] = useState<Listener[] | undefined>(undefined)
 
     const user = useListener()!;
+    const setUser = useSetListener()!;
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const response = await fetcher.get("Listener/details")
+            setUser(response.data);
+        }
+
+        fetchUser();
+    }, [setUser])
 
     useEffect(() => {
         if (!user)

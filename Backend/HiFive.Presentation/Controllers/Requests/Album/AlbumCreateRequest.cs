@@ -7,7 +7,7 @@ public class AlbumCreateRequest
 {
 	public required string Title { get; set; }
 	public required Guid ArtistId { get; set; }
-	public required string Description { get; set; }
+	public string? Description { get; set; } = "";
 	public required DateTime ReleaseDate { get; set; }
 	public IFormFile? CoverImage { get; set; }
 	public required List<SongCreateRequest> Songs { get; set; }

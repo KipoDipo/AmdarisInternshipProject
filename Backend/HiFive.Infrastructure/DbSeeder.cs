@@ -15,11 +15,11 @@ public class DbSeeder
 {
 	public static async Task Seed(IUnitOfWork unit)
 	{
-		Artist Reol, LotusJuice, DuaLipa, LynyrdSkynyrd, FleetwoodMac, PinkFloyd, Sabaton;
+		Artist Reol, LotusJuice, DuaLipa, LynyrdSkynyrd, FleetwoodMac, PinkFloyd, Sabaton, JethroTull;
 
 		Album ReolAlbum, LotusJuiceAlbum, DuaLipaAlbum, LynyrdSkynyrdAlbum, FleetwoodMacAlbum, PinkFloydAlbum, SabatonAlbum;
 
-		ImageFile reolPfp, lotusPfp, duaPfp, lynyrdPfp, fleetwoodPfp, pinkPfp, sabatonPfp;
+		ImageFile reolPfp, lotusPfp, duaPfp, lynyrdPfp, fleetwoodPfp, pinkPfp, sabatonPfp, jethroPfp;
 
 		ImageFile reolCover, lotusCover, duaCover, lynyrdCover, fleetwoodCover, pinkCover, sabatonCover;
 
@@ -38,6 +38,7 @@ public class DbSeeder
 			fleetwoodPfp	= FileHelper.CreateImageFile("Images/pfp/fleetwood.jpg");
 			pinkPfp			= FileHelper.CreateImageFile("Images/pfp/pink.jpg");
 			sabatonPfp		= FileHelper.CreateImageFile("Images/pfp/sabaton.jpg");
+			jethroPfp		= FileHelper.CreateImageFile("Images/pfp/jethro.jpg");
 
 			reolCover		= FileHelper.CreateImageFile("Images/cover/reol.png");
 			lotusCover		= FileHelper.CreateImageFile("Images/cover/lotus.jpg");
@@ -57,6 +58,7 @@ public class DbSeeder
 			silverHiFive	= FileHelper.CreateImageFile("Images/badge/silver-hifive.png");
 			bronzeHiFive	= FileHelper.CreateImageFile("Images/badge/bronze-hifive.png");
 
+
 			await unit.BeginTransactionAsync();
 
 			await unit.Images.AddAsync(reolPfp);
@@ -66,6 +68,7 @@ public class DbSeeder
 			await unit.Images.AddAsync(fleetwoodPfp);
 			await unit.Images.AddAsync(pinkPfp);
 			await unit.Images.AddAsync(sabatonPfp);
+			await unit.Images.AddAsync(jethroPfp);
 
 			await unit.Images.AddAsync(reolCover);
 			await unit.Images.AddAsync(lotusCover);
@@ -100,6 +103,7 @@ public class DbSeeder
 			fleetwoodPfp	= all[ctr++];
 			pinkPfp			= all[ctr++];
 			sabatonPfp		= all[ctr++];
+			jethroPfp		= all[ctr++];
 
 			reolCover		= all[ctr++];
 			lotusCover		= all[ctr++];
@@ -159,6 +163,7 @@ public class DbSeeder
 			var FleetwoodDto	= new ArtistCreateDto()	{ UserName = "artist9",		Email = "fleetwood@gmail.com",	Password = "DreamsGoOn123!",	FirstName = "Fleetwood",	LastName = "Mac",		Bio = "British-American rock band with iconic harmonies.",						DisplayName = "Fleetwood Mac",	ProfilePictureId = fleetwoodPfp.Id };
 			var PinkFloydDto	= new ArtistCreateDto()	{ UserName = "artist10",	Email = "floyd@gmail.com",		Password = "Wall1979!",			FirstName = "Pink",			LastName = "Floyd",		Bio = "Pioneers of progressive and psychedelic rock.",							DisplayName = "Pink Floyd",		ProfilePictureId = pinkPfp.Id };
 			var SabatonDto		= new ArtistCreateDto()	{ UserName = "artist11",	Email = "sabaton@gmail.com",	Password = "SabatonWar123!",	FirstName = "Sabaton",		LastName = "",			Bio = "Swedish heavy metal band inspired by historical battles.",				DisplayName = "Sabaton",		ProfilePictureId = sabatonPfp.Id };
+			var JethroDto		= new ArtistCreateDto()	{ UserName = "artist12",	Email = "jethro@gmail.com",		Password = "Jethro123!",		FirstName = "Jethro",		LastName = "Tull",		Bio = "English progressive rock giants.",										DisplayName = "Jethro Tull",	ProfilePictureId = jethroPfp.Id };
 
 			await unit.BeginTransactionAsync();
 
@@ -169,6 +174,7 @@ public class DbSeeder
 			FleetwoodMac	= await unit.Artists.Register(FleetwoodDto);
 			PinkFloyd		= await unit.Artists.Register(PinkFloydDto);
 			Sabaton			= await unit.Artists.Register(SabatonDto);
+			JethroTull		= await unit.Artists.Register(JethroDto);
 
 			await unit.CommitTransactionAsync();
 		}

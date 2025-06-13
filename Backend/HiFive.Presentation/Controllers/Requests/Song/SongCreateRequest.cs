@@ -6,7 +6,7 @@ public class SongCreateRequest
 {
 	public required string Title { get; set; }
 	public DateTime ReleaseDate { get; set; }
-	public List<Guid> GenreIds { get; set; } = null!;
+	public List<Guid>? GenreIds { get; set; } = null!;
 	public required IFormFile CoverImage { get; set; }
 
 	public IFormFile Data { get; set; } = null!;
@@ -20,7 +20,7 @@ public class SongCreateRequest
 		{
 			Title = Title,
 			ReleaseDate = ReleaseDate,
-			GenreIds = GenreIds,
+			GenreIds = GenreIds ?? [],
 			CoverImageId = coverImageId,
 			Data = songUri,
 			ArtistId = ArtistId,

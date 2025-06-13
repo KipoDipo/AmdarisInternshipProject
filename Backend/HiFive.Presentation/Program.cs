@@ -9,6 +9,7 @@ using HiFive.Infrastructure.Db;
 using HiFive.Presentation.Extentions;
 using HiFive.Presentation.Middleware;
 using HiFive.Presentation.Models;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
@@ -80,6 +81,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+	options.Limits.MaxRequestBodySize = 200_000_000;
+});
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
