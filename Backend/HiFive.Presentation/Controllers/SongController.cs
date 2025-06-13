@@ -2,6 +2,7 @@
 using Azure.Storage.Sas;
 using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
+using HiFive.Application.DTOs.Genre;
 using HiFive.Application.DTOs.Misc;
 using HiFive.Application.DTOs.Song;
 using HiFive.Domain.Models.Music;
@@ -193,7 +194,10 @@ public class SongController : ControllerBase
 	{
 		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, pagingParameters.PageNumber, pagingParameters.PageSize, 2);
 		var genreIds = songs.SelectMany(s => s.GenreIds).Distinct();
-		var genres = await Task.WhenAll(genreIds.Select(async g => await _genreService.GetGenreByIdAsync(g)));
+		
+		var genres = new List<GenreDto>();
+		foreach (var id in genreIds)
+			genres.Add(await _genreService.GetGenreByIdAsync(id));
 
 		var result = new List<object>();
 

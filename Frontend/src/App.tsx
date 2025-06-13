@@ -34,6 +34,7 @@ import { ListenerDetails } from "./Models/ListenerDetails";
 import { fetcher } from "./Fetcher";
 import ManageArtistsPage from "./Pages/ManageArtistsPage";
 import Explore from "./Pages/Explore";
+import FollowingListeners from "./Pages/FollowingListeners";
 
 function App() {
     const token = localStorage.getItem('token')
@@ -151,7 +152,7 @@ function ListenerRoutes({listener}: {listener: ListenerDetails}) {
                     <TopBar />
                     <Routes>
                         <Route index element={<Home />} />
-                        <Route path="/account" element={<Account />} />
+                        <Route path="/account/:id" element={<Account />} />
                         <Route path="/account-edit" element={<AccountEdit />} />
                         <Route path="/artist/:id" element={<Artist />} />
                         <Route path="/playlist/:id" element={<Playlist />} />
@@ -160,7 +161,8 @@ function ListenerRoutes({listener}: {listener: ListenerDetails}) {
                         <Route path="/explore" element={<Explore />} />
                         <Route path="/playlists" element={<Playlists />} />
                         <Route path="/queue" element={<Queue />} />
-                        <Route path="/following-artists" element={<FollowingArtists />} />
+                        <Route path="/following-artists/:id" element={<FollowingArtists />} />
+                        <Route path="/following-users/:id" element={<FollowingListeners />} />
                         <Route path="/my-badges" element={<Badges />} />
                         <Route path="/subscribe" element={<Subscribe />} />
                         <Route path="/subscribed-success" element={<SubscribeSuccess />} />

@@ -4,12 +4,15 @@ import { ReactNode, useEffect, useState } from "react";
 import { fetcher } from "../Fetcher";
 import FetchImage from "../Utils/FetchImage";
 
-export default function AppBadge({ badgeId, children } : {badgeId: string | undefined, children: ReactNode}) {
+export default function AppBadge({ badgeId, children }: { badgeId: string | undefined | null, children: ReactNode }) {
   const [badge, setBadge] = useState<BadgeType>();
 
   useEffect(() => {
-    fetcher.get(`Trophy/get-badge/${badgeId}`)
-    .then(result => setBadge(result.data));
+    if (badgeId === undefined || badgeId === null)
+      setBadge(undefined);
+    else
+      fetcher.get(`Trophy/get-badge/${badgeId}`)
+        .then(result => setBadge(result.data));
   }, [badgeId])
 
   return (

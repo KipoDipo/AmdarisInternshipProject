@@ -16,6 +16,7 @@ import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import FetchImage from "../Utils/FetchImage";
 import ArtistSkeleton from "../Components/Skeletons/ArtistSkeleton";
+import { useListener } from "../Contexts/Listener/UseListener";
 
 
 
@@ -31,6 +32,8 @@ export default function Page() {
 
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
+
+    const listener = useListener();
 
     useEffect(() => {
         setSongs([]);
@@ -70,7 +73,7 @@ export default function Page() {
         if (!user || !id)
             return;
 
-        fetcher.get(`Listener/following-artists`)
+        fetcher.get(`Listener/following-artists/${listener?.id}`)
             .then((response) => {
                 const following: Artist[] = response.data;
                 let found = false;
@@ -83,7 +86,7 @@ export default function Page() {
                 setIsFollowing(found);
             })
             .catch(error => notify({ message: error, severity: 'error' }))
-    }, [user, id, notify])
+    }, [user, id, listener, notify])
 
     useEffect(() => {
         if (!id)

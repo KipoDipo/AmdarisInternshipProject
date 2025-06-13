@@ -11,9 +11,12 @@ public interface IListenerService
 	Task UnlikeSongAsync(Guid listenerId, Guid songId);
 	Task FollowArtistAsync(Guid listenerId, Guid artistId);
 	Task UnfollowArtistAsync(Guid listenerId, Guid artistId);
+	Task FollowListenerAsync(Guid followerId, Guid followeeId);
+	Task UnfollowListenerAsync(Guid followerId, Guid followeeId);
 
 	Task<ListenerDto> GetListenerByIdAsync(Guid listenerId);
 	Task<IEnumerable<ArtistDto>> GetFollowingArtists(Guid listenerId);
+	Task<IEnumerable<ListenerDto>> GetFollowingListeners(Guid listenerId);
 	Task<IEnumerable<ListenerDto>> GetListenersByPartialNameAsync(string partialName);
 	Task<ListenerDetailsDto> GetListenerDetailsByIdAsync(Guid listenerId);
 

@@ -6,4 +6,5 @@ namespace HiFive.Application.Contracts.Repositories;
 
 public interface IListenerRepository : IRepository<Listener>, IRegisterable<Listener, ListenerCreateDto>, IGettableWithDetails<Listener>, IGettableByPartialName<Listener>
 {
+	Task<Listener?> GetFollowing(Guid id);
 }

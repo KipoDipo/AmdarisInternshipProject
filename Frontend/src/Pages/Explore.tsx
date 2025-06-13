@@ -3,6 +3,7 @@ import {  fetchPaged } from "../Fetcher"
 import { Stack, Typography } from "@mui/material";
 import { Song } from "../Models/Song";
 import SongCategory from "../Components/SongCategory";
+import SongCategorySkeleton from "../Components/Skeletons/SongCategorySkeleton";
 
 type GenreWithSongs = {
     name: string,
@@ -21,8 +22,13 @@ export default function Page() {
         <Stack gap={3} margin={3}>
             <Typography variant='h2' alignSelf='center'>Genres you listen to</Typography>
             {
+                categories ?
                 categories?.slice(0, 3).map(cat => {
                     return <SongCategory name={cat.name[0].toUpperCase() + cat.name.slice(1)} songs={cat.songs}/>
+                })
+                :
+                new Array(3).fill(null).map((_, id) => {
+                    return <SongCategorySkeleton key={id}/>
                 })
             }
         </Stack>

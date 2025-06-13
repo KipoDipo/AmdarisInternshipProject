@@ -42,6 +42,14 @@ public class ListenerRepository : BaseRepository<Listener>, IListenerRepository
 			.FirstOrDefaultAsync(x => x.Id == id);
 	}
 
+	public async Task<Listener?> GetFollowing(Guid id)
+	{
+		return await _dbContext.Set<Listener>()
+			.Include(l => l.FollowingListeners)
+			.ThenInclude(l => l.Followed)
+			.FirstOrDefaultAsync(x => x.Id == id);
+	}
+
 	public async Task<Listener> Register(ListenerCreateDto listenerCreateDto)
 	{
 		ApplicationUser newListener = new()

@@ -57,12 +57,31 @@ public class ListenerController : ControllerBase
 		return NoContent();
 	}
 
-	[HttpGet("following-artists")]
-	public async Task<IActionResult> GetFollowingdArtists()
+	[HttpPost("follow-listener/{listenerId}")]
+	public async Task<IActionResult> FollowListener(Guid listenerId)
 	{
-		return Ok(await _listenerService.GetFollowingArtists(_currentUserService.Id));
+		await _listenerService.FollowListenerAsync(_currentUserService.Id, listenerId);
+		return NoContent();
 	}
 
+	[HttpPost("unfollow-listener/{listenerId}")]
+	public async Task<IActionResult> UnfollowListener(Guid listenerId)
+	{
+		await _listenerService.UnfollowListenerAsync(_currentUserService.Id, listenerId);
+		return NoContent();
+	}
+
+	[HttpGet("following-artists/{id}")]
+	public async Task<IActionResult> GetFollowingdArtists(Guid id)
+	{
+		return Ok(await _listenerService.GetFollowingArtists(id));
+	}
+
+	[HttpGet("following-listeners/{id}")]
+	public async Task<IActionResult> GetFollowingListeners(Guid id)
+	{
+		return Ok(await _listenerService.GetFollowingListeners(id));
+	}
 
 	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById(Guid id)

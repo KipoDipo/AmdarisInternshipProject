@@ -14,11 +14,13 @@ import AppBadge from "./AppBadge";
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
+import { Listener } from "../Models/Listener";
 
 type SongExt = Song & { type: 'song' }
 type ArtistExt = Artist & { type: 'artist' }
+type ListenerExt = Listener & { type: 'listener' }
 
-type OptionType = SongExt | ArtistExt
+type OptionType = SongExt | ArtistExt | ListenerExt
 
 function renderOptionComponent(option: OptionType) {
     if (option.type === 'song')
@@ -35,9 +37,23 @@ function renderOptionComponent(option: OptionType) {
         return (
             <Stack direction='row' alignItems='center' gap={3} component={Link} to={`/artist/${option?.id}`} width='100%' sx={{ textDecoration: 'none' }}>
                 <Avatar src={FetchImage(option.profilePictureId)} variant='circular' />
-                <Typography>{option.displayName}</Typography>
+                <Stack>
+                    <Typography>{option.displayName}</Typography>
+                    <Typography marginTop={-0.5} variant='body2'>Artist</Typography>
+                </Stack>
             </Stack>
         )
+    if (option.type === 'listener')
+        return (
+            <Stack direction='row' alignItems='center' gap={3} component={Link} to={`/account/${option?.id}`} width='100%' sx={{ textDecoration: 'none' }}>
+                <Avatar src={FetchImage(option.profilePictureId)} variant='circular' />
+                <Stack>
+                    <Typography>{option.displayName}</Typography>
+                    <Typography marginTop={-0.5} variant='body2'>User</Typography>
+                </Stack>
+            </Stack>
+        )
+
 
     return (
         <>
@@ -83,7 +99,7 @@ function AccountHub() {
                 </ButtonBase>
             </AppBadge>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem component={Link} to='/account' onClick={handleClose}>
+                <MenuItem component={Link} to={`/account/${listener?.id}`} onClick={handleClose}>
                     <Stack direction='row' gap={1}>
                         <PersonRoundedIcon />
                         <Typography>Account</Typography>
@@ -96,7 +112,7 @@ function AccountHub() {
                     </Stack>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={() => {handleClose(); handleExit();}}>
+                <MenuItem onClick={() => { handleClose(); handleExit(); }}>
                     <Stack direction='row' gap={1}>
                         <ExitToAppRoundedIcon />
                         <Typography>Log out</Typography>
@@ -141,10 +157,12 @@ function SearchBar() {
 
         const songs = await fetcher.get(`/Song/name/${query}`);
         const artists = await fetcher.get(`/Artist/name/${query}`);
+        const listeners = await fetcher.get(`/Listener/name/${query}`);
         const songsType = songs.data.map((s: Song) => ({ ...s, type: 'song' }))
         const artistsType = artists.data.map((a: Artist) => ({ ...a, type: 'artist' }))
+        const listenersType = listeners.data.map((a: Listener) => ({ ...a, type: 'listener' }))
 
-        const result = [...songsType, ...artistsType];
+        const result = [...songsType, ...artistsType, ...listenersType];
         setOptions(result);
     }
 
@@ -161,6 +179,8 @@ function SearchBar() {
                     if (option.type === 'song')
                         return option.title;
                     if (option.type === 'artist')
+                        return option.displayName;
+                    if (option.type === 'listener')
                         return option.displayName;
                     return '';
                 }}

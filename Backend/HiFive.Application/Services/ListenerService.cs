@@ -186,11 +186,60 @@ public class ListenerService : IListenerService
 		await _unitOfWork.CommitTransactionAsync();
 	}
 
+	public async Task FollowListenerAsync(Guid followerId, Guid followeeId)
+	{
+		var follower = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(followerId);
+		_validator.Validate(follower);
+
+		var followee = await _unitOfWork.Listeners.GetByIdAsync(followeeId);
+		_validator.Validate(followee);
+
+		await _unitOfWork.BeginTransactionAsync();
+
+		var listenerFollower = new ListenerFollower()
+		{
+			Follower = follower,
+			Followed = followee,
+		};
+
+		follower.FollowingListeners.Add(listenerFollower);
+
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+	public async Task UnfollowListenerAsync(Guid followerId, Guid followeeId)
+	{
+		var follower = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(followerId); 
+		_validator.Validate(follower);
+
+		var followee = await _unitOfWork.Listeners.GetByIdAsync(followeeId);
+		_validator.Validate(followee);
+
+		var followedListener = follower.FollowingListeners.FirstOrDefault(a => a.FollowedId == followeeId);
+		if (followedListener == null)
+			throw new NotFoundException("Follower doesn't follow the followee");
+
+		await _unitOfWork.BeginTransactionAsync();
+
+		follower.FollowingListeners.Remove(followedListener);
+
+		await _unitOfWork.CommitTransactionAsync();
+	}
+
+
 	public async Task<IEnumerable<ArtistDto>> GetFollowingArtists(Guid listenerId)
 	{
 		var listener = await _unitOfWork.Listeners.GetWithDetailsByIdAsync(listenerId);
 		_validator.Validate(listener);
 
 		return listener.FollowingArtists.Select(ArtistDto.FromEntity);
+	}
+
+	public async Task<IEnumerable<ListenerDto>> GetFollowingListeners(Guid listenerId)
+	{
+		var listener = await _unitOfWork.Listeners.GetFollowing(listenerId);
+		_validator.Validate(listener);
+
+		return listener.FollowingListeners.Select(l => ListenerDto.FromEntity(l.Followed));
 	}
 }

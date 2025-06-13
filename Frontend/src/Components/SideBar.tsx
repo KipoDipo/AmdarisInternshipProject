@@ -72,9 +72,9 @@ function SideBar({ role }: { role: string }) {
                     <AppTab label='Playlists' icon={<SubscriptionsRoundedIcon />} to='/playlists' />
                     <Divider sx={{ background: theme.palette.secondary.main, height: '1px', margin: '10% 0 0 0' }} />
                     <Typography variant='h4' sx={{ margin: '10px' }}>Social</Typography>
-                    <AppTab label='Account' icon={<PersonRoundedIcon />} to='/account' />
-                    <AppTab label='Following' icon={<PeopleAltRoundedIcon />} to='/TODO' />
-                    <AppTab label='Artists' icon={<Diversity1RoundedIcon />} to='/following-artists' />
+                    <AppTab label='Account' icon={<PersonRoundedIcon />} to={`/account/${listener?.id}`} />
+                    <AppTab label='Following' icon={<PeopleAltRoundedIcon />} to={`/following-users/${listener?.id}`} />
+                    <AppTab label='Artists' icon={<Diversity1RoundedIcon />} to={`/following-artists/${listener?.id}`} />
                 </TabGroup>
             )
             break;
