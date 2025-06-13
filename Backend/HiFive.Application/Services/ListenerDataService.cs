@@ -47,6 +47,8 @@ public class ListenerDataService : IListenerDataService
 		var songs = _unitOfWork.ListenerData.GetAllNoTracking()
 			.Include(ld => ld.Song)
 				.ThenInclude(s => s.Artist)
+			.Include(ld => ld.Song)
+				.ThenInclude(s => s.Genres)
 			.Where(ld =>
 				ld.ListenerId == listenerId &&
 				ld.ListenedOn >= afterDate)
@@ -57,6 +59,6 @@ public class ListenerDataService : IListenerDataService
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize);
 
-		return songs.Select(SongDto.FromEntity);
-	} 
+		return songs.Select(SongDto.FromEntity).ToList();
+	}
 }

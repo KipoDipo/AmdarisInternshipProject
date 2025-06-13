@@ -4,6 +4,7 @@ using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Artist;
 using HiFive.Application.DTOs.Misc;
 using HiFive.Application.DTOs.Song;
+using HiFive.Domain.Models.Music;
 using HiFive.Presentation.Controllers.Requests.Music;
 using HiFive.Presentation.Controllers.Requests.Song;
 using HiFive.Presentation.Extentions;
@@ -23,9 +24,10 @@ public class SongController : ControllerBase
 	private IImageFileService _imageFileService;
 	private ICurrentUserService _currentUserService;
 	private IListenerDataService _listenerDataService;
+	private IGenreService _genreService;
 	private BlobService _blobService;
 
-	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService, IListenerDataService listenerDataService, IArtistService artistService)
+	public SongController(ISongService songService, IImageFileService imageFileService, ICurrentUserService currentUserService, BlobService blobService, IListenerDataService listenerDataService, IArtistService artistService, IGenreService genreService)
 	{
 		_songService = songService;
 		_imageFileService = imageFileService;
@@ -33,6 +35,7 @@ public class SongController : ControllerBase
 		_blobService = blobService;
 		_listenerDataService = listenerDataService;
 		_artistService = artistService;
+		_genreService = genreService;
 	}
 
 	[HttpPost]
@@ -99,10 +102,10 @@ public class SongController : ControllerBase
 		var song = await _songService.GetSongByIdAsync(songId);
 
 		await _listenerDataService.AddListenedSong(_currentUserService.Id, songId);
-		
+
 		var sasUrl = _blobService.GetSasUrl(song.Data, TimeSpan.FromHours(0.5));
-		
-		return Ok(new {url = sasUrl});
+
+		return Ok(new { url = sasUrl });
 	}
 
 	[HttpGet("id/{id}")]
@@ -130,9 +133,9 @@ public class SongController : ControllerBase
 	}
 
 	[HttpGet("genre/{genreId}")]
-	public async Task<IActionResult> GetByGenre(Guid genreId)
+	public async Task<IActionResult> GetByGenre(Guid genreId, [FromQuery] PagingParameters pagingParameters)
 	{
-		return Ok(await _songService.GetAllSongsByGenreAsync(genreId));
+		return Ok(await _songService.GetSongsByGenreAsync(genreId, pagingParameters.PageNumber, pagingParameters.PageSize));
 	}
 
 	[HttpGet("playlist/{id}")]
@@ -157,9 +160,9 @@ public class SongController : ControllerBase
 	[HttpGet("curated-songs")]
 	public async Task<IActionResult> GetCuratedSongs()
 	{
-		var lynyrd	= (await _artistService.GetArtistsByPartialNameAsync("Lynyrd Skynyrd")).First();
-		var reol	= (await _artistService.GetArtistsByPartialNameAsync("Reol")).First();
-		var lotus	= (await _artistService.GetArtistsByPartialNameAsync("Lotus Juice")).First();
+		var lynyrd = (await _artistService.GetArtistsByPartialNameAsync("Lynyrd Skynyrd")).First();
+		var reol = (await _artistService.GetArtistsByPartialNameAsync("Reol")).First();
+		var lotus = (await _artistService.GetArtistsByPartialNameAsync("Lotus Juice")).First();
 
 		var songs1 = (await _songService.GetSongsByArtistIdAsync(lynyrd.Id, 1, 5));
 		var songs2 = (await _songService.GetSongsByArtistIdAsync(reol.Id, 1, 5));
@@ -183,6 +186,30 @@ public class SongController : ControllerBase
 	public async Task<IActionResult> GetMyLikedSongs()
 	{
 		return Ok(await _songService.GetListenerLikedSongs(_currentUserService.Id));
+	}
+
+	[HttpGet("my-recommended")]
+	public async Task<IActionResult> GetRecommendedForMe([FromQuery] PagingParameters pagingParameters, int countPerGenre)
+	{
+		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, pagingParameters.PageNumber, pagingParameters.PageSize, 2);
+		var genreIds = songs.SelectMany(s => s.GenreIds).Distinct();
+		var genres = await Task.WhenAll(genreIds.Select(async g => await _genreService.GetGenreByIdAsync(g)));
+
+		var result = new List<object>();
+
+		Random rng = new Random();
+
+		foreach (var g in genres)
+		{
+			var songsByGenre = await _songService.GetRandomSongsByGenre(g.Id, countPerGenre);
+			result.Add(new
+			{
+				Name = g.Name,
+				Songs = songsByGenre
+			});
+		}
+
+		return Ok(result);
 	}
 
 	[HttpGet("artist/{artistId}")]

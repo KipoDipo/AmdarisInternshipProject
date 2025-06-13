@@ -33,6 +33,7 @@ import { ListenerProvider } from "./Contexts/Listener/ListenerProvider"
 import { ListenerDetails } from "./Models/ListenerDetails";
 import { fetcher } from "./Fetcher";
 import ManageArtistsPage from "./Pages/ManageArtistsPage";
+import Explore from "./Pages/Explore";
 
 function App() {
     const token = localStorage.getItem('token')
@@ -156,6 +157,7 @@ function ListenerRoutes({listener}: {listener: ListenerDetails}) {
                         <Route path="/playlist/:id" element={<Playlist />} />
                         <Route path="/album/:id" element={<Album />} />
                         <Route path="/liked" element={<LikedSongs />} />
+                        <Route path="/explore" element={<Explore />} />
                         <Route path="/playlists" element={<Playlists />} />
                         <Route path="/queue" element={<Queue />} />
                         <Route path="/following-artists" element={<FollowingArtists />} />

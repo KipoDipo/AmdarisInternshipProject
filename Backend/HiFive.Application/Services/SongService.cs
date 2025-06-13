@@ -99,13 +99,33 @@ public class SongService : ISongService
 		return songs.Select(SongDto.FromEntity);
 	}
 
-	public async Task<IEnumerable<SongDto>> GetAllSongsByGenreAsync(Guid genreId)
+	public async Task<IEnumerable<SongDto>> GetSongsByGenreAsync(Guid genreId, int pageNumber, int pageSize)
 	{
 		var genre = await _unitOfWork.Genres.GetByIdAsync(genreId);
 		_validator.Validate(genre);
 
-		var songs = await _unitOfWork.Songs.GetAll()
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Where(s => s.Genres.Any(g => g.Id == genreId))
+			.Skip(pageSize * (pageNumber - 1))
+			.Take(pageSize)
+			.ToListAsync();
+
+		return songs.Select(SongDto.FromEntity);
+	}
+
+	public async Task<IEnumerable<SongDto>> GetRandomSongsByGenre(Guid genreId, int count)
+	{
+		var genre = await _unitOfWork.Genres.GetByIdAsync(genreId);
+		_validator.Validate(genre);
+
+		var songs = await _unitOfWork.Songs.GetAllNoTracking()
+			.Include(s => s.Artist)
+			.Include(s => s.AlbumSong)
+			.ThenInclude(a => a.Album)
+			.Include(s => s.Genres)
+			.Where(s => s.Genres.Any(g => g.Id == genreId))
+			.OrderBy(_ => Guid.NewGuid())
+			.Take(count)
 			.ToListAsync();
 
 		return songs.Select(SongDto.FromEntity);
