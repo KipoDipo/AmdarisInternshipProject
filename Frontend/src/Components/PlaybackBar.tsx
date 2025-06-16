@@ -23,7 +23,6 @@ import { useSetQueue } from '../Contexts/Queue/UseSetQueue';
 import { TimeFormat } from '../Utils/TimeFormat';
 import { useNotification } from '../Contexts/Snackbar/UseNotification';
 import FetchImage from '../Utils/FetchImage';
-import { useListener } from '../Contexts/Listener/UseListener';
 import { Shuffled } from '../Utils/Shuffle';
 import { CreateQueue } from '../Utils/QueueUtils';
 

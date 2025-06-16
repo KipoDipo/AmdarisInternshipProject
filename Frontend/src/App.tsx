@@ -1,4 +1,4 @@
-import { Box, Stack, ThemeProvider } from "@mui/material";
+import { Box, IconButton, Stack, ThemeProvider } from "@mui/material";
 import PlaybackBar from "./Components/PlaybackBar";
 import SideBar from "./Components/SideBar"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -36,6 +36,8 @@ import ManageArtistsPage from "./Pages/ManageArtistsPage";
 import Explore from "./Pages/Explore";
 import FollowingListeners from "./Pages/FollowingListeners";
 
+import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
+
 function App() {
     const token = localStorage.getItem('token')
     const [logged, setLogged] = useState(token !== null)
@@ -57,7 +59,7 @@ function App() {
         switch (role) {
             case 'Listener':
                 fetcher.get("/Listener/details")
-                    .then((response) => setComponent(<ListenerRoutes listener={response.data}/>))
+                    .then((response) => setComponent(<ListenerRoutes listener={response.data} />))
                 break;
 
             case 'Artist':
@@ -118,15 +120,26 @@ function App() {
 }
 
 function DistributorRoutes() {
+    function handleExit() {
+        delete localStorage['token'];
+        delete localStorage['role'];
+        location.reload();
+    }
+
     return (
-        <Routes>
-            <Route index element={<Navigate to='/add-song' />} />
-            <Route path="/add-song/" element={<AddSongPage />} />
-            <Route path="/add-genre/" element={<AddGenrePage />} />
-            <Route path="/add-album/" element={<AddAlbumPage />} />
-            <Route path="/add-artist/" element={<AddArtistToDistributor />} />
-            <Route path="/manage-artists/" element={<ManageArtistsPage />} />
-        </Routes>
+        <Stack width='100%' margin={3}>
+            <IconButton sx={{alignSelf: 'flex-end', color: theme.palette.secondary.light, fontSize: 100}} onClick={handleExit}>
+                <ExitToAppRoundedIcon />
+            </IconButton>
+            <Routes>
+                <Route index element={<Navigate to='/manage-artists' />} />
+                <Route path="/add-song/" element={<AddSongPage />} />
+                <Route path="/add-genre/" element={<AddGenrePage />} />
+                <Route path="/add-album/" element={<AddAlbumPage />} />
+                <Route path="/add-artist/" element={<AddArtistToDistributor />} />
+                <Route path="/manage-artists/" element={<ManageArtistsPage />} />
+            </Routes>
+        </Stack>
     )
 }
 
@@ -138,7 +151,7 @@ function ArtistRoutes() {
     )
 }
 
-function ListenerRoutes({listener}: {listener: ListenerDetails}) {
+function ListenerRoutes({ listener }: { listener: ListenerDetails }) {
     return (
         <ListenerProvider initialData={listener}>
             <QueueProvider>

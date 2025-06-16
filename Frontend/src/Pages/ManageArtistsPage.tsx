@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Dialog, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Artist } from "../Models/Artist";
-import { fetcher } from "../Fetcher";
+import { fetcher, fetchPaged } from "../Fetcher";
 import { theme } from "../Styling/Theme";
 import FetchImage from "../Utils/FetchImage";
 import { AddArtistToDistributor } from "./AddArtistToDistributor";
@@ -48,7 +48,7 @@ export default function Page() {
                             artists?.map(artist => {
                                 return (
                                     <TableRow>
-                                        <TableCell>
+                                        <TableCell width='100%'>
                                             <Stack alignItems='center' gap={2} direction='row'>
                                                 <Avatar src={FetchImage(artist.profilePictureId)} />
                                                 <Typography>{artist.displayName}</Typography>
@@ -90,8 +90,8 @@ function ManageArtist({ artist }: { artist: Artist | null }) {
         if (!artist)
             return;
 
-        fetcher.get(`Song/artist/${artist.id}`)
-            .then(response => setSongs(response.data));
+        fetchPaged(`Song/artist/${artist.id}`, 1, 100)
+            .then(response => setSongs(response));
 
         fetcher.get(`Album/artist/${artist.id}`)
             .then(response => setAlbums(response.data));
