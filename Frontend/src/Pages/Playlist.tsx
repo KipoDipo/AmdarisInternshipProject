@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Playlist } from "../Models/Playlist";
 import { Song } from "../Models/Song";
 import { fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { TimeFormat } from "../Utils/TimeFormat";
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
 import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import FetchImage from "../Utils/FetchImage";
 import { Shuffled } from "../Utils/Shuffle";
 import { useListener } from "../Contexts/Listener/UseListener";
+
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+
 
 export default function Page() {
     const { id } = useParams();
@@ -22,6 +26,7 @@ export default function Page() {
     const setQueue = useSetQueue();
     const listener = useListener();
     const notify = useNotification();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!id)
@@ -36,12 +41,30 @@ export default function Page() {
             .catch(error => notify({ message: error, severity: 'error' }))
     }, [id, notify])
 
-    function startPlaylist() {
+    function play() {
         if (!songs)
             return;
 
         notify({ message: "Queuing Playlist..." });
         setQueue(CreateQueue(listener?.isSubscribed ? songs : Shuffled(songs)));
+        navigate('/queue')
+    }
+
+    function shuffle() {
+        if (!songs)
+            return;
+
+        notify({ message: "Shuffling Playlist..." });
+        setQueue(CreateQueue(Shuffled(songs)));
+        navigate('/queue')
+    }
+
+    function copy() {
+        if (!songs)
+            return;
+
+        notify({ message: "Copied link..." });
+        navigator.clipboard.writeText(window.location.href)
     }
 
     return (
@@ -52,9 +75,17 @@ export default function Page() {
                 <Avatar src={FetchImage(playlist.thumbnailId)} variant='rounded' sx={{ width: 200, height: 200 }} />
                 <Typography variant='h5'>{playlist.title}</Typography>
                 <Typography variant='body1' width='200px' textAlign='center'>{playlist.description}</Typography>
-                <Fab centerRipple onClick={startPlaylist} disabled={!(songs && songs.length > 0)}>
-                    {<PlayArrowRoundedIcon fontSize='large' />}
-                </Fab>
+                <Stack direction='row' gap={3} alignItems='center'>
+                    <Fab centerRipple onClick={shuffle} sx={{ width: 40, height: 40 }}>
+                        {<ShuffleRoundedIcon fontSize='medium' />}
+                    </Fab>
+                    <Fab centerRipple onClick={play} disabled={!(songs && songs.length > 0) && !listener?.isSubscribed}>
+                        {<PlayArrowRoundedIcon fontSize='large' />}
+                    </Fab>
+                    <Fab centerRipple onClick={copy} sx={{ width: 40, height: 40 }}>
+                        {<LinkRoundedIcon fontSize='medium' />}
+                    </Fab>
+                </Stack>
             </Stack>
 
             <Stack gap={2} alignItems='center'>

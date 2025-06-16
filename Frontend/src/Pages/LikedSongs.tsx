@@ -3,7 +3,6 @@ import { Song } from "../Models/Song";
 import { fetcher } from "../Fetcher";
 import { Avatar, Box, Fab, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { TimeFormat } from "../Utils/TimeFormat";
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { ThumbUpRounded } from "@mui/icons-material";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
 import { CreateQueue } from "../Utils/QueueUtils";
@@ -11,6 +10,11 @@ import { useNotification } from "../Contexts/Snackbar/UseNotification";
 import FetchImage from "../Utils/FetchImage";
 import { useListener } from "../Contexts/Listener/UseListener";
 import { Shuffled } from "../Utils/Shuffle";
+import { useNavigate } from "react-router-dom";
+
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
+
 
 export default function Page() {
 
@@ -22,19 +26,30 @@ export default function Page() {
 
     const notify = useNotification();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         fetcher.get(`/Song/my-liked`)
             .then((response) => setSongs(response.data))
             .catch((error) => notify({ message: error, severity: 'error', duration: 10000 }))
     }, [notify])
 
-    function startPlaylist() {
+    function play() {
         if (!songs)
             return;
 
         notify({ message: "Queuing Liked Songs..." });
-
         setQueue(CreateQueue(listener?.isSubscribed ? songs : Shuffled(songs)));
+        navigate('/queue')
+    }
+
+    function shuffle() {
+        if (!songs)
+            return;
+
+        notify({ message: "Shuffling Liked Songs..." });
+        setQueue(CreateQueue(Shuffled(songs)));
+        navigate('/queue')
     }
 
     return (
@@ -46,9 +61,14 @@ export default function Page() {
                 </Avatar>
                 <Typography variant='h5'>{'Your liked songs'}</Typography>
                 <Typography variant='body1' width='200px' textAlign='center'>{'Songs that you like will appear here'}</Typography>
-                <Fab centerRipple onClick={startPlaylist} disabled={!(songs && songs.length > 0)}>
-                    {<PlayArrowRoundedIcon fontSize='large' />}
-                </Fab>
+                <Stack direction='row' gap={3} alignItems='center'>
+                    <Fab centerRipple onClick={shuffle} sx={{width: 40, height: 40}}>
+                        {<ShuffleRoundedIcon fontSize='medium' />}
+                    </Fab>
+                    <Fab centerRipple onClick={play} disabled={!listener?.isSubscribed}>
+                        {<PlayArrowRoundedIcon fontSize='large' />}
+                    </Fab>
+                </Stack>
             </Stack>
 
             <Stack gap={2} alignItems='center'>
