@@ -59,6 +59,8 @@ public class UserController : ControllerBase
 		}
 		var dto = await _listenerService.CreateListenerAsync(listener.ToListenerCreateDto(imageId));
 		await _awarder.Award(dto.Id, new Registered());
+		if (imageId != null)
+			await _awarder.Award(dto.Id, new UploadedProfilePicture());
 		return Ok(dto);
 	}
 
