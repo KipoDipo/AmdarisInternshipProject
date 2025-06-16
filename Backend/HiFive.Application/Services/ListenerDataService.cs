@@ -49,6 +49,9 @@ public class ListenerDataService : IListenerDataService
 				.ThenInclude(s => s.Artist)
 			.Include(ld => ld.Song)
 				.ThenInclude(s => s.Genres)
+			.Include(ld => ld.Song)
+				.ThenInclude(s => s.AlbumSong)
+					.ThenInclude(s => s.Album)
 			.Where(ld =>
 				ld.ListenerId == listenerId &&
 				ld.ListenedOn >= afterDate)

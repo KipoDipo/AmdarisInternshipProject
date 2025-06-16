@@ -14,8 +14,13 @@ public class PlaylistRepository : BaseRepository<Playlist>, IPlaylistRepository
 	{
 		return await _dbContext.Set<Playlist>()
 			.Include(p => p.Songs)
+				.ThenInclude(s => s.Song)
+					.ThenInclude(s => s.Artist)
+			.Include(p => p.Songs)
 			.ThenInclude(s => s.Song)
-			.ThenInclude(s => s.Artist)
+				.ThenInclude(s => s.AlbumSong)
+					.ThenInclude(s => s.Album)
+
 			.FirstOrDefaultAsync(p => p.Id == id);
 	}
 }

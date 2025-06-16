@@ -105,6 +105,9 @@ public class SongService : ISongService
 		_validator.Validate(genre);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
+			.Include(s => s.Genres)
+			.Include(s => s.AlbumSong)
+			.ThenInclude(s => s.Album)
 			.Where(s => s.Genres.Any(g => g.Id == genreId))
 			.Skip(pageSize * (pageNumber - 1))
 			.Take(pageSize)
@@ -173,8 +176,12 @@ public class SongService : ISongService
 	{
 		var listener = await _unitOfWork.Listeners.GetAllNoTracking()
 			.Include(l => l.LikedSongs)
-			.ThenInclude(l => l.LikedSong)
-			.ThenInclude(s => s.Artist)
+				.ThenInclude(l => l.LikedSong)
+					.ThenInclude(s => s.Artist)
+			.Include(l => l.LikedSongs)
+				.ThenInclude(l => l.LikedSong)
+					.ThenInclude(s => s.AlbumSong)
+						.ThenInclude(s => s.Album)
 			.Where(l => l.Id == listenerId)
 			.FirstOrDefaultAsync();
 

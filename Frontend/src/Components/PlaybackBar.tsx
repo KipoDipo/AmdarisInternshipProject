@@ -200,15 +200,23 @@ function Info({ song }: { song?: Song }) {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        width: '100%',
     }
 
     return (
-        <Stack direction='row' alignItems='center' spacing={3} flex={1} minWidth={0}>
+        <Stack direction='row' alignItems='center' spacing={3} flex={1}>
             <Avatar sx={{ width: 64, height: 64 }} variant='rounded' src={FetchImage(song?.coverImageId)} alt={song?.title} />
-            <Stack minWidth={0}>
+            <Stack>
                 <Typography variant='h5' sx={typographySx}>{song?.title}</Typography>
-                <Typography variant='subtitle1' sx={typographySx} component={Link} to={`/artist/${song?.artistId}`} >{song?.artistName}</Typography>
+                <Stack direction='row' gap={1}>
+                    <Typography variant='subtitle1' sx={typographySx} component={Link} to={`/artist/${song?.artistId}`} >{song?.artistName}</Typography>
+                    {
+                        song?.albumId &&
+                        <>
+                            <Typography variant='subtitle1' sx={typographySx} >{`•`}</Typography>
+                            <Typography variant='subtitle1' sx={typographySx} component={Link} to={`/album/${song?.albumId}`} >{song?.album}</Typography>
+                        </>
+                    }
+                </Stack>
             </Stack>
         </Stack>
     )
@@ -244,7 +252,7 @@ function Actions({ volume, onVolumeChange, repeatState, setRepeatState, size }: 
 
     function handleShuffle() {
         setQueue(last => CreateQueue(Shuffled(last.songs)))
-        notify({message: 'Shuffling...'})
+        notify({ message: 'Shuffling...' })
     }
 
     return (
@@ -258,7 +266,7 @@ function Actions({ volume, onVolumeChange, repeatState, setRepeatState, size }: 
                 sx={{ width: 100, marginRight: 2 }}
             />
             <IconButton component={Link} to='/queue'>
-                <QueueMusicRoundedIcon sx={{...fontSx, color: theme.palette.secondary.light}} />
+                <QueueMusicRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light }} />
             </IconButton>
 
             <IconButton sx={buttonSx} onClick={handleRepeat}>
@@ -268,7 +276,7 @@ function Actions({ volume, onVolumeChange, repeatState, setRepeatState, size }: 
             </IconButton>
 
             <IconButton sx={buttonSx} onClick={handleShuffle}>
-                <ShuffleRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light}} />
+                <ShuffleRoundedIcon sx={{ ...fontSx, color: theme.palette.secondary.light }} />
             </IconButton>
 
             <IconButton>
