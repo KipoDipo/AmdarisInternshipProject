@@ -157,6 +157,13 @@ public class SongController : ControllerBase
 		var songs = await _listenerDataService.GetUniqueSongsListenedById(_currentUserService.Id, pagingParameters.PageNumber, pagingParameters.PageSize, lastNMonths);
 		return Ok(songs);
 	}
+	
+	[HttpGet("history/{id}")]
+	public async Task<IActionResult> GetSongsFromHistory(Guid id, [FromQuery] PagingParameters pagingParameters, int lastNMonths = 1)
+	{
+		var songs = await _listenerDataService.GetUniqueSongsListenedById(id, pagingParameters.PageNumber, pagingParameters.PageSize, lastNMonths);
+		return Ok(songs);
+	}
 
 	[HttpGet("curated-songs")]
 	public async Task<IActionResult> GetCuratedSongs()
