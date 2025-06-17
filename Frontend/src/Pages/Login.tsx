@@ -40,6 +40,7 @@ function Form({ setLogged }: ({ setLogged: (logged: boolean) => void })) {
             if (response.status == 200 && response.data.token) {
                 localStorage.setItem("token", response.data.token);
                 localStorage.setItem("role", response.data.role);
+                delete localStorage['queue'];
                 setLogged(true);
                 navigate('/');
             }
