@@ -204,7 +204,10 @@ function Info({ song }: { song?: Song }) {
 
     return (
         <Stack direction='row' alignItems='center' spacing={3} flex={1}>
-            <Avatar sx={{ width: 64, height: 64 }} variant='rounded' src={FetchImage(song?.coverImageId)} alt={song?.title} />
+            {
+                song?.coverImageId &&
+                <Avatar sx={{ width: 64, height: 64 }} variant='rounded' src={FetchImage(song?.coverImageId)} alt={song?.title} />
+            }
             <Stack>
                 <Typography variant='h5' sx={typographySx}>{song?.title}</Typography>
                 <Stack direction='row' gap={1}>
