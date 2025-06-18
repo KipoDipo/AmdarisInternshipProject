@@ -136,7 +136,7 @@ export default function Account() {
                         artists && artists.length > 0 &&
                         <ArtistList title="Artists" to={`/following-artists/${accountHolder.id}`} artists={artists} />
                     }
-                    <TrophyList badgeIds={accountHolder.badgeIds ?? []} titleIds={accountHolder.titleIds ?? []} />
+                    <TrophyList badgeIds={accountHolder.badgeIds ?? []} titleIds={accountHolder.titleIds ?? []} accountHolder={accountHolder} />
                 </Stack>
             </Stack>
         </Stack >
@@ -211,7 +211,7 @@ function ListenerList({ title, listeners, to }: { title: string, listeners: List
     )
 }
 
-function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: string[] }) {
+function TrophyList({ badgeIds, titleIds, accountHolder }: { badgeIds: string[], titleIds: string[], accountHolder: ListenerDetails }) {
     const [titles, setTitles] = useState<Title[] | null>(null);
     const [badges, setBadges] = useState<Badge[] | null>(null);
 
@@ -259,7 +259,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
             <Stack sx={{ background: theme.palette.secondary.dark }} width='100%' gap={3} padding={5} borderRadius={theme.shape.borderRadius}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Badges</Typography>
-                    <Typography component={Link} to="/my-badges">See all</Typography>
+                    <Typography component={Link} to={`/badges/${accountHolder.id}`}>See all</Typography>
                 </Stack>
                 <Stack width='100%' alignItems='center' gap={3}>
                     {

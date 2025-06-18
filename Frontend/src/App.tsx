@@ -176,7 +176,7 @@ function ListenerRoutes({ listener }: { listener: ListenerDetails }) {
                         <Route path="/queue" element={<Queue />} />
                         <Route path="/following-artists/:id" element={<FollowingArtists />} />
                         <Route path="/following-users/:id" element={<FollowingListeners />} />
-                        <Route path="/my-badges" element={<Badges />} />
+                        <Route path="/badges/:id" element={<Badges />} />
                         <Route path="/subscribe" element={<Subscribe />} />
                         <Route path="/subscribed-success" element={<SubscribeSuccess />} />
                         <Route path="/subscribed-fail" element={<SubscribeFail />} />

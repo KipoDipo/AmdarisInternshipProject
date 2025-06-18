@@ -6,8 +6,11 @@ import BadgeTile from "../Components/BadgeTile";
 import { ListenerBadge } from "../Models/ListenerBadge";
 import FetchImage from "../Utils/FetchImage";
 import { DateTimeFormat } from "../Utils/TimeFormat";
+import { useParams } from "react-router-dom";
 
 export default function Badges() {
+    const { id } = useParams();
+
     const [badges, setBadges] = useState<ListenerBadge[] | null>(null);
 
     const [badgeInfo, setBadgeInfo] = useState<ListenerBadge | null>(null);
@@ -19,12 +22,12 @@ export default function Badges() {
     const notify = useNotification();
 
     useEffect(() => {
-        fetcher.get("Trophy/my-badges")
+        fetcher.get(`Trophy/get-badges/${id}`)
             .then((response) => {
                 setBadges(response.data);
             })
             .catch(error => notify({ message: error, severity: 'error' }));
-    }, [notify])
+    }, [notify, id])
 
     return (
         <>

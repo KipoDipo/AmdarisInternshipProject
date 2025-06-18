@@ -59,6 +59,13 @@ public class TrophyController : ControllerBase
 		return Ok(await _trophyService.GetListenerBadges(_currentUserService.Id));
 	}
 
+	[HttpGet("get-badges/{id}")]
+	public async Task<IActionResult> GetBadges(Guid id)
+	{
+		return Ok(await _trophyService.GetListenerBadges(id));
+	}
+
+
 	[HttpPost("create-condition")]
 	public async Task<IActionResult> CreateCondition(ConditionCreateDto dto)
 	{
