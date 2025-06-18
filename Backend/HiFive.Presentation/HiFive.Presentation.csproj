@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HiFive.Application\HiFive.Application.csproj" />
     <ProjectReference Include="..\HiFive.Infrastructure\HiFive.Infrastructure.csproj" />
+    <ProjectReference Include="..\HiFive.Integrations\HiFive.Integrations.csproj" />
   </ItemGroup>
 
 </Project>

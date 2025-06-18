@@ -1,4 +1,4 @@
-﻿namespace HiFive.Presentation.Models;
+﻿namespace HiFive.Integrations.Models;
 
 public class Jwt
 {

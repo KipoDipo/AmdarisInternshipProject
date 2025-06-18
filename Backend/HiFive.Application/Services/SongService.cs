@@ -140,6 +140,7 @@ public class SongService : ISongService
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Include(s => s.Genres)
+			.OrderByDescending(s => s.UpdatedOn)
 			.Where(s => s.ArtistId == artistId)
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)

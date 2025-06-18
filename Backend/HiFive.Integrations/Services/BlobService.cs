@@ -3,9 +3,10 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using FFMpegCore;
-using HiFive.Domain.Models.Music;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
-namespace HiFive.Presentation;
+namespace HiFive.Integrations.Services;
 
 public class BlobService
 {
@@ -28,12 +29,10 @@ public class BlobService
 		string accountKey = "";
 
 		foreach (var part in connStringParts)
-		{
 			if (part.StartsWith("AccountName=", StringComparison.InvariantCultureIgnoreCase))
 				accountName = part.Substring("AccountName=".Length);
 			else if (part.StartsWith("AccountKey=", StringComparison.InvariantCultureIgnoreCase))
 				accountKey = part.Substring("AccountKey=".Length);
-		}
 
 		if (accountName == "" || accountKey == "")
 			throw new InvalidOperationException("Connection string must contain AccountName and AccountKey.");
@@ -66,9 +65,7 @@ public class BlobService
 		var tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
 		await using (var tempFile = new FileStream(tempFilePath, FileMode.Create))
-		{
 			await file.CopyToAsync(tempFile);
-		}
 
 		var mediaInfo = await FFProbe.AnalyseAsync(tempFilePath);
 		var duration = (uint)Math.Round(mediaInfo.Duration.TotalSeconds);
@@ -77,12 +74,10 @@ public class BlobService
 		var headers = new BlobHttpHeaders { ContentType = file.ContentType };
 
 		await using (var uploadStream = new FileStream(tempFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-		{
 			await blobClient.UploadAsync(uploadStream, new BlobUploadOptions
 			{
 				HttpHeaders = headers
 			});
-		}
 
 		File.Delete(tempFilePath);
 

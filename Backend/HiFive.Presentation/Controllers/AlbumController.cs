@@ -1,6 +1,7 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.DTOs.Album;
 using HiFive.Domain.Models.Music;
+using HiFive.Integrations.Services;
 using HiFive.Presentation.Controllers.Requests.Album;
 using HiFive.Presentation.Extentions;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,5 @@
 ﻿using HiFive.Application.Contracts.Services.Contracts;
-using HiFive.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 

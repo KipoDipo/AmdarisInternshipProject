@@ -1,5 +1,5 @@
 ﻿using HiFive.Infrastructure.Identity;
-using HiFive.Presentation.Models;
+using HiFive.Integrations.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace HiFive.Presentation;
+namespace HiFive.Integrations.Services;
 
 public class JwtService
 {

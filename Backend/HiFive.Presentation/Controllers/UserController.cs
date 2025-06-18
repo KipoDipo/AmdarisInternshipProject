@@ -9,6 +9,7 @@ using HiFive.Application.Contracts.Services.Contracts;
 using HiFive.Application.AwardSystem;
 using HiFive.Presentation.Controllers.Requests.Users;
 using HiFive.Presentation.Controllers.Requests.Distributor;
+using HiFive.Integrations.Services;
 
 namespace HiFive.Presentation.Controllers;
 
