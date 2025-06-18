@@ -238,6 +238,7 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
 
     return (
         <Stack direction='row' justifyContent='space-between' gap={3} height={270}>
+            { false && // TODO: Implement titles
             <Stack sx={{ background: theme.palette.secondary.dark }} width='50%' gap={3} padding={5} borderRadius={theme.shape.borderRadius}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Titles</Typography>
@@ -254,7 +255,8 @@ function TrophyList({ badgeIds, titleIds }: { badgeIds: string[], titleIds: stri
                     }
                 </Stack>
             </Stack>
-            <Stack sx={{ background: theme.palette.secondary.dark }} width='50%' gap={3} padding={5} borderRadius={theme.shape.borderRadius}>
+            }
+            <Stack sx={{ background: theme.palette.secondary.dark }} width='100%' gap={3} padding={5} borderRadius={theme.shape.borderRadius}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                     <Typography variant='h4'>Badges</Typography>
                     <Typography component={Link} to="/my-badges">See all</Typography>
