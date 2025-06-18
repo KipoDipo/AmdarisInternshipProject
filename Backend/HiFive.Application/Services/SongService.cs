@@ -37,7 +37,7 @@ public class SongService : ISongService
 		{
 			Title = songCreateDto.Title,
 			ArtistId = songCreateDto.ArtistId,
-			AlbumId = songCreateDto.AlbumId,
+			ArtistName = artist.DisplayName,
 			Duration = (uint)songCreateDto.Duration!,
 			CoverImageId = songCreateDto.CoverImageId,
 			Genres = genres,
@@ -48,14 +48,18 @@ public class SongService : ISongService
 
 		if (songCreateDto.AlbumId != null)
 		{
+			var album = await _unitOfWork.Albums.GetByIdAsync((Guid)songCreateDto.AlbumId);
+			_validator.Validate(album);
+
 			var albumSong = new AlbumSong()
 			{
 				AlbumId = (Guid)songCreateDto.AlbumId,
 				SongId = song.Id,
 				OrderIndex = (int)songCreateDto.OrderIndex!
 			};
-
+			song.AlbumId = songCreateDto.AlbumId;
 			song.AlbumSong = albumSong;
+			song.AlbumName = album.Title;
 		}
 
 		await _unitOfWork.BeginTransactionAsync();
@@ -106,8 +110,6 @@ public class SongService : ISongService
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
 			.Include(s => s.Genres)
-			.Include(s => s.AlbumSong)
-			.ThenInclude(s => s.Album)
 			.Where(s => s.Genres.Any(g => g.Id == genreId))
 			.Skip(pageSize * (pageNumber - 1))
 			.Take(pageSize)
@@ -122,9 +124,6 @@ public class SongService : ISongService
 		_validator.Validate(genre);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
-			.Include(s => s.Artist)
-			.Include(s => s.AlbumSong)
-			.ThenInclude(a => a.Album)
 			.Include(s => s.Genres)
 			.Where(s => s.Genres.Any(g => g.Id == genreId))
 			.OrderBy(_ => Guid.NewGuid())
@@ -140,10 +139,7 @@ public class SongService : ISongService
 		_validator.Validate(artist);
 
 		var songs = await _unitOfWork.Songs.GetAllNoTracking()
-			.Include(s => s.Artist)
 			.Include(s => s.Genres)
-			.Include(s => s.AlbumSong)
-			.ThenInclude(a => a.Album)
 			.Where(s => s.ArtistId == artistId)
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
@@ -177,11 +173,6 @@ public class SongService : ISongService
 		var listener = await _unitOfWork.Listeners.GetAllNoTracking()
 			.Include(l => l.LikedSongs)
 				.ThenInclude(l => l.LikedSong)
-					.ThenInclude(s => s.Artist)
-			.Include(l => l.LikedSongs)
-				.ThenInclude(l => l.LikedSong)
-					.ThenInclude(s => s.AlbumSong)
-						.ThenInclude(s => s.Album)
 			.Where(l => l.Id == listenerId)
 			.FirstOrDefaultAsync();
 

@@ -20,9 +20,11 @@ public class Song : IDeletable
 
 	public Guid ArtistId { get; set; }
 	public Artist Artist { get; set; } = null!;
+	public string ArtistName { get; set; } = null!;
 
 	public Guid? AlbumId { get; set; }
 	public AlbumSong? AlbumSong { get; set; }
+	public string AlbumName { get; set; } = null!;
 
 	public List<PlaylistSong> PlaylistsIn { get; set; } = [];
 	public List<ListenerLikedSong> LikedBy { get; set; } = [];

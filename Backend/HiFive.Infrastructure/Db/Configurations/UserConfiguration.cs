@@ -17,7 +17,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 			.HasColumnType("nvarchar(32)");
 
 		builder.Property(b => b.DisplayName)
-			.HasColumnType("nvarchar(32)");
+			.HasColumnType("nvarchar(64)");
 
 		builder.Property(b => b.Bio)
 			.HasColumnType("nvarchar(max)");

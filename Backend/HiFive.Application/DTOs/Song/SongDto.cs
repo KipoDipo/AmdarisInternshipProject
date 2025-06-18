@@ -22,9 +22,9 @@ public class SongDto
 			Title = song.Title,
 			ArtistId = song.ArtistId,
 			Data = song.Data,
-			ArtistName = song.Artist?.DisplayName ?? "",
+			ArtistName = song.ArtistName,
 			Duration = song.Duration,
-			Album = song.AlbumSong?.Album?.Title ?? "",
+			Album = song.AlbumName,
 			AlbumId = song.AlbumId,
 			CoverImageId = song.CoverImageId,
 			GenreIds = song.Genres.Select(x => x.Id).ToList()

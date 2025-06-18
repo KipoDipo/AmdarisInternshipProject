@@ -12,6 +12,14 @@ public class SongConfiguration : IEntityTypeConfiguration<Song>
 			.HasMaxLength(64);
 
 		builder
+			.Property(s => s.ArtistName)
+			.HasMaxLength(64);
+
+		builder
+			.Property(s => s.AlbumName)
+			.HasMaxLength(64);
+
+		builder
 			.HasOne(s => s.Artist)
 			.WithMany(a => a.Singles)
 			.OnDelete(DeleteBehavior.NoAction);
