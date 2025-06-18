@@ -3,7 +3,6 @@
 using HiFive.Application.UnitOfWork;
 using HiFive.Infrastructure;
 #endif
-using Azure.Storage.Blobs;
 using FFMpegCore;
 using HiFive.Infrastructure.Db;
 using HiFive.Integrations.Models;
@@ -14,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Stripe;
+
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
