@@ -30,7 +30,7 @@ export default function Page() {
 
     useEffect(() => {
         fetcher.get(`/Song/my-liked`)
-            .then((response) => setSongs(response.data))
+            .then((response) => setSongs(response.data.reverse()))
             .catch((error) => notify({ message: error, severity: 'error', duration: 10000 }))
     }, [notify])
 

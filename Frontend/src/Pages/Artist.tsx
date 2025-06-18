@@ -8,7 +8,7 @@ import { Album } from "../Models/Album";
 
 import AlbumCategory from "../Components/AlbumCategory";
 import { TimeFormat } from "../Utils/TimeFormat";
-import { textWidth, theme } from "../Styling/Theme";
+import { textWidth } from "../Styling/Theme";
 import { ListenerDetails } from "../Models/ListenerDetails";
 import { Artist } from "../Models/Artist";
 import { useSetQueue } from "../Contexts/Queue/UseSetQueue";
@@ -136,8 +136,8 @@ export default function Page() {
                         <Button variant='contained' onClick={handleFollow} sx={{ width: textWidth }}>{isFollowing == null ? "..." : (isFollowing ? "Unfollow" : "Follow")}</Button>
                     </Stack>
                 </Stack>
-                <Stack padding={3} gap={3} bgcolor={theme.palette.secondary.dark} sx={{ borderRadius: theme.shape.borderRadius }}>
-                    <Typography variant='h3'>Bio</Typography>
+                <Stack padding={3} gap={1} marginTop={-6}>
+                    <Typography variant='h4'>Info</Typography>
                     <Typography variant='body1'>{artist?.bio}</Typography>
                 </Stack>
                 <AlbumCategory albums={albums} name="Albums" />
