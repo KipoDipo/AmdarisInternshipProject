@@ -37,7 +37,17 @@ export default function Badges() {
                     {
                         badges?.map(badge => {
                             return (
-                                <Box key={badge.id} onClick={() => openDialogue(badge)}>
+                                <Box
+                                    key={badge.id}
+                                    onClick={() => openDialogue(badge)}
+                                    sx={{
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s ease-in-out',
+                                        ':hover': {
+                                            transform: 'scale(1.05)',
+                                        }
+                                    }}
+                                >
                                     <BadgeTile badge={badge} />
                                 </Box>
                             );
@@ -50,7 +60,7 @@ export default function Badges() {
                 {
                     badgeInfo &&
                     <Stack gap={3} margin={3} alignItems='center'>
-                        <Avatar src={FetchImage(badgeInfo.imageId)} sx={{width: 200, height: 200, boxShadow: 10}}/>
+                        <Avatar src={FetchImage(badgeInfo.imageId)} sx={{ width: 200, height: 200, boxShadow: 10 }} />
                         <Typography variant='h3'>{badgeInfo.name}</Typography>
                         <Typography variant='h5'>{badgeInfo.description}</Typography>
                         <Typography variant='h6'>Awarded on: {DateTimeFormat(badgeInfo.awardedOn)}</Typography>
